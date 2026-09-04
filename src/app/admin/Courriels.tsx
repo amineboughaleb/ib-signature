@@ -50,9 +50,11 @@ export default function EtatCourriels({ enAttente }: { enAttente: number }) {
 
       {enAttente > 0 && (
         <p className="avert">
-          <strong>{enAttente} courriel(s) ne sont jamais partis.</strong> Ils concernent des demandes déjà
-          enregistrées. Le bouton « Renvoyer » de chaque demande les repropose à l’envoi, une fois le fournisseur en
-          place.
+          <strong>{enAttente} courriel(s) ne sont jamais partis.</strong> Les demandes, elles, sont bien enregistrées :
+          elles portent la mention « courriel non parti » dans{' '}
+          <Link href="/admin/virements">Séjours et virements</Link> et{' '}
+          <Link href="/admin/demandes">Propriétaires et messages</Link>. Personne n’a été prévenu, ni le demandeur ni
+          vous — écrivez-leur directement. Une demande de virement classée « annulée » sort de ce décompte.
         </p>
       )}
     </div>
