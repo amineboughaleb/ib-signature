@@ -1,0 +1,1610 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Karla:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================================
+   IB Signature - charte v2, papier et encre
+
+   Deux marques de la même maison ne doivent pas se ressembler, et la v1 s'en
+   rapprochait dangereusement : son ocre tombait dans la famille de l'ocre de
+   Staytle, sur un fond crème presque identique. Ce n'était pas le vert qui
+   posait problème, c'était l'accent.
+
+   D'où ce parti : aucune couleur d'accent. Papier et encre, rien d'autre. La
+   seule couleur d'une page vient des photographies des logements - et c'est
+   exactement ce qu'un voyageur est venu regarder. Un bouton d'encre sur du
+   papier ne ressemble à aucune autre conciergerie marocaine, précisément
+   parce qu'aucune n'ose se passer de couleur.
+
+   La contrepartie est exigeante et il faut la dire : sans photographies
+   soignées, une page sans couleur paraît vide plutôt que sobre. La charte
+   repose donc sur la qualité de vos images.
+
+   Les caractères : Newsreader pour les titres, une serif contemporaine dessinée
+   pour l'écran, avec du contraste et sans nostalgie ; Karla pour le texte, une
+   grotesque à l'italique franche. Staytle n'emploie ni l'une ni l'autre.
+
+   Aucune couleur ne s'introduit ici sans découler des variables ci-dessous.
+   ========================================================================== */
+
+:root {
+  /* Papier - le fond, jamais du blanc pur : un blanc pur durcit les photos */
+  --papier: #f7f5f0;
+  --papier-creux: #efece4;
+  --panneau: #ffffff;
+  --panneau-alt: #fbfaf7;
+
+  /* Encre - l'accent, et le seul. Un noir chaud, jamais du noir pur */
+  --accent: #15120e;
+  --accent-clair: #453e34;
+  --accent-voile: rgba(21, 18, 14, 0.06);
+
+  /* Encre et gris - le texte */
+  --encre: #15120e;
+  --sourd: #6d675e;
+  --sourd-clair: #8c857a;
+  --filet: #e3ddd2;
+
+  /* Sémantique, sobre */
+  --succes: #3f6b52;
+  --alerte: #8a6320;
+  --erreur: #8c3a2c;
+
+  /* Rayons - presque droit, partout */
+  --r-sm: 2px;
+  --r-md: 3px;
+  --r-lg: 4px;
+  --r-pill: 999px;
+
+  /* Caractères */
+  --titre: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --texte: 'Karla', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Élévation - discrète : sur du papier, une ombre lourde salit */
+  --ombre: 0 1px 2px rgba(21, 18, 14, 0.05), 0 14px 34px -22px rgba(21, 18, 14, 0.35);
+
+  --maxw: 1200px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--papier);
+  color: var(--encre);
+  font-family: var(--texte);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- typographie ----------
+   Newsreader a du contraste et une hauteur d'x normale : elle demande de
+   l'espace et des capitales espacées. On ne lui demande jamais de porter un
+   paragraphe - seulement des titres, où sa finesse fait tout le travail. */
+h1, h2, h3 {
+  font-family: var(--titre);
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+h1 { font-size: clamp(38px, 5.4vw, 68px); }
+h2 { font-size: clamp(28px, 3.4vw, 44px); }
+h3 { font-family: var(--texte); font-size: 19px; font-weight: 500; letter-spacing: 0; line-height: 1.3; }
+p { margin: 0 0 1em; }
+
+/* L'étiquette en capitales espacées : le motif récurrent de la charte.
+   C'est elle qui structure la page, à la place des filets et des cadres. */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.surtitre {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sourd-clair);
+}
+.lead { font-size: 18px; color: var(--sourd); max-width: 62ch; }
+.small { font-size: 14px; }
+.muted { color: var(--sourd); }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+.narrow { max-width: 780px; }
+.section { padding: 96px 0; }
+.section-tight { padding: 64px 0; }
+
+/* ---------- en-tête ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(247, 245, 240, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--filet);
+}
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 24px; }
+.wordmark { display: inline-flex; flex-direction: column; line-height: 1; gap: 4px; }
+.wordmark b {
+  font-family: var(--titre); font-weight: 400; font-size: 25px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--encre);
+}
+.wordmark span {
+  font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent);
+}
+.nav { display: flex; align-items: center; gap: 30px; font-size: 14px; }
+.nav a { color: var(--sourd); transition: color .2s ease; }
+.nav a:hover { color: var(--encre); }
+.switch {
+  display: inline-flex; border: 1px solid var(--filet); border-radius: var(--r-pill);
+  overflow: hidden; font-size: 11px; letter-spacing: 0.1em;
+}
+.switch a { padding: 6px 11px; color: var(--sourd-clair); }
+.switch a.on { background: var(--accent); color: var(--papier); font-weight: 500; }
+
+/* ---------- boutons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 13px 28px;
+  border: 1px solid var(--accent); border-radius: var(--r-md);
+  background: var(--accent); color: var(--papier);
+  font-family: var(--texte); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; transition: background .22s ease, color .22s ease, border-color .22s ease;
+}
+.btn:hover { background: var(--accent-clair); border-color: var(--accent-clair); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--encre); border-color: var(--filet); }
+.btn-ghost:hover { background: transparent; border-color: var(--accent); color: var(--accent); }
+.btn-sm { min-height: 40px; padding: 10px 20px; font-size: 11px; }
+
+/* Le lien souligné d'encre : discret au repos, franc au survol. */
+.lien {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+  padding-bottom: 4px; border-bottom: 1px solid var(--accent-voile);
+  transition: border-color .22s ease;
+}
+.lien:hover { border-bottom-color: var(--accent); }
+
+/* ---------- formulaires ---------- */
+label { display: block; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sourd-clair); margin-bottom: 8px; }
+input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date],
+input[type=url], select, textarea {
+  width: 100%; padding: 12px 14px;
+  background: var(--papier-creux); color: var(--encre);
+  border: 1px solid var(--filet); border-radius: var(--r-sm);
+  font-size: 15px; font-weight: 300; outline: none;
+  transition: border-color .2s ease;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+input::placeholder, textarea::placeholder { color: var(--sourd-clair); }
+textarea { resize: vertical; min-height: 120px; }
+.field + .field { margin-top: 20px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+.grid2 > .field + .field, .grid3 > .field + .field { margin-top: 0; }
+.hint { font-size: 13px; color: var(--sourd-clair); margin-top: 8px; }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--panneau); border: 1px solid var(--filet); border-radius: var(--r-lg); }
+.card-pad { padding: 30px; }
+.rule { height: 1px; background: var(--filet); border: 0; margin: 0; }
+/* Le filet d'encre qui ouvre une section : court, aligné à gauche du texte. */
+.filet-or { width: 46px; height: 1px; background: var(--accent); border: 0; margin: 0 0 22px; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border: 1px solid var(--filet); border-radius: var(--r-pill);
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sourd);
+}
+.badge-or { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- accroche ----------
+   Pas de photographie au lancement : le fond est une trame Art déco tracée en
+   CSS - un dégradé de papier, et deux séries de rayons d'encre très pâles qui
+   évoquent une ferronnerie sans en dessiner une. Quand la photographie
+   arrivera, elle se glissera sous ce même voile sans que rien ne bouge. */
+.accroche { position: relative; padding: 108px 0 0; }
+.accroche-fond {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(1200px 520px at 78% -10%, rgba(21, 18, 14, .05), transparent 62%),
+    repeating-linear-gradient(115deg, rgba(21,18,14,.035) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(-115deg, rgba(21,18,14,.025) 0 1px, transparent 1px 46px),
+    linear-gradient(180deg, var(--papier-creux) 0%, var(--papier) 62%);
+}
+.accroche-corps { position: relative; z-index: 1; max-width: 880px; padding-bottom: 52px; }
+.accroche-corps h1 { margin: 18px 0 22px; }
+.accroche .lead { font-size: 19px; }
+
+/* La barre de recherche : un bandeau posé à cheval sur la fin de l'accroche. */
+.recherche {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 1fr 1.55fr .7fr auto;
+  gap: 0; align-items: stretch;
+  background: var(--panneau); border: 1px solid var(--filet); border-radius: var(--r-lg);
+  box-shadow: var(--ombre);
+  /* Surtout pas d'`overflow: hidden` ici : il arrondissait joliment les coins,
+     et rognait le panneau du calendrier qui s'ouvre en dessous. Les coins sont
+     donc arrondis segment par segment. */
+  overflow: visible;
+}
+.recherche > *:first-child { border-radius: var(--r-lg) 0 0 var(--r-lg); }
+.recherche > *:last-child { border-radius: 0 var(--r-lg) var(--r-lg) 0; }
+.rech-seg { padding: 16px 20px; border-right: 1px solid var(--filet); }
+.rech-seg label { margin-bottom: 6px; }
+.rech-seg input, .rech-seg select {
+  border: 0; background: transparent; padding: 0; font-size: 15px;
+  color: var(--encre); width: 100%;
+}
+.rech-seg input:focus, .rech-seg select:focus { border: 0; }
+
+.rech-btn { height: 100%; white-space: nowrap; }
+
+/* ---------- manifeste ----------
+   Le seul endroit où Newsreader porte autre chose qu'un titre : deux phrases
+   composées grand, très aérées, qui se lisent lentement. C'est la voix de la
+   maison, elle a droit à du silence autour d'elle. */
+.manifeste { background: var(--papier-creux); border-top: 1px solid var(--filet); }
+.manifeste .wrap { max-width: 900px; }
+.manifeste-phrase {
+  font-family: var(--titre); font-size: clamp(24px, 2.9vw, 36px);
+  line-height: 1.32; color: var(--encre); margin: 22px 0 0; text-wrap: balance;
+}
+.manifeste-phrase + .manifeste-phrase { color: var(--sourd); }
+.manifeste-fin { margin-top: 30px; max-width: 60ch; }
+
+/* ---------- rythme des sections ---------- */
+.section-alt { background: var(--papier-creux); border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; margin-bottom: 56px; }
+
+/* ---------- piliers ----------
+   La numérotation est ici légitime : ce sont trois moments d'un séjour, dans
+   l'ordre où on les rencontre - la remise en état avant, l'assistance pendant,
+   l'arrivée. Ailleurs, un 01/02/03 serait de la décoration. */
+.piliers { gap: 0; }
+.pilier { padding: 0 34px; border-left: 1px solid var(--filet); }
+.pilier:first-child { padding-left: 0; border-left: 0; }
+.pilier-n {
+  font-family: var(--titre); font-size: 34px; color: var(--accent); line-height: 1; margin-bottom: 18px;
+}
+.pilier h3 { margin-bottom: 10px; }
+
+/* ---------- cartes de biens ---------- */
+.biens-grille { gap: 30px; }
+.bien-carte { display: block; }
+.bien-image {
+  position: relative; aspect-ratio: 4 / 3; overflow: hidden;
+  border: 1px solid var(--filet); border-radius: var(--r-md); background: var(--panneau);
+}
+.bien-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.bien-carte:hover .bien-image img { transform: scale(1.04); }
+.bien-trame {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background:
+    repeating-linear-gradient(45deg, rgba(21,18,14,.04) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(-45deg, rgba(21,18,14,.04) 0 1px, transparent 1px 22px),
+    linear-gradient(160deg, var(--panneau-alt), var(--papier-creux));
+}
+.bien-trame span {
+  font-family: var(--titre); font-size: 46px; color: var(--accent); opacity: .5;
+  width: 92px; height: 92px; display: grid; place-items: center;
+  border: 1px solid var(--accent-voile); transform: rotate(45deg);
+}
+.bien-trame span::first-letter { display: inline-block; transform: rotate(-45deg); }
+.bien-etiquette { position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,.9); }
+.bien-corps { padding: 18px 2px 0; }
+.bien-corps h3 { margin-bottom: 6px; transition: color .2s ease; }
+.bien-carte:hover .bien-corps h3 { color: var(--accent); }
+.bien-pied {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--filet);
+}
+.bien-prix { display: inline-flex; align-items: baseline; gap: 8px; }
+.bien-prix b { font-family: var(--titre); font-size: 22px; color: var(--encre); }
+.bien-fleche { color: var(--accent); transition: transform .25s ease; }
+.bien-carte:hover .bien-fleche { transform: translateX(5px); }
+
+/* ---------- chiffres ---------- */
+.chiffres { background: var(--papier-creux); border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); }
+.chiffre { display: flex; flex-direction: column; gap: 8px; }
+.chiffre b { font-family: var(--titre); font-size: 50px; color: var(--accent); line-height: 1; }
+
+/* ---------- encart propriétaires ---------- */
+.proprio { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; padding: 52px; }
+.proprio h2 { max-width: 12ch; }
+
+/* ---------- pied ---------- */
+.site-footer { border-top: 1px solid var(--filet); padding: 72px 0 34px; background: var(--papier-creux); }
+.pied-haut { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; margin-bottom: 48px; }
+.pied-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.pied-cols .surtitre { margin-bottom: 14px; }
+.pied-cols a { display: block; font-size: 14px; color: var(--sourd); margin-bottom: 8px; }
+.pied-cols a:hover { color: var(--accent); }
+.pied-bas { display: flex; justify-content: space-between; gap: 20px; padding-top: 26px; color: var(--sourd-clair); }
+.pied-liens { display: flex; gap: 24px; }
+.pied-liens a:hover { color: var(--accent); }
+
+/* ---------- adaptatif ---------- */
+@media (max-width: 1000px) {
+  .recherche { grid-template-columns: 1fr 1fr; }
+  .rech-seg-dates { grid-column: 1 / -1; }
+  /* En colonnes, les coins arrondis ne suivent plus l'ordre du document. */
+  .recherche > *:first-child { border-radius: var(--r-lg) 0 0 0; }
+  .recherche > *:last-child { border-radius: 0 0 var(--r-lg) var(--r-lg); }
+  .rech-btn { grid-column: 1 / -1; border-radius: 0; }
+  .duo, .proprio, .pied-haut { grid-template-columns: 1fr; gap: 28px; }
+  .grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+  .pilier { padding: 0; border-left: 0; padding-bottom: 26px; }
+}
+@media (max-width: 640px) {
+  .section { padding: 64px 0; }
+  .accroche { padding-top: 68px; }
+  .recherche { grid-template-columns: 1fr; }
+  .rech-seg { border-right: 0; border-bottom: 1px solid var(--filet); }
+  .recherche > *:first-child { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+  .grid3, .grid4, .grid2, .pied-cols { grid-template-columns: 1fr; }
+  .nav { gap: 18px; font-size: 13px; }
+  .masq-sm { display: none; }
+  .pied-bas { flex-direction: column; }
+  .proprio { padding: 32px; }
+}
+
+/* ---------- liste ---------- */
+.liste-tete { padding-top: 72px; }
+.liste-tete .filet-or { margin-bottom: 20px; }
+.liste-barre { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--filet); margin-bottom: 34px; }
+.liste-effacer { border-bottom: 1px solid var(--filet); padding-bottom: 3px; }
+.liste-effacer:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.liste-degrade { margin: -18px 0 30px; }
+
+/* ---------- fiche ---------- */
+.fiche-fil { padding-top: 40px; }
+.fiche-tete { padding: 34px 0 30px; }
+.galerie { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: 460px; }
+.galerie figure { margin: 0; position: relative; overflow: hidden; border: 1px solid var(--filet); border-radius: var(--r-md); background: var(--panneau); }
+.galerie-grande { grid-row: 1 / 3; }
+.galerie img { width: 100%; height: 100%; object-fit: cover; }
+
+.fiche-corps { display: grid; grid-template-columns: 1.6fr 1fr; gap: 64px; padding: 64px 0 96px; align-items: start; }
+.faits { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding-bottom: 34px; border-bottom: 1px solid var(--filet); }
+.faits div { display: flex; flex-direction: column; gap: 8px; }
+.faits b { font-family: var(--titre); font-size: 28px; font-weight: 400; }
+.fiche-bloc { margin-top: 48px; }
+.fiche-bloc h2 { margin-bottom: 24px; }
+.compris { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; }
+.compris li { position: relative; padding-left: 26px; color: var(--sourd); font-size: 15px; }
+.compris li::before { content: ''; position: absolute; left: 0; top: 11px; width: 14px; height: 1px; background: var(--accent); }
+
+.reserver { position: sticky; top: 100px; }
+.reserver-prix { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; margin-bottom: 18px; }
+.reserver-prix b { font-family: var(--titre); font-size: 34px; font-weight: 400; }
+.reserver-dates { padding: 12px 0 18px; border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); margin-bottom: 20px; }
+.btn-block-or { width: 100%; }
+
+@media (max-width: 1000px) {
+  .fiche-corps { grid-template-columns: 1fr; gap: 40px; }
+  .reserver { position: static; }
+  .galerie { height: 340px; }
+  .faits { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .galerie { grid-template-columns: 1fr; grid-template-rows: 1fr; height: 260px; }
+  .galerie figure:nth-child(n + 2) { display: none; }
+  .compris { grid-template-columns: 1fr; }
+}
+
+/* ---------- propriétaires ---------- */
+.accroche-courte { padding: 92px 0 0; }
+.accroche-courte .accroche-corps { padding-bottom: 92px; }
+.parcours-audit { display: grid; grid-template-columns: 1fr 1.05fr; gap: 72px; align-items: start; }
+.etapes { list-style: none; margin: 0; padding: 0; }
+.etapes li { display: grid; grid-template-columns: 62px 1fr; gap: 18px; padding: 24px 0; border-top: 1px solid var(--filet); }
+.etapes li:last-child { border-bottom: 1px solid var(--filet); }
+.etape-n { font-family: var(--titre); font-size: 26px; color: var(--accent); line-height: 1.2; }
+.etapes h3 { margin-bottom: 6px; }
+.audit-erreur {
+  background: rgba(140, 58, 44, .07); border: 1px solid rgba(140, 58, 44, .3);
+  color: var(--erreur); padding: 12px 14px; border-radius: var(--r-sm); font-size: 14px; margin-bottom: 20px;
+}
+.audit-merci h3 { margin: 0 0 8px; }
+
+@media (max-width: 1000px) {
+  .parcours-audit { grid-template-columns: 1fr; gap: 44px; }
+}
+
+/* ---------- pages légales ---------- */
+.table-legal { width: 100%; border-collapse: collapse; margin-top: 34px; font-size: 15px; }
+.table-legal td { padding: 13px 0; border-bottom: 1px solid var(--filet); vertical-align: top; }
+.table-legal td:first-child { color: var(--sourd-clair); width: 42%; font-size: 13px; letter-spacing: .04em; }
+
+/* ---------- menu des petits écrans ---------- */
+.menu-bouton { display: none; background: none; border: 0; padding: 10px; cursor: pointer; }
+.barres { display: block; width: 24px; }
+.barres i { display: block; height: 1px; background: var(--encre); transition: transform .25s ease, opacity .25s ease; }
+.barres i + i { margin-top: 7px; }
+.barres.ouvertes i:first-child { transform: translateY(4px) rotate(45deg); }
+.barres.ouvertes i:last-child { transform: translateY(-4px) rotate(-45deg); }
+.menu-panneau {
+  position: fixed; inset: 76px 0 0; z-index: 39;
+  background: var(--papier); border-top: 1px solid var(--filet);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 44px 28px 40px;
+}
+.menu-panneau nav { display: flex; flex-direction: column; gap: 4px; }
+.menu-panneau nav a {
+  font-family: var(--titre); font-size: 34px; color: var(--encre);
+  padding: 14px 0; border-bottom: 1px solid var(--filet);
+}
+.menu-pied { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+
+@media (max-width: 860px) {
+  .nav-large { display: none; }
+  .menu-bouton { display: block; }
+  .wordmark b { font-size: 21px; letter-spacing: 0.1em; }
+}
+
+/* ---------- diaporama de l'accroche ----------
+   Les images passent sous un voile clair : sans lui, le bas de l'image
+   deviendrait illisible dès qu'une photo claire apparaît, et la photo change
+   toutes les six secondes - on ne peut pas parier sur elle. */
+.diapo { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.diapo img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0; transition: opacity 1.6s ease;
+}
+.diapo img.on { opacity: 1; }
+/* Aucun voile sur la photographie.
+   Il y en avait un, qui la fondait dans le papier vers le bas. C'était utile
+   du temps où un titre était posé dessus : il fallait le rendre lisible quelle
+   que soit l'image. Le titre est descendu sous la barre de recherche, le voile
+   n'a plus de raison d'être, et une photographie de logement se montre telle
+   qu'elle est. La barre de recherche porte son propre fond blanc : elle reste
+   lisible sans qu'on ait à assombrir l'image dessous. */
+.accroche::after { content: none; }
+.accroche-corps, .accroche-barre { position: relative; z-index: 2; }
+.diapo-points { position: absolute; right: 30px; bottom: 138px; z-index: 3; display: flex; gap: 9px; }
+.diapo-points button {
+  width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(21, 18, 14, .28); cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.diapo-points button:hover { background: rgba(21, 18, 14, .6); }
+.diapo-points button.on { background: var(--accent); transform: scale(1.4); }
+
+/* Avec une photographie, l'accroche a besoin de hauteur : une image de trois
+   cents points de haut ne montre rien d'un appartement. */
+.accroche { min-height: 620px; display: flex; flex-direction: column; justify-content: flex-end; }
+.accroche-corps { padding-top: 140px; }
+.accroche-barre { padding-bottom: 0; transform: translateY(50%); }
+.accroche + * { padding-top: 130px; }
+
+@media (max-width: 860px) {
+  .accroche { min-height: 520px; }
+  .accroche-corps { padding-top: 96px; }
+  .diapo-points { bottom: 168px; right: 22px; }
+}
+@media (max-width: 640px) {
+  .accroche { min-height: 460px; }
+  .accroche-barre { transform: none; padding-bottom: 0; margin-top: 34px; }
+  .accroche + * { padding-top: 64px; }
+  .diapo-points { display: none; }
+}
+
+/* Le délai d'une étape : petit, en encre, sous le titre. C'est la donnée que
+   le propriétaire cherche - « combien de temps cela va me prendre ». */
+.etape-delai {
+  display: inline-block; font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+/* ---------- la marque ----------
+   Le logo est une signature manuscrite : il a besoin d'air autour de lui, et
+   d'aucun cadre. La qualité l'accompagne en capitales espacées, décalée d'un
+   filet d'encre - le même motif que les étiquettes de section. */
+.marque { display: inline-flex; align-items: center; gap: 16px; }
+.marque-logo { height: 46px; width: auto; }
+.marque-qualite {
+  font-size: 9px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent);
+  padding-left: 16px; border-left: 1px solid var(--filet); line-height: 1.4;
+}
+.marque-logo-pied { height: 148px; width: auto; opacity: .92; }
+
+@media (max-width: 860px) {
+  .marque-logo { height: 40px; }
+  .marque-qualite { display: none; }
+  .marque-logo-pied { height: 108px; }
+}
+
+/* ---------- le bloc de présentation de l'accueil ----------
+   Deux colonnes, l'image d'abord dans l'ordre visuel sur grand écran. Le texte
+   garde une longueur de ligne lisible pendant que la photographie occupe la
+   moitié restante ; en dessous de 900 points, l'image passe au-dessus, où elle
+   annonce le paragraphe plutôt que de le pousser hors de l'écran. */
+.presentation { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.presentation-image {
+  border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--filet);
+  box-shadow: var(--ombre); line-height: 0;
+}
+.presentation-image img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3 / 2; }
+.presentation-texte .manifeste-phrase { margin: 18px 0 22px; }
+.presentation-texte .lead { margin: 0; }
+
+@media (max-width: 900px) {
+  .presentation { grid-template-columns: 1fr; gap: 34px; }
+}
+
+/* ---------- les trois services ----------
+   Une icône, un titre, une ligne. Le trait de l'icône reprend l'encre des
+   filets : c'est le même geste graphique, à une autre échelle. */
+.services-grille { gap: 44px; }
+.service-icone { color: var(--accent); display: block; margin-bottom: 18px; }
+.service h3 { font-size: 19px; margin: 0 0 8px; }
+.service p { margin: 0; }
+
+/* ---------- les avis ----------
+   La photographie du logement au-dessus du commentaire : le lecteur relie la
+   phrase à une pièce, et un témoignage rattaché à un lieu pèse plus lourd
+   qu'un témoignage flottant. */
+.avis-grille { gap: 34px; }
+.avis-carte {
+  margin: 0; padding: 0 0 26px;
+  border-bottom: 1px solid var(--filet);
+  display: flex; flex-direction: column;
+}
+.avis-image {
+  border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--filet);
+  aspect-ratio: 4 / 3; margin-bottom: 22px; line-height: 0;
+}
+.avis-image img { width: 100%; height: 100%; object-fit: cover; }
+/* Sans photographie - un logement sorti du parc - la trame Art déco tient la
+   place, plutôt qu'un cadre vide ou une image d'ailleurs. */
+.avis-trame {
+  width: 100%; height: 100%;
+  background:
+    repeating-linear-gradient(115deg, rgba(21,18,14,.055) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(-115deg, rgba(21,18,14,.04) 0 1px, transparent 1px 22px),
+    linear-gradient(160deg, var(--papier-creux), var(--papier));
+}
+.avis-carte blockquote {
+  margin: 0 0 18px; padding: 0; border: 0;
+  font-family: var(--titre); font-size: 21px; line-height: 1.45; color: var(--encre);
+}
+.avis-carte blockquote::before { content: '\201C'; color: var(--accent); margin-right: 2px; }
+.avis-carte blockquote::after { content: '\201D'; color: var(--accent); margin-left: 1px; }
+.avis-carte figcaption { margin-top: auto; display: flex; flex-direction: column; gap: 4px; }
+.avis-qui { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.avis-bien a { color: var(--sourd); border-bottom: 1px solid var(--filet); }
+.avis-bien a:hover { color: var(--encre); border-color: var(--accent); }
+
+/* ---------- le sommaire de « Qui sommes-nous » ----------
+   Il reste sous l'en-tête pendant qu'on descend : sur une page longue, un
+   sommaire qui disparaît au premier défilement ne sert à rien. */
+.sous-menu {
+  position: sticky; top: 76px; z-index: 30;
+  background: rgba(247, 245, 240, 0.94);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet);
+}
+.sous-menu .wrap { display: flex; align-items: center; gap: 26px; height: 56px; overflow-x: auto; }
+.sous-menu .surtitre { flex: none; }
+.sous-menu ul { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
+.sous-menu li { flex: none; }
+.sous-menu a { font-size: 14px; color: var(--sourd); white-space: nowrap; }
+.sous-menu a:hover { color: var(--encre); }
+.qs-portes { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 40px; }
+
+@media (max-width: 860px) {
+  .sous-menu { top: 64px; }
+  .sous-menu .surtitre { display: none; }
+}
+
+/* ---------- la sélection réciproque, chez les propriétaires ---------- */
+.choix { display: grid; grid-template-columns: 1fr 1.15fr; gap: 48px; align-items: start; }
+@media (max-width: 860px) { .choix { grid-template-columns: 1fr; gap: 26px; } }
+
+/* ---------- les coordonnées de la page contact ---------- */
+.coordonnees { margin: 0; display: grid; gap: 26px; }
+.coordonnees dt {
+  font-size: 10px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 7px;
+}
+.coordonnees dd { margin: 0; font-size: 17px; color: var(--encre); line-height: 1.6; }
+.coordonnees dd a { color: var(--encre); border-bottom: 1px solid var(--filet); }
+.coordonnees dd a:hover { border-color: var(--accent); }
+
+/* L'entrée de menu de la page courante : un filet d'encre dessous, pas une
+   couleur pleine - la barre reste calme. */
+.nav-large a[aria-current='page'] { color: var(--encre); border-bottom: 1px solid var(--accent); padding-bottom: 3px; }
+
+/* L'accroche courte des pages intérieures ne porte pas de photographie : elle
+   n'a donc pas à emprunter la hauteur d'une accroche d'accueil, sous peine
+   d'ouvrir chaque page par un demi-écran vide. */
+.accroche-courte { min-height: 0; display: block; }
+.accroche-courte .accroche-corps { padding-top: 92px; padding-bottom: 92px; }
+@media (max-width: 860px) {
+  .accroche-courte .accroche-corps { padding-top: 62px; padding-bottom: 62px; }
+}
+
+/* ---------- les encarts repris du site de conciergerie ----------
+   Un filet d'encre, un titre, un paragraphe, et parfois des jetons. Pas de
+   cadre : une bordure autour de chaque carte fabrique une
+   grille de fenêtres et fatigue l'oeil. Le filet suffit à séparer. */
+.encarts { gap: 40px; }
+.encart h3 { font-size: 19px; margin: 16px 0 10px; }
+.encart p { margin: 0; }
+.encart .filet-or { margin: 0; }
+.jetons { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 16px 0 0; padding: 0; }
+.jetons li {
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid var(--filet); border-radius: var(--r-pill);
+  padding: 5px 12px;
+}
+.jetons-large li { font-size: 12px; letter-spacing: .1em; text-transform: none; color: var(--sourd); padding: 8px 18px; }
+
+/* Les études de cas : la photographie, puis trois lignes de chiffres. Le
+   « avant » reste barré, le « avec » prend l'encre pleine - c'est la seule
+   comparaison que le lecteur cherche. */
+.cas-photo {
+  width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: var(--r-md); border: 1px solid var(--filet); margin-bottom: 20px;
+}
+.cas-chiffres { margin: 18px 0 0; display: grid; gap: 12px; }
+.cas-chiffres div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.cas-chiffres dt { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--sourd-clair); }
+.cas-chiffres dd { margin: 0; font-size: 16px; color: var(--encre); font-variant-numeric: tabular-nums; }
+.cas-chiffres .cas-avant { color: var(--sourd-clair); text-decoration: line-through; }
+.cas-chiffres .cas-apres { color: var(--accent); font-size: 19px; }
+
+.distribution { margin-top: 56px; }
+.operateur { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 56px; }
+@media (max-width: 860px) { .operateur { grid-template-columns: 1fr; gap: 24px; } }
+
+/* Le parcours accompagné d'une photographie plutôt que du formulaire. */
+.parcours-photo { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
+@media (max-width: 900px) { .parcours-photo { grid-template-columns: 1fr; gap: 34px; } }
+
+/* Les témoignages de propriétaires n'ont pas de photographie de logement : la
+   carte se réduit alors à la citation et à sa signature. */
+.avis-carte-nue .avis-image { display: none; }
+
+.rassurance {
+  margin-top: 22px; font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+/* Une ancre ne doit pas glisser sous l'en-tête et son sommaire : la marge de
+   défilement réserve exactement leur hauteur. */
+[id] { scroll-margin-top: 140px; }
+
+/* Les photographies du site de conciergerie sont servies depuis un hébergeur
+   extérieur. Si l'une d'elles ne se charge pas, la trame Art déco tient le
+   cadre : mieux vaut un motif qu'un rectangle blanc. */
+.presentation-image, .cas-photo {
+  background:
+    repeating-linear-gradient(115deg, rgba(21,18,14,.055) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(-115deg, rgba(21,18,14,.04) 0 1px, transparent 1px 22px),
+    linear-gradient(160deg, var(--papier-creux), var(--papier));
+}
+
+/* ---------- l'accroche sans texte ----------
+   L'accueil ouvre sur la photographie seule : la promesse se lit juste en
+   dessous, en pleine lumière, plutôt que posée sur une image qui change. Le
+   voile reste, plus léger : il n'a plus à rendre un titre lisible, seulement à
+   raccorder l'image au papier de la page. */
+.accroche-nue { min-height: 560px; }
+/* La photographie s'arrête net sur le papier : un filet suffit à marquer la
+   limite, là où un dégradé la ferait fuir. */
+.accroche-nue .diapo { border-bottom: 1px solid var(--filet); }
+.accroche-nue .diapo-points { bottom: 128px; }
+@media (max-width: 860px) { .accroche-nue { min-height: 440px; } }
+@media (max-width: 640px) { .accroche-nue { min-height: 340px; } }
+
+/* Le titre de l'accueil vit maintenant dans le bloc de présentation. */
+.presentation-texte h1 { font-size: clamp(30px, 3.4vw, 46px); margin: 16px 0 22px; }
+.presentation-texte .lead + .lead { margin-top: 18px; }
+
+/* La plateforme d'origine d'un avis, après la provenance. */
+.avis-source::before { content: '·'; margin: 0 8px; color: var(--filet); }
+
+/* Le sommaire quand il ouvre la page : pas de filet supérieur, il touche
+   déjà l'en-tête. */
+.sous-menu-haut { border-top: 0; }
+
+/* L'accroche sans photographie se rétracte : une bande de papier vide de six
+   cents points de haut n'annonce rien. La barre de recherche remonte alors
+   juste sous l'en-tête, et la page reste utilisable. */
+.accroche-vide { min-height: 0; padding-top: 62px; }
+.accroche-vide .accroche-barre { transform: none; padding-bottom: 0; }
+.accroche-vide + * { padding-top: 64px; }
+
+/* Les illustrations d'ambiance de « Qui sommes-nous » sont des images en
+   hauteur. Le cadre paysage de l'accueil les rognerait aux trois quarts : on
+   leur donne ici un cadre vertical, qui laisse la photographie respirer. */
+.presentation-portrait img { aspect-ratio: 4 / 5; }
+@media (max-width: 900px) { .presentation-portrait img { aspect-ratio: 3 / 2; } }
+
+/* ==========================================================================
+   Le calendrier de la barre de recherche.
+
+   Il remplace deux champs `type="date"`, qui affichaient le format du
+   navigateur - « mm/dd/yyyy » sur un site français - et ne montraient pas que
+   les deux dates forment une période. Ici, la période se voit : la traînée
+   entre l'arrivée et le départ est colorée, y compris pendant qu'on survole.
+   ========================================================================== */
+.rech-seg-dates { padding: 0; }
+.cal { position: relative; height: 100%; }
+.cal-champ {
+  width: 100%; height: 100%; text-align: left; cursor: pointer;
+  background: transparent; border: 0; padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cal-etiquettes, .cal-valeurs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: baseline; }
+.cal-etiquettes {
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--sourd-clair);
+}
+.cal-etiquettes span:last-child { text-align: right; }
+.cal-valeurs { font-size: 15px; color: var(--encre); }
+.cal-valeurs span:last-child { text-align: right; }
+.cal-vide { color: var(--sourd-clair); }
+.cal-fleche { color: var(--sourd-clair); font-size: 12px; }
+
+.cal-panneau {
+  position: absolute; z-index: 60; top: calc(100% + 10px); left: 0;
+  background: var(--panneau); border: 1px solid var(--filet); border-radius: var(--r-lg);
+  box-shadow: var(--ombre); padding: 20px 22px 16px; min-width: 560px;
+}
+.cal-tete { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-nav {
+  background: transparent; border: 1px solid var(--filet); border-radius: var(--r-pill);
+  width: 30px; height: 30px; cursor: pointer; color: var(--encre); font-size: 17px; line-height: 1;
+}
+.cal-nav:hover { border-color: var(--accent); }
+.cal-compte { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--sourd); }
+.cal-mois { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.cal-titre {
+  font-family: var(--titre); font-size: 17px; text-align: center; margin-bottom: 10px;
+  text-transform: capitalize;
+}
+.cal-jours, .cal-grille { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cal-jours span {
+  text-align: center; font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--sourd-clair); padding-bottom: 6px;
+}
+.cal-jour {
+  aspect-ratio: 1; border: 0; background: transparent; cursor: pointer;
+  font: inherit; font-size: 13.5px; color: var(--encre); border-radius: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.cal-jour:hover:not(:disabled) { background: var(--papier-creux); }
+.cal-jour:disabled { color: var(--filet); cursor: default; }
+/* La période choisie : les deux bornes pleines, la traînée en papier creux.
+   Deux niveaux suffisent, un dégradé de trois nuances se lit mal en petit. */
+.cal-jour.cal-entre { background: var(--papier-creux); border-radius: 0; }
+.cal-jour.cal-debut, .cal-jour.cal-fin { background: var(--accent); color: var(--papier); }
+.cal-jour.cal-debut { border-radius: 2px 0 0 2px; }
+.cal-jour.cal-fin { border-radius: 0 2px 2px 0; }
+.cal-pied { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--filet); text-align: right; }
+.cal-effacer {
+  background: transparent; border: 0; cursor: pointer; font: inherit; font-size: 12px;
+  color: var(--sourd); text-decoration: underline; text-underline-offset: 3px;
+}
+.cal-effacer:hover { color: var(--encre); }
+
+/* Sur un téléphone, un seul mois tient : le second passerait hors écran, et un
+   panneau plus large que la fenêtre déclencherait un défilement horizontal. */
+@media (max-width: 720px) {
+  .cal-panneau { min-width: 0; width: min(92vw, 340px); left: 50%; transform: translateX(-50%); }
+  .cal-mois { grid-template-columns: 1fr; }
+  .cal-second { display: none; }
+}
+
+/* La galerie d'une fiche s'ajuste au nombre de photographies : deux cadres
+   vides à côté d'une seule image ressemblent à une panne de chargement. */
+.galerie-vide, .galerie-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.galerie-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+.galerie-2 .galerie-grande { grid-row: auto; }
+
+/* ---------- le titre d'une fiche ----------
+   Il était au corps des titres de section, calibré pour trois mots, et un nom
+   comme « Number One Racine - 2BR - Terrace + parking » débordait sur deux
+   lignes en occupant un demi-écran.
+
+   Le corps se calcule donc à partir du nombre de caractères, passé par la page
+   dans --n : pour tenir N caractères dans la largeur utile, il faut environ
+   deux fois cette largeur divisée par N. Le facteur 1.7 tient compte de la
+   chasse moyenne de Newsreader, et le plafond de 40 points empêche un nom
+   court de devenir une enseigne. */
+.fiche-nom {
+  font-size: min(40px, calc((min(100vw, var(--maxw)) - 80px) / var(--n, 20) * 1.7));
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Sous 720 points, un nom long deviendrait illisible à force de rétrécir : on
+   le laisse alors revenir à la ligne, ce qui vaut mieux qu'un corps de dix
+   points. */
+@media (max-width: 720px) {
+  .fiche-nom { font-size: clamp(22px, 6vw, 30px); white-space: normal; overflow: visible; }
+}
+
+/* Le séjour minimum, dans le bloc de réservation. En alerte quand la durée
+   demandée est trop courte : c'est la seule chose qui empêche de réserver, et
+   la taire renverrait le voyageur vers un moteur muet. */
+.reserver-minimum { margin: 0 0 16px; line-height: 1.5; }
+.reserver-alerte { color: var(--erreur); }
+
+/* ---------- la foire aux questions ----------
+   Des questions repliées : la page se lit d'un coup d'oeil, et chacun n'ouvre
+   que ce qui le concerne. Le marqueur natif du navigateur est remplacé par un
+   signe qui bascule - un triangle gris n'appartient à aucune charte. */
+.faq { border-top: 1px solid var(--filet); }
+.faq details { border-bottom: 1px solid var(--filet); }
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 20px 0;
+  font-family: var(--titre);
+  font-size: 19px;
+  line-height: 1.35;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: '+';
+  margin-left: auto;
+  font-family: var(--texte);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--sourd);
+  transition: transform 0.18s ease;
+}
+.faq details[open] summary::after { content: '–'; }
+.faq summary:hover { color: var(--accent); }
+.faq details p {
+  margin: 0 0 22px;
+  max-width: 62ch;
+  color: var(--sourd);
+  line-height: 1.65;
+}
+@media (max-width: 720px) {
+  .faq summary { font-size: 17px; padding: 16px 0; }
+}
+
+/* ---------- la mosaïque de tête ----------
+   Une grande à gauche sur deux rangs, quatre à droite. La proportion 2:1 laisse
+   à la première la place de porter la promesse, sans écraser les autres au
+   point qu'on ne les regarde plus. */
+.mosaique {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  height: 480px;
+  position: relative;
+}
+.mosaique button {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--filet);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--panneau);
+  cursor: zoom-in;
+  display: block;
+}
+.mosaique img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.mosaique button:hover img { transform: scale(1.03); }
+.mosaique-grande { grid-row: 1 / 3; }
+
+/* Moins de cinq photographies : plutôt que de laisser des cadres vides, la
+   grille se referme sur ce qui existe. Un rectangle gris ressemble à une
+   panne, jamais à un choix. */
+.mosaique-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.mosaique-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+.mosaique-2 .mosaique-grande { grid-row: auto; }
+.mosaique-3 { grid-template-columns: 2fr 1fr; }
+.mosaique-4 { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.mosaique-4 button:nth-child(4) { grid-column: 2 / 4; }
+
+.mosaique-toutes {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  background: var(--papier);
+  color: var(--encre);
+  border: 1px solid var(--encre) !important;
+  border-radius: 2px;
+  font: inherit;
+  font-size: 13px;
+  padding: 9px 16px;
+  cursor: pointer;
+  height: auto;
+}
+.mosaique-toutes:hover { background: var(--encre); color: var(--papier); }
+
+/* ---------- la visionneuse ---------- */
+.visionneuse {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: rgba(21, 18, 14, 0.94);
+  padding: 56px 72px;
+}
+.visionneuse > img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+}
+.vis-fond { position: absolute; inset: 0; border: 0; background: none; cursor: zoom-out; z-index: 1; }
+.visionneuse button:not(.vis-fond) {
+  position: absolute;
+  z-index: 3;
+  background: none;
+  border: 0;
+  color: var(--papier);
+  cursor: pointer;
+  font-family: var(--texte);
+}
+.vis-fermer { top: 18px; right: 22px; font-size: 22px; line-height: 1; padding: 10px; }
+.vis-compte {
+  position: absolute;
+  top: 24px;
+  left: 26px;
+  z-index: 3;
+  color: var(--papier);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+.vis-nav { top: 50%; transform: translateY(-50%); font-size: 42px; line-height: 1; padding: 12px 18px; opacity: 0.7; }
+.vis-nav:hover { opacity: 1; }
+.vis-avant { left: 8px; }
+.vis-apres { right: 8px; }
+
+/* ---------- le défilement dans une vignette ----------
+   Une bande qui glisse, avec accrochage par image : le doigt fonctionne sans
+   une ligne de code, et le lien qui entoure la carte reste cliquable puisqu'un
+   glissement n'est pas un clic. */
+.bien-bande {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.bien-bande::-webkit-scrollbar { display: none; }
+.bien-bande img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: center;
+}
+/* L'agrandissement au survol vaut pour une image fixe, pas pour une bande qui
+   défile : il décalerait l'accrochage. */
+.bien-carte:hover .bien-bande img { transform: none; }
+
+.bien-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--encre);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.bien-carte:hover .bien-nav { opacity: 1; }
+.bien-nav:hover { background: #fff; }
+.bien-avant { left: 8px; }
+.bien-apres { right: 8px; }
+/* Sur un écran tactile il n'y a pas de survol : les flèches ne servent à rien
+   et le doigt fait mieux qu'elles. */
+@media (hover: none) {
+  .bien-nav { display: none; }
+}
+
+.bien-points {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.bien-points i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 2px rgba(21, 18, 14, 0.4);
+}
+.bien-points i.on { background: #fff; }
+
+@media (max-width: 900px) {
+  .mosaique { height: 380px; }
+}
+@media (max-width: 640px) {
+  /* Cinq images sur 390 points ne se regardent pas : la mosaïque laisse la
+     place à la seule qui compte, et la visionneuse prend le relais. */
+  .mosaique { grid-template-columns: 1fr; grid-template-rows: 1fr; height: 280px; }
+  .mosaique button:nth-child(n + 2) { display: none; }
+  .mosaique-toutes { display: block !important; right: 12px; bottom: 12px; }
+}
+
+/* ---------- le défilement des avis ----------
+   Une bande qui glisse plutôt qu'une grille : trois cartes alignées montraient
+   trois avis et cachaient les autres. Trois de front sur un grand écran, deux
+   sur une tablette, un sur un téléphone - la largeur des cases suffit à le
+   dire, et le composant la mesure au lieu de la supposer. */
+.avis-defilant { margin-top: 6px; }
+.avis-bande {
+  display: flex;
+  gap: 34px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* De quoi laisser respirer l'ombre portée et le filet du bas. */
+  padding-bottom: 4px;
+}
+.avis-bande::-webkit-scrollbar { display: none; }
+/* Deux de front, pas trois. Une carte plus large laisse au commentaire une
+   ligne qui se lit sans sauter, et à la photographie du logement une taille où
+   l'on reconnaît une pièce. */
+.avis-case {
+  flex: 0 0 calc((100% - 34px) / 2);
+  scroll-snap-align: start;
+  display: flex;
+}
+.avis-case > figure { flex: 1; }
+
+.avis-commandes {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 26px;
+}
+.avis-commandes button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--filet);
+  border-radius: 50%;
+  background: none;
+  color: var(--encre);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.avis-commandes button:hover { border-color: var(--accent); background: var(--panneau); }
+.avis-points { display: flex; gap: 6px; }
+.avis-points i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--filet);
+  transition: background .2s ease;
+}
+.avis-points i.on { background: var(--accent); }
+
+@media (max-width: 820px) {
+  .avis-bande { gap: 24px; }
+  .avis-case { flex-basis: 100%; }
+}
+
+/* ---------- un avis replié ----------
+   Quatre lignes, puis un bouton - et seulement si le texte est réellement
+   coupé. Les commentaires vont de trois mots à quinze lignes : alignées, les
+   cartes prenaient la hauteur du plus bavard et l'oeil ne voyait plus qu'un mur
+   de texte. */
+.avis-carte .avis-texte {
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  font-family: var(--titre);
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--encre);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+.avis-carte .avis-texte.ouvert {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+}
+.avis-plus {
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: 0 0 18px;
+  margin: 0;
+  font: inherit;
+  font-size: 13px;
+  color: var(--sourd);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+}
+.avis-plus:hover { color: var(--accent); }
+
+/* ---------- la carte d'un logement ----------
+   Un cercle, jamais une épingle : le voyageur a besoin du quartier, pas de la
+   porte, et un logement dont l'adresse exacte circule est un logement qu'on
+   repère quand il est vide. */
+.carte-bloc { margin-top: 20px; }
+.carte {
+  position: relative;
+  height: 380px;
+  border: 1px solid var(--filet);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--papier-creux);
+}
+.carte-toile { position: absolute; inset: 0; }
+.carte-repli {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--sourd);
+  font-size: 14px;
+  background: var(--papier-creux);
+}
+.carte-etiquette {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 500;
+  background: var(--papier);
+  border: 1px solid var(--filet);
+  border-radius: 2px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--sourd);
+}
+/* L'aide ne s'affiche qu'au survol : elle répond à une question que l'on ne se
+   pose qu'une fois la souris sur la carte. */
+.carte-aide {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 500;
+  background: rgba(21, 18, 14, 0.82);
+  color: var(--papier);
+  border-radius: 2px;
+  padding: 6px 12px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.carte:hover .carte-aide { opacity: 1; }
+
+.carte-pied {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.carte-pied a { color: var(--sourd); border-bottom: 1px solid var(--filet); }
+.carte-pied a:hover { color: var(--encre); border-color: var(--accent); }
+
+/* Leaflet pose sa propre typographie et ses propres teintes : on les ramène
+   dans la charte plutôt que de laisser deux styles cohabiter. */
+.leaflet-container { font: inherit; background: var(--papier-creux); }
+.leaflet-control-attribution { font-size: 10px; background: rgba(247, 245, 240, 0.85) !important; }
+.leaflet-bar a {
+  color: var(--encre) !important;
+  border-bottom-color: var(--filet) !important;
+}
+
+@media (max-width: 640px) {
+  .carte { height: 280px; }
+}
+
+/* ---------- l'encadré des caractéristiques ----------
+   Deux registres : ce qui situe, posé sur le fond de la page ; ce qui se
+   compte, dans un panneau bordé. Un voyageur lit la première ligne pour savoir
+   si le logement le concerne, et le panneau pour vérifier qu'il lui convient. */
+.faits-tete {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-bottom: 16px;
+}
+.faits-panneau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 34px;
+}
+.fait {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  color: var(--encre);
+  white-space: nowrap;
+}
+.faits-tete .fait { color: var(--sourd); }
+.fait-ic {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.faits-tete .fait-ic { stroke: var(--sourd); }
+
+@media (max-width: 640px) {
+  .faits-panneau { gap: 12px 20px; padding: 16px 18px; }
+  .fait { font-size: 14px; }
+}
+
+/* ---------- les équipements ----------
+   Une grille plutôt qu'une liste à puces : on ne lit pas des équipements, on
+   les balaie du regard pour vérifier que celui qu'on cherche y est. */
+.equipements {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px 28px;
+}
+.equipements li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 15px;
+  color: var(--encre);
+}
+@media (max-width: 640px) {
+  .equipements { grid-template-columns: 1fr 1fr; gap: 12px 18px; }
+  .equipements li { font-size: 14px; gap: 9px; }
+}
+
+/* ---------- l'étape de paiement ----------
+   Deux panneaux côte à côte, et un seul écart de traitement entre eux : le
+   virement porte un ruban et un liseré, la carte non. C'est assez pour dire
+   lequel vous préférez, et pas assez pour donner l'impression que l'autre est
+   déconseillé - il reste le seul possible à moins de cinq jours de l'arrivée,
+   et le dénigrer aujourd'hui rendrait la page malhonnête demain. */
+
+.etape-paiement { max-width: 1080px; }
+
+/* ---------- la saisie et le récapitulatif, côte à côte ----------
+
+   À gauche ce que le voyageur donne, à droite ce qu'il achète. Le
+   récapitulatif reste visible pendant toute la saisie, et c'est le point de
+   cette disposition : remplir six champs sans plus voir ni le logement ni le
+   prix est une bonne façon de se demander ce qu'on est en train de faire, et
+   de fermer l'onglet. Il colle donc au défilement sur grand écran.
+
+   Sous 900 px il repasse au-dessus du formulaire, et non en dessous : sur un
+   téléphone, on veut voir ce qu'on achète avant de sortir son clavier. */
+.reserver-grille {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+  gap: 24px;
+  margin-top: 34px;
+  align-items: start;
+}
+.reserver-colonne {
+  display: grid;
+  gap: 18px;
+  position: sticky;
+  top: 96px;
+}
+.reserver-resume-nom { font-size: 22px; margin: 10px 0 2px; }
+
+.reserver-lignes { margin: 22px 0 0; display: grid; gap: 12px; }
+.reserver-lignes > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.reserver-lignes dt { color: var(--sourd); font-size: 14px; }
+.reserver-lignes dd { margin: 0; font-size: 14px; text-align: right; }
+
+.reserver-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--filet);
+}
+.reserver-total span { color: var(--sourd); font-size: 14px; }
+.reserver-total b {
+  font-family: var(--titre);
+  font-size: 30px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Deux champs par ligne quand ils vont par paires - prénom et nom, courriel et
+   téléphone. Une colonne de huit champs pleine largeur donne l'impression d'un
+   questionnaire administratif. */
+.champs-paire {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 18px;
+}
+
+.cgv {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 20px 0 4px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sourd);
+  cursor: pointer;
+}
+.cgv input { margin-top: 3px; flex: none; }
+
+.paiement-boutons { display: grid; gap: 10px; margin-top: 18px; }
+.paiement-boutons .btn { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; }
+.paiement-bouton-prix { font-variant-numeric: tabular-nums; opacity: 0.85; }
+.paiement-eco { margin: -2px 0 4px; text-align: center; color: var(--accent); }
+.paiement-mad { margin: -4px 0 0; text-align: center; font-variant-numeric: tabular-nums; }
+.paiement-tenue { margin: 0 0 6px; }
+
+@media (max-width: 900px) {
+  .reserver-grille { grid-template-columns: 1fr; }
+  .reserver-colonne { position: static; order: -1; }
+  .champs-paire { grid-template-columns: 1fr; }
+}
+
+.paiement-choix {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 38px;
+  align-items: start;
+}
+.paiement-choix.paiement-seul { grid-template-columns: minmax(0, 460px); }
+.paiement-note { grid-column: 1 / -1; }
+
+.moyen { position: relative; display: flex; flex-direction: column; }
+.moyen .corps { flex: 1; margin: 14px 0 22px; }
+
+.moyen-recommande { border-color: var(--accent); }
+
+.moyen-ruban {
+  position: absolute;
+  top: -11px;
+  left: 26px;
+  padding: 4px 12px;
+  background: var(--accent);
+  color: var(--papier);
+  border-radius: var(--r-pill);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.moyen-prix {
+  font-family: var(--titre);
+  font-size: 34px;
+  line-height: 1.1;
+  margin-top: 10px;
+  /* Les prix se comparent d'un panneau à l'autre : des chiffres de largeur
+     égale les alignent au lieu de les faire danser. */
+  font-variant-numeric: tabular-nums;
+}
+.moyen-prix-absent { color: var(--sourd-clair); }
+.moyen-mad { color: var(--sourd); font-size: 14px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+.moyen-eco {
+  margin-top: 12px;
+  align-self: flex-start;
+  padding: 5px 12px;
+  border: 1px solid var(--filet);
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.etape-formulaire {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 38px;
+  align-items: start;
+}
+.moyen-choisi { border-color: var(--accent); }
+
+.virement-ref {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+}
+.virement-ref b { font-family: var(--titre); font-size: 26px; letter-spacing: 0.06em; }
+
+/* Un RIB se recopie chiffre par chiffre : chasse fixe, et les retours à la
+   ligne tels qu'ils ont été saisis. */
+.virement-rib {
+  margin: 0;
+  padding: 16px 18px;
+  background: var(--panneau-alt);
+  border: 1px solid var(--filet);
+  border-radius: var(--r-md);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+@media (max-width: 820px) {
+  .paiement-choix,
+  .etape-formulaire { grid-template-columns: 1fr; }
+  .paiement-choix.paiement-seul { grid-template-columns: 1fr; }
+  .moyen-prix { font-size: 30px; }
+}
+
+/* ---------- le choix des dates sur la fiche ----------
+   Il manquait, et l'absence ne se voyait pas tant qu'on arrivait toujours par
+   la recherche. Un voyageur venu d'un lien ou d'un moteur se trouvait devant
+   un appartement, un prix « à partir de », et aucun moyen de demander SES
+   dates - il devait remonter à la liste pour redescendre. Beaucoup ne
+   remontent pas. */
+.reserver-dates-choix {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--filet);
+}
+.reserver-dates-choix .field { margin: 0; }
+.reserver-dates-choix select {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--encre);
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+  border-radius: var(--r-md);
+}
+/* Le calendrier est dessiné pour la barre de recherche, où il occupe toute la
+   hauteur d'un segment. Dans une colonne, cette hauteur imposée le ferait
+   flotter au milieu du vide : on la lui rend ici, et son champ retrouve la
+   bordure que la barre lui prenait. */
+.reserver-dates-choix .cal { height: auto; }
+.reserver-dates-choix .cal-champ {
+  height: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--filet);
+  border-radius: var(--r-md);
+}
+
+.reserver-pris { margin-bottom: 16px; }
+
+/* Le titre de l'étape de paiement.
+
+   Il vit dans le formulaire et non dans la page, parce qu'il change d'état :
+   « Comment souhaitez-vous régler ? » n'a plus de sens au-dessus d'une demande
+   déjà enregistrée. Le style est ici pour que les trois états - la question, la
+   confirmation, le départ vers Lodgify - occupent exactement la même place. */
+.etape-titre {
+  margin-top: 12px;
+  margin-bottom: 34px;
+}
+
+/* ---------- les conditions générales ----------
+
+   Les conditions d'annulation d'abord, dans un encadré qui se distingue du
+   corps du texte. L'ordre habituel des CGV commence par l'identité du vendeur ;
+   il est fait pour le juriste qui les rédige, pas pour le voyageur qui les
+   ouvre. Celui-ci vient chercher une seule chose. */
+.cgv-annulation {
+  margin: 34px 0 48px;
+  border: 1px solid var(--accent);
+}
+.cgv-liste {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cgv-liste li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.cgv-liste li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 1px;
+  background: var(--accent);
+}
+.cgv-liste li:last-child { margin-bottom: 0; }
+
+.cgv-section { margin-bottom: 38px; }
+.cgv-section h2 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+}
+.cgv-section p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  max-width: 68ch;
+}
+.cgv-numero {
+  display: inline-block;
+  min-width: 1.6em;
+  color: var(--sourd);
+  font-variant-numeric: tabular-nums;
+}
+
+/* La ligne d'annulation sous la case à cocher : le point qui décide, en clair,
+   sans obliger à ouvrir un onglet. */
+.cgv-resume { margin-top: 10px; }
+
+/* Les horaires en tête de « compris dans chaque séjour ».
+
+   C'est la seule ligne de cette liste dont dépend l'organisation d'un voyage :
+   un vol qui atterrit à sept heures du matin ne se planifie pas de la même
+   façon selon qu'on entre à midi ou à quinze heures. */
+.compris-horaires {
+  margin: 0 0 20px;
+  color: var(--sourd);
+  font-size: 0.94rem;
+  letter-spacing: 0.01em;
+}

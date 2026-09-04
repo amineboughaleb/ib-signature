@@ -1,0 +1,651 @@
+/**
+ * L'administration : la charte du site, resserrée.
+ *
+ * Rien de nouveau côté couleurs ni typographie - c'est le même papier, la même
+ * encre, les mêmes filets. Ce qui change est la densité : ici on lit des
+ * tableaux, pas des paragraphes, et l'air qui sert une page de vente encombre
+ * une page de travail.
+ */
+
+.admin { background: var(--papier); }
+
+.admin-tete {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(247, 245, 240, 0.94);
+  backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--filet);
+}
+.admin-tete .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 24px; }
+.admin-tete .nav { gap: 24px; flex-wrap: wrap; }
+.admin-corps { padding: 48px 0 120px; }
+.admin-corps h1 { font-size: 34px; margin: 0 0 8px; }
+.admin-corps h2 { font-size: 22px; margin: 0 0 6px; }
+
+.lien-bouton {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--sourd); font: inherit; font-size: 14px;
+}
+.lien-bouton:hover { color: var(--encre); }
+
+/* La fiche d'édition : un filet, un titre, des champs. Pas de carte encadrée
+   par ligne - vingt cadres empilés fabriquent une grille illisible. */
+.fiche {
+  border-top: 1px solid var(--filet);
+  padding: 26px 0;
+  display: grid; grid-template-columns: 1fr; gap: 18px;
+}
+.fiche-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.fiche-titre { font-size: 17px; color: var(--encre); }
+.fiche-meta { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--sourd-clair); }
+
+.grille-champs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grille-champs .large { grid-column: span 2; }
+.grille-champs .pleine { grid-column: 1 / -1; }
+@media (max-width: 900px) {
+  .grille-champs { grid-template-columns: repeat(2, 1fr); }
+  .grille-champs .large { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .grille-champs { grid-template-columns: 1fr; }
+  .grille-champs .large, .grille-champs .pleine { grid-column: 1; }
+}
+
+.admin .field label { font-size: 10px; letter-spacing: .2em; }
+.admin input[type='text'], .admin input[type='number'], .admin input[type='password'], .admin textarea, .admin select {
+  width: 100%; background: var(--panneau); color: var(--encre);
+  border: 1px solid var(--filet); border-radius: var(--r-md); padding: 10px 12px; font: inherit; font-size: 15px;
+}
+.admin textarea { resize: vertical; }
+.admin input:focus, .admin textarea:focus, .admin select:focus { outline: 0; border-color: var(--accent); }
+
+.bascule { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--sourd); }
+.bascule input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+.actions-ligne { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.btn-mini {
+  background: transparent; border: 1px solid var(--filet); color: var(--sourd);
+  border-radius: var(--r-pill); padding: 8px 18px; cursor: pointer;
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+}
+.btn-mini:hover { border-color: var(--accent); color: var(--encre); }
+/* La suppression est irréversible : elle porte donc la seule couleur d'alerte
+   de la charte, et rien d'autre sur la page ne l'emprunte. */
+.btn-mini.danger:hover { border-color: #8c3a2c; color: #8c3a2c; }
+
+.vignette {
+  width: 108px; height: 76px; object-fit: cover;
+  border-radius: var(--r-md); border: 1px solid var(--filet);
+  background: linear-gradient(160deg, var(--papier-creux), var(--panneau));
+}
+.ligne-image { display: grid; grid-template-columns: 108px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 560px) { .ligne-image { grid-template-columns: 1fr; } }
+
+.avert {
+  border: 1px solid var(--filet); border-left: 2px solid var(--accent);
+  border-radius: var(--r-md); padding: 18px 22px; margin: 0 0 34px;
+  color: var(--sourd); font-size: 15px; line-height: 1.6;
+}
+
+.boite { border-top: 1px solid var(--filet); padding: 22px 0; }
+.boite-tete { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; align-items: baseline; }
+.boite dl { display: flex; flex-wrap: wrap; gap: 6px 26px; margin: 10px 0 0; }
+.boite dl div { display: flex; gap: 8px; align-items: baseline; }
+.boite dt { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--sourd-clair); }
+.boite dd { margin: 0; font-size: 14px; color: var(--encre); }
+.boite .corps { margin: 14px 0 0; white-space: pre-wrap; color: var(--sourd); font-size: 15px; }
+
+.connexion { max-width: 420px; margin: 60px auto; }
+
+/* Un tableau de diagnostic : des lignes, pas une grille. Les filets verticaux
+   ajouteraient du bruit là où l'oeil ne cherche qu'à comparer des statuts. */
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 14px;
+  font-size: 13px;
+}
+.tableau td {
+  padding: 9px 12px 9px 0;
+  border-top: 1px solid var(--filet);
+  vertical-align: top;
+}
+.tableau tr:first-child td {
+  border-top: none;
+}
+.tableau td:nth-child(2) {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--sourd);
+}
+.tableau td:nth-child(3) {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ---------- les galeries ---------- */
+
+.fil { font-size: 13px; color: var(--sourd); margin: 0; }
+.fil a { color: var(--sourd); }
+
+.sous-titre {
+  font-family: var(--titre);
+  font-size: 21px;
+  font-weight: 400;
+  margin: 40px 0 4px;
+  padding-top: 26px;
+  border-top: 1px solid var(--filet);
+}
+
+/* Une grille qui se remplit d'elle-même : les vignettes gardent la même taille
+   quel que soit le nombre de photographies, et le nombre de colonnes suit la
+   largeur de la fenêtre sans point de rupture à écrire. */
+.grille-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+  gap: 14px;
+  margin: 18px 0 0;
+}
+
+.vignette-carte {
+  margin: 0;
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+}
+.vignette-carte img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--papier-creux);
+}
+/* Ce qu'on déplace s'efface, ce qu'on survole s'annonce : sans ces deux
+   signaux, un glisser-déposer se fait à l'aveugle. */
+.vignette-carte.prise { opacity: 0.35; }
+.vignette-carte.cible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.vignette-carte .etiquette {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--accent);
+  color: var(--papier);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+.vignette-carte figcaption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border-top: 1px solid var(--filet);
+}
+.vignette-carte figcaption button {
+  background: none;
+  border: 1px solid var(--filet);
+  border-radius: 2px;
+  color: var(--encre);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.vignette-carte figcaption button:hover:not(:disabled) { background: var(--papier-creux); }
+.vignette-carte figcaption button:disabled { opacity: 0.3; cursor: default; }
+.vignette-carte figcaption .rang {
+  font-size: 12px;
+  color: var(--sourd);
+  font-variant-numeric: tabular-nums;
+  min-width: 18px;
+  text-align: center;
+}
+.vignette-carte figcaption .ecarter { margin-left: auto; }
+
+.reserve .vignette-carte { cursor: default; }
+.reserve .vignette-carte img { filter: grayscale(1); opacity: 0.6; }
+
+/* ---------- la liste des logements ---------- */
+
+.grille-logements {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.carte-logement {
+  display: flex;
+  flex-direction: column;
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+  border-radius: 3px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+.carte-logement:hover { border-color: var(--accent); }
+.carte-logement img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--papier-creux);
+}
+.carte-logement .sans-image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: var(--papier-creux);
+  color: var(--sourd);
+  font-size: 13px;
+}
+.carte-logement .carte-nom {
+  font-family: var(--titre);
+  font-size: 15px;
+  padding: 10px 12px 2px;
+}
+.carte-logement .carte-meta {
+  font-size: 12px;
+  color: var(--sourd);
+  padding: 0 12px 11px;
+}
+
+/* Un texte de référence qu'on consulte sans le vouloir sous les yeux en
+   permanence : replié par défaut, dépliable d'un clic. */
+.repli {
+  border: 1px solid var(--filet);
+  border-radius: 3px;
+  padding: 10px 12px;
+  margin: 14px 0;
+  background: var(--papier-creux);
+}
+.repli summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--sourd);
+}
+.repli p { margin: 12px 0 2px; }
+
+/* ---------- l'ajout de photographies ---------- */
+
+.ajout {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 16px 0 4px;
+}
+.btn-ajout {
+  background: var(--accent);
+  color: var(--papier);
+  border: 0;
+  border-radius: 2px;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.btn-ajout:hover:not(:disabled) { opacity: 0.88; }
+.btn-ajout:disabled { opacity: 0.5; cursor: progress; }
+.ajout .small { flex: 1 1 260px; }
+
+/* ---------- la saisie en tableau ----------
+   Vingt-quatre logements et neuf colonnes : un formulaire vertical ferait
+   défiler sans fin, alors qu'un tableau se lit d'un regard et se remplit à la
+   tabulation.
+
+   Mais un tableau de cette taille perd ses repères dès qu'on le parcourt : au
+   dixième logement on ne sait plus quelle colonne on remplit, et à la
+   quatrième colonne on ne sait plus quel logement. Une case juste au mauvais
+   endroit, et c'est la surface d'un appartement qui devient son nombre de
+   lits.
+
+   D'où un cadre qui défile pour lui-même, dans les deux sens, avec deux
+   ancrages : la ligne des titres reste en haut, la colonne des noms reste à
+   gauche. Le nom et le libellé sont donc toujours sous les yeux, où que l'on
+   soit dans la grille.
+
+   Une note technique, parce qu'elle explique une bizarrerie : avec
+   `border-collapse: collapse`, les bordures n'appartiennent plus aux cellules
+   et disparaissent sous un élément collant. Les filets des cellules ancrées
+   sont donc tracés à l'ombre portée intérieure, qui, elle, suit la cellule. */
+.tableau-large {
+  overflow: auto;
+  max-height: 72vh;
+  /* Un fond opaque : les cellules ancrées glissent par-dessus les autres, et
+     doivent les masquer complètement. */
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+}
+
+.tableau-large thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--panneau);
+  box-shadow: inset 0 -1px 0 var(--filet);
+}
+.tableau-large tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--panneau);
+  box-shadow: inset -1px 0 0 var(--filet);
+}
+/* Le coin haut-gauche appartient aux deux ancrages : il doit passer devant. */
+.tableau-large thead th:first-child {
+  left: 0;
+  z-index: 3;
+  box-shadow: inset -1px 0 0 var(--filet), inset 0 -1px 0 var(--filet);
+}
+/* Le tableau respire à l'intérieur de son cadre plutôt que contre ses bords.
+   La marge se met sur les cellules et non sur le cadre : un rembourrage sur un
+   cadre qui défile laisserait passer le contenu au-dessus de la ligne des
+   titres, dans la bande ainsi créée. */
+.tableau-large th:first-child,
+.tableau-large td:first-child { padding-left: 14px; }
+.tableau-large th:last-child,
+.tableau-large td:last-child { padding-right: 14px; }
+.tableau-large tbody tr:last-child th,
+.tableau-large tbody tr:last-child td { padding-bottom: 14px; }
+.grille-saisie {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.grille-saisie th,
+.grille-saisie td {
+  padding: 8px 10px 8px 0;
+  border-top: 1px solid var(--filet);
+  text-align: left;
+  vertical-align: middle;
+}
+.grille-saisie thead th {
+  border-top: 0;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sourd);
+  white-space: nowrap;
+}
+.grille-saisie tbody th {
+  font-weight: 400;
+  min-width: 190px;
+  display: table-cell;
+}
+.grille-saisie tbody th a { display: block; }
+.grille-saisie tbody th .small { display: block; }
+.grille-saisie input {
+  width: 78px;
+  padding: 7px 9px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--encre);
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+  border-radius: 2px;
+}
+.grille-saisie td.large input { width: 170px; }
+.grille-saisie input:focus { outline: none; border-color: var(--accent); }
+.grille-saisie input::placeholder { color: var(--sourd); opacity: 0.55; }
+
+/* ---------- les cases d'équipements ---------- */
+.cases-equipements {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px 22px;
+  margin: 16px 0 22px;
+}
+.case-eq {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.case-eq svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  fill: none;
+  stroke: var(--sourd);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.case-eq input:checked ~ svg { stroke: var(--accent); }
+
+/* ---------- la grille de cases, tous logements ----------
+   Vingt colonnes : les libellés sont pivotés, faute de quoi la page ferait
+   trois fois la largeur de l'écran. */
+.grille-cases { border-collapse: collapse; font-size: 13px; }
+.grille-cases th,
+.grille-cases td { border-top: 1px solid var(--filet); padding: 6px 4px; text-align: center; }
+.grille-cases thead th { border-top: 0; vertical-align: bottom; }
+.grille-cases thead th:first-child { text-align: left; font-weight: 400; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--sourd); }
+.grille-cases tbody th { text-align: left; font-weight: 400; min-width: 200px; white-space: nowrap; }
+.colonne-bascule {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 4px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--sourd);
+  font: inherit;
+  font-size: 11px;
+}
+.colonne-bascule svg {
+  width: 17px; height: 17px;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.colonne-bascule span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  max-height: 120px;
+  overflow: hidden;
+}
+.colonne-bascule:hover { color: var(--accent); }
+.grille-cases td input { width: 15px; height: 15px; cursor: pointer; accent-color: var(--accent); }
+
+/* ---------- l'état des calendriers ----------
+   Les pastilles disent l'anomalie par le mot, pas par la couleur seule : un
+   tableau qui ne se lit qu'en couleur ne se lit pas du tout pour une partie
+   des gens, et pas davantage sur une impression. La teinte ne fait que
+   hiérarchiser ce que le mot dit déjà. */
+.pastille {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--r-pill, 999px);
+  border: 1px solid var(--filet);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--sourd);
+}
+.pastille-muet { border-color: var(--accent); color: var(--accent); font-weight: 500; }
+.pastille-vide { border-color: var(--accent); color: var(--accent); }
+.pastille-court { border-color: var(--sourd); color: var(--encre); }
+.pastille-plein { border-color: var(--filet); color: var(--sourd); }
+.pastille-ok { border-color: transparent; color: var(--sourd-clair); }
+
+.choix-mois {
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--encre);
+  background: var(--panneau);
+  border: 1px solid var(--filet);
+  border-radius: 2px;
+}
+
+.legende {
+  display: grid;
+  gap: 8px;
+  margin: 22px 0 0;
+  max-width: 72ch;
+}
+.legende > div { display: flex; gap: 14px; align-items: baseline; }
+.legende dt { flex: 0 0 130px; margin: 0; }
+.legende dd { margin: 0; font-size: 13px; color: var(--sourd); }
+
+@media (max-width: 600px) {
+  .legende > div { flex-direction: column; gap: 4px; }
+  .legende dt { flex: none; }
+}
+
+/* ---------- la saisie des flux iCal ----------
+   Une zone par logement plutôt qu'un champ par adresse : un logement en a une,
+   deux ou trois selon les canaux où il est publié, et prévoir trois champs
+   fixes obligerait à en laisser deux vides vingt fois sur vingt-quatre. */
+.flux-grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 16px;
+}
+.flux-grille textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* Un libellé que l'oeil n'a pas besoin de voir - le titre de l'encadré le dit
+   déjà - mais qu'un lecteur d'écran doit entendre. Le masquer avec
+   `display: none` le retirerait des deux. */
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Le mois retenu, dans le choix d'horizon : marqué par l'encre plutôt que par
+   une couleur, comme le reste de cette administration. */
+.btn-mini-actif { background: var(--accent); color: var(--papier); border-color: var(--accent); }
+
+/* Les états d'un calendrier iCal reprennent les pastilles déjà définies plus
+   haut ; seul « complet » leur manquait. */
+.pastille-complet { border-color: var(--filet); color: var(--sourd); }
+
+/* Le collage venu de Staytle : chasse fixe et pas de retour à la ligne
+   automatique. Un tableau collé garde ses colonnes, et l'on voit d'un coup
+   d'oeil si les lignes se correspondent - ce qu'un texte reformaté cacherait. */
+.zone-collage {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ---------- le menu sur deux rangs ----------
+
+   Huit boutons d'affilée ne se lisent pas : on les parcourt un par un, à
+   chaque fois, parce que rien ne dit lequel concerne ce qu'on est en train de
+   faire. Le premier rang porte les quatre familles, le second ce que contient
+   celle où l'on se trouve. Rien n'est caché derrière un survol : on sait
+   toujours où l'on est, et la page voisine est à un clic. */
+
+.admin-familles {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.admin-famille {
+  position: relative;
+  padding: 6px 0;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: var(--sourd);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.admin-famille:hover { color: var(--encre); }
+.admin-famille.est-active { color: var(--encre); font-weight: 500; }
+/* Le trait ne souligne que la famille ouverte : c'est le seul repère dont on
+   ait besoin, et il ne bouge pas d'une page à l'autre de la même famille. */
+.admin-famille.est-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--encre);
+}
+.admin-menu-fin {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+}
+.admin-menu-fin a { color: var(--sourd); text-decoration: none; }
+.admin-menu-fin a:hover { color: var(--encre); }
+
+.admin-sous-barre {
+  border-top: 1px solid var(--filet);
+  background: rgba(255, 255, 255, 0.55);
+}
+.admin-pages {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 11px 0;
+  font-size: 14px;
+}
+.admin-pages a {
+  color: var(--sourd);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.admin-pages a:hover { color: var(--encre); }
+.admin-pages a.est-active { color: var(--encre); font-weight: 500; }
+
+/* La hauteur fixe de l'en-tête valait pour un seul rang. */
+.admin-tete .wrap { height: auto; min-height: 76px; padding-top: 10px; padding-bottom: 10px; }
+.admin-sous-barre .wrap { height: auto; min-height: 0; padding-top: 0; padding-bottom: 0; }
+
+@media (max-width: 720px) {
+  .admin-familles { gap: 18px; font-size: 14px; }
+  .admin-menu-fin { margin-left: 0; width: 100%; }
+  .admin-pages { gap: 16px; font-size: 13px; }
+}
+
+/* L'état du courrier, en tête de chaque page. Il ne s'affiche que lorsqu'il y
+   a quelque chose à dire : un bandeau permanent cesse d'être lu au bout de
+   trois jours. */
+.courriels-etat { margin-bottom: 26px; }
+.courriels-etat .avert + .avert { margin-top: 12px; }
+
+/* L'en-tête colle en haut et fait maintenant deux rangs. Tout ce vers quoi
+   l'on défile - un ancrage, un champ atteint au clavier, un bouton qu'un
+   navigateur ramène dans la vue - se retrouverait donc caché dessous.
+
+   `scroll-padding-top` dit au navigateur de s'arrêter plus bas. C'est la
+   contrepartie exacte d'un en-tête collant, et on l'oublie presque toujours :
+   le défaut ne se voit qu'en tabulant jusqu'au bas d'un long tableau, ou en
+   suivant une ancre. */
+html { scroll-padding-top: 132px; }
+.admin-corps :is(input, select, textarea, button) { scroll-margin-top: 132px; }

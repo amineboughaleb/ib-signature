@@ -1,0 +1,29 @@
+node_modules
+.next
+out
+
+# Secrets : la clé Lodgify et celle d'envoi vivent chez l'hébergeur, jamais ici.
+.env
+.env.*
+!.env.example
+
+# Aucune base, nulle part.
+#
+# La règle visait `data/` seule, et c'était trop étroit : une sauvegarde
+# téléchargée depuis l'administration se range là où le navigateur la dépose,
+# souvent à la racine du projet - et partait donc sur GitHub avec les noms,
+# les téléphones et les courriels des voyageurs, plus les coordonnées
+# bancaires de la maison. Un dépôt privé n'y change rien : un secret publié
+# reste publié, et l'historique de git ne s'oublie pas.
+*.db
+*.db-shm
+*.db-wal
+
+# Les photographies déposées depuis l'administration : elles vivent sur le
+# volume de production, pas dans le dépôt. Celles de l'import, elles, sont
+# versionnées - elles font partie du site.
+data/media/
+
+tsconfig.tsbuildinfo
+*.log
+.DS_Store

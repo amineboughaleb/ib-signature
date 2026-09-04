@@ -1,0 +1,131 @@
+{
+  "_lisez_moi": "Les avis voyageurs. L'API Lodgify n'expose AUCUN point d'entrée « avis » : ils ne peuvent donc pas se récupérer automatiquement, et ils vivent ici. Ceux qui suivent sont recopiés tels quels depuis le diaporama d'avis publié sur ibsignature.lodgify.com. Aucun avis n'est inventé : n'ajoutez ici que des commentaires réellement reçus. « prenom » est facultatif - Lodgify ne publie que le pays ; quand vous connaissez le prénom, ajoutez-le et il s'affichera avant la provenance. « bien » est le slug de l'appartement : s'il correspond à un logement du catalogue, sa photo de couverture illustre l'avis et le nom devient un lien ; sinon seul le nom s'affiche.",
+  "avis": [
+    {
+      "id": "a1",
+      "prenom": "",
+      "pays": {
+        "fr": "États-Unis",
+        "en": "United States"
+      },
+      "bien": "number-nine-triangle-d-or",
+      "bien_nom": "Number Nine Triangle d'Or",
+      "texte": {
+        "fr": "This is a place to call home! This location is beautifully decorated and is clean and spacious.",
+        "en": "This is a place to call home! This location is beautifully decorated and is clean and spacious."
+      }
+    },
+    {
+      "id": "a2",
+      "prenom": "",
+      "pays": {
+        "fr": "France",
+        "en": "France"
+      },
+      "bien": "gardenia-cfc",
+      "bien_nom": "Gardenia CFC",
+      "texte": {
+        "fr": "Très bel appartement, propre, fonctionnel et très bien situé.",
+        "en": "Très bel appartement, propre, fonctionnel et très bien situé."
+      }
+    },
+    {
+      "id": "a3",
+      "prenom": "",
+      "pays": {
+        "fr": "France",
+        "en": "France"
+      },
+      "bien": "the-45-lyautey",
+      "bien_nom": "The 45 Lyautey",
+      "texte": {
+        "fr": "Appartement confortable et fonctionnel, espace bien aménagé et optimisé.",
+        "en": "Appartement confortable et fonctionnel, espace bien aménagé et optimisé."
+      }
+    },
+    {
+      "id": "a4",
+      "prenom": "",
+      "pays": {
+        "fr": "Belgique",
+        "en": "Belgium"
+      },
+      "bien": "number-nine-triangle-d-or",
+      "bien_nom": "Number Nine Triangle d'Or",
+      "texte": {
+        "fr": "Super appartement avec propriétaire très sympathique et proactif.",
+        "en": "Super appartement avec propriétaire très sympathique et proactif."
+      }
+    },
+    {
+      "id": "a5",
+      "prenom": "",
+      "pays": {
+        "fr": "France",
+        "en": "France"
+      },
+      "bien": "the-fifty-one-hermitage",
+      "bien_nom": "The Fifty-One Hermitage",
+      "texte": {
+        "fr": "J'ai passé un excellent séjour chez Amine, logement cosy, propre.",
+        "en": "J'ai passé un excellent séjour chez Amine, logement cosy, propre."
+      }
+    },
+    {
+      "id": "a6",
+      "prenom": "",
+      "pays": {
+        "fr": "Suède",
+        "en": "Sweden"
+      },
+      "bien": "number-nine-triangle-d-or",
+      "bien_nom": "Number Nine Triangle d'Or",
+      "texte": {
+        "fr": "Awesome apartment. Spacious and clean.",
+        "en": "Awesome apartment. Spacious and clean."
+      }
+    },
+    {
+      "id": "a7",
+      "prenom": "",
+      "pays": {
+        "fr": "Maroc",
+        "en": "Morocco"
+      },
+      "bien": "the-fifty-one-hermitage",
+      "bien_nom": "The Fifty-One Hermitage",
+      "texte": {
+        "fr": "It was an absolute amazing experience, everything was brand new and clean.",
+        "en": "It was an absolute amazing experience, everything was brand new and clean."
+      }
+    },
+    {
+      "id": "a8",
+      "prenom": "",
+      "pays": {
+        "fr": "France",
+        "en": "France"
+      },
+      "bien": "the-twenty-six-palmier",
+      "bien_nom": "The Twenty-Six Palmier",
+      "texte": {
+        "fr": "Appartement très propre, Amine et Fatim sont très réactifs.",
+        "en": "Appartement très propre, Amine et Fatim sont très réactifs."
+      }
+    },
+    {
+      "id": "a9",
+      "prenom": "",
+      "pays": {
+        "fr": "Suisse",
+        "en": "Switzerland"
+      },
+      "bien": "the-twenty-six-palmier",
+      "bien_nom": "The Twenty-Six Palmier",
+      "texte": {
+        "fr": "Recently furnished, the apartment has everything needed for staying.",
+        "en": "Recently furnished, the apartment has everything needed for staying."
+      }
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "_lisez_moi": "Ce que Lodgify ne sait pas dire. Les cles de « biens » sont des identifiants Lodgify ; « repli » est le catalogue servi quand l'API n'est pas jointe, et il ne porte jamais de prix. checkout_base et checkout_compte construisent l'adresse du tunnel de paiement : checkout.lodgify.com/{langue}/{compte}/{idLogement}/contact, qui s'adresse par identifiant et non par slug. C'est ce qui evite de coller vingt-quatre adresses a la main. base_reservation reste le repli pour les logements sans identifiant Lodgify, et une adresse collee dans l'administration l'emporte toujours sur l'adresse construite.",
+  "base_reservation": "https://ibsignature.lodgify.com/fr/toutes-les-proprietes/",
+  "checkout_base": "https://checkout.lodgify.com",
+  "checkout_compte": "ibsignature",
+  "biens": {},
+  "repli": [
+    {
+      "slug": "number-twelve-triangle-d-or",
+      "nom": "Number Twelve Triangle d'Or",
+      "ville": "Casablanca",
+      "quartier": "Triangle d'Or",
+      "chambres": 4,
+      "voyageurs": 8
+    },
+    {
+      "slug": "number-six-triangle-d-or",
+      "nom": "Number Six Triangle d'Or",
+      "ville": "Casablanca",
+      "quartier": "Triangle d'Or",
+      "chambres": 3,
+      "voyageurs": 7
+    },
+    {
+      "slug": "le-501-racine",
+      "nom": "Le 501 Racine",
+      "ville": "Casablanca",
+      "quartier": "Racine",
+      "chambres": 3,
+      "voyageurs": 7
+    },
+    {
+      "slug": "le-28-triangle-d-or",
+      "nom": "Le 28 Triangle d'Or",
+      "ville": "Casablanca",
+      "quartier": "Triangle d'Or",
+      "chambres": 2,
+      "voyageurs": 6
+    },
+    {
+      "slug": "number-one-racine",
+      "nom": "Number One Racine",
+      "ville": "Casablanca",
+      "quartier": "Racine",
+      "chambres": 2,
+      "voyageurs": 6
+    },
+    {
+      "slug": "one-five-racine",
+      "nom": "One-Five Racine",
+      "ville": "Casablanca",
+      "quartier": "Racine",
+      "chambres": 2,
+      "voyageurs": 7
+    },
+    {
+      "slug": "c202-alcazar",
+      "nom": "C202 Alcazar",
+      "ville": "Casablanca",
+      "quartier": "Maarif",
+      "chambres": 2,
+      "voyageurs": 5
+    },
+    {
+      "slug": "le-23-princesses",
+      "nom": "Le 23 Princesses",
+      "ville": "Casablanca",
+      "quartier": "Les Princesses",
+      "chambres": 2,
+      "voyageurs": 5
+    },
+    {
+      "slug": "le-31-grand-theatre",
+      "nom": "Le 31 Grand Théâtre",
+      "ville": "Casablanca",
+      "quartier": "Beaux-Arts",
+      "chambres": 1,
+      "voyageurs": 6
+    },
+    {
+      "slug": "the-fifteen-triangle-d-or",
+      "nom": "The Fifteen Triangle d'Or",
+      "ville": "Casablanca",
+      "quartier": "Triangle d'Or",
+      "chambres": 1,
+      "voyageurs": 6
+    },
+    {
+      "slug": "the-37-gauthier",
+      "nom": "The 37 Gauthier",
+      "ville": "Casablanca",
+      "quartier": "Gauthier",
+      "chambres": 1,
+      "voyageurs": 4
+    },
+    {
+      "slug": "the-sixteen-triangle-d-or",
+      "nom": "The Sixteen Triangle d'Or",
+      "ville": "Casablanca",
+      "quartier": "Triangle d'Or",
+      "chambres": 1,
+      "voyageurs": 5
+    },
+    {
+      "slug": "le-twenty-six-palmier",
+      "nom": "Le Twenty-Six Palmier",
+      "ville": "Casablanca",
+      "quartier": "Palmier",
+      "chambres": 1,
+      "voyageurs": 6
+    },
+    {
+      "slug": "le-41-maarif",
+      "nom": "Le 41 Maarif",
+      "ville": "Casablanca",
+      "quartier": "Maarif",
+      "chambres": 1,
+      "voyageurs": 5
+    },
+    {
+      "slug": "tamaris",
+      "nom": "Tamaris",
+      "ville": "Casablanca",
+      "quartier": "Dar Bouazza",
+      "chambres": 2,
+      "voyageurs": 6
+    },
+    {
+      "slug": "villa-5-chambres-piscine-chauffee",
+      "nom": "Villa 5 chambres, piscine chauffée",
+      "ville": "Marrakech",
+      "quartier": "Atlas Golf Resort",
+      "chambres": 5,
+      "voyageurs": 10
+    }
+  ]
+}

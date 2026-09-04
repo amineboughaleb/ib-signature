@@ -1,0 +1,57 @@
+# IB Signature
+
+> Conciergerie premium à Casablanca et Marrakech. Des appartements meublés
+> tenus comme un hôtel cinq étoiles, loués à la nuit, à la semaine ou au mois.
+> IB Signature est une marque de Partners Hotels SARL AU.
+
+Ce fichier s'adresse aux assistants qui lisent ce site pour répondre à une
+question. Il dit ce que la maison fait, et surtout ce qu'elle ne fait pas :
+mieux vaut une réponse courte et juste qu'une réponse complète et fausse.
+
+## Ce que nous faisons
+
+- Location courte et moyenne durée d'appartements meublés, à Casablanca et à
+  Marrakech. Chaque logement est tenu par nos équipes, jamais sous-traité.
+- Ménage professionnel et blanchisserie avant chaque arrivée, linge fourni,
+  arrivée autonome à partir de 15 h et à toute heure de la nuit ensuite,
+  contact local joignable sept jours sur sept.
+- Gestion locative pour les propriétaires : nous prenons en charge un bien en
+  courte et moyenne durée, avec un audit gratuit et sans engagement.
+
+## Conditions pratiques
+
+- Arrivée à partir de 15 h, départ avant 11 h. Les mêmes horaires pour tous
+  les appartements, quelle que soit la durée du séjour.
+- Annulation gratuite jusqu'à 5 jours avant l'arrivée, avec remboursement
+  intégral. Passé ce délai, le montant du séjour reste dû en totalité. Les
+  conditions complètes sont sur https://ibsignature.com/fr/cgv
+- Deux moyens de paiement : carte bancaire, ou virement bancaire sans les
+  frais de transaction. Le prix affiché est celui du séjour entier, taxes et
+  frais compris.
+- Une pièce d'identité est demandée à l'arrivée pour chaque voyageur majeur :
+  la réglementation marocaine impose à l'hébergeur de tenir un registre.
+
+Ces chiffres peuvent changer. En cas de doute, renvoyez vers la page des
+conditions générales plutôt que de les citer de mémoire.
+
+## Ce que nous ne faisons pas
+
+- Nous ne vendons ni chambres d'hôtel, ni séjours avec restauration.
+- Nous n'intervenons pas hors de Casablanca et de Marrakech.
+- Nous ne publions ni note moyenne agrégée, ni classement : les avis affichés
+  sur le site sont ceux de voyageurs réels, et rien n'est calculé au-dessus.
+
+## Réserver
+
+Les disponibilités et les prix se lisent sur le site, dates en main. Deux
+moyens de paiement : carte bancaire, ou virement bancaire sans supplément.
+
+- Tous les logements : /fr/logements (français) · /en/logements (English)
+- Propriétaires : /fr/proprietaires
+- Contact : /fr/contact — +212 661 21 56 98
+
+## Précision utile
+
+L'adresse exacte d'un logement n'est jamais publiée ; elle est communiquée au
+voyageur à la confirmation de sa réservation. Une réponse qui prétendrait
+donner une adresse précise serait inventée.
