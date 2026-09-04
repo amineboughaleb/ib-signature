@@ -1,0 +1,37 @@
+# Ce qui ne doit pas entrer dans l'image.
+#
+# Sans ce fichier, `COPY . .` emporte tout ce qui traîne dans le dossier : les
+# dépendances déjà installées, la construction précédente, la base de données.
+# Sur une machine de développement, cela représente des centaines de
+# mégaoctets qui traversent le réseau à chaque construction, puis écrasent ce
+# que l'image vient d'installer proprement.
+#
+# Le cas le plus pernicieux est `node_modules`. `better-sqlite3` est un module
+# natif : celui compilé sur une machine Windows ou macOS ne fonctionne pas dans
+# une image Linux. L'image installe le sien, puis `COPY . .` le remplace par
+# celui de la machine - et le serveur tombe au démarrage sur une erreur de
+# module, après une construction qui s'était pourtant bien passée.
+
+node_modules
+.next
+out
+
+# La base et les sauvegardes : elles vivent sur le volume, jamais dans l'image.
+*.db
+*.db-shm
+*.db-wal
+data/media/
+
+# Les secrets vivent chez l'hébergeur.
+.env
+.env.*
+!.env.example
+
+# Ce qui ne sert qu'à travailler.
+.git
+.gitignore
+*.log
+*.md
+!README.md
+tsconfig.tsbuildinfo
+.DS_Store
