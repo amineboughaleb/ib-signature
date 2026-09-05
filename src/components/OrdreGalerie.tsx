@@ -119,7 +119,15 @@ export default function OrdreGalerie({
           ref={champ}
           type="file"
           id="ajout-photos"
-          accept="image/jpeg,image/png,image/webp"
+          /* Les types MIME ne suffisent pas. Sous Windows, le sélecteur de
+             fichiers ne les déduit pas du contenu : il les lit dans la base de
+             registre, et quand « .jpeg » n'y est pas associé à image/jpeg -
+             ce qui arrive - les fichiers apparaissent grisés, impossibles à
+             choisir, sans le moindre message. On énumère donc aussi les
+             extensions : le sélecteur accepte alors l'une OU l'autre forme.
+             Le serveur, lui, ne se fie ni à l'une ni à l'autre - il relit
+             l'image et refuse ce qui n'en est pas une. */
+          accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.jpe,.png,.webp"
           multiple
           hidden
           onChange={(e) => ajouter(e.target.files)}
@@ -128,8 +136,8 @@ export default function OrdreGalerie({
           {envoi ? `Envoi… ${progres}` : '＋ Ajouter des photographies'}
         </button>
         <span className="small muted">
-          Depuis votre téléphone ou votre ordinateur, douze au maximum à la fois. Elles s’ajoutent à la fin, puis se
-          rangent comme les autres.
+          JPG, JPEG, PNG ou WEBP — douze au maximum à la fois, depuis votre téléphone ou votre ordinateur. Elles
+          s’ajoutent à la fin, puis se rangent comme les autres.
         </span>
       </div>
 
