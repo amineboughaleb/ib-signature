@@ -848,7 +848,10 @@ check('  formulaire d\'audit', (await p.locator('form input[name=nom]').count())
 
 await p.goto(`${B}/fr/qui-sommes-nous`, { waitUntil: 'domcontentloaded' });
 await p.waitForTimeout(400);
-check('page qui sommes-nous', (await p.locator('h1').innerText()).includes('écart'));
+/* Les titres de section sont en capitales : innerText rend le texte tel qu'il
+   s'affiche, donc en majuscules. Les contrôles se font sans distinction de
+   casse - sinon c'est la feuille de style qu'on teste, pas le contenu. */
+check('page qui sommes-nous', /écart/i.test(await p.locator('h1').innerText()));
 const qsOrdre = await p.evaluate(() => {
   const y = (s) => { const e = document.querySelector(s); return e ? e.getBoundingClientRect().top + window.scrollY : null; };
   return { menu: y('.sous-menu'), titre: y('h1') };
@@ -1013,9 +1016,9 @@ if (!mdp) {
   check('    les avis existants sont là', nAvis >= 10, `${nAvis} fiches (dont celle d'ajout)`);
   check('    le diaporama est accessible', true);
   await a.goto(`${B}/admin/diaporama`, { waitUntil: 'domcontentloaded' });
-  check('  page diaporama', /Diaporama de l/.test(await a.locator('h1').innerText()));
+  check('  page diaporama', /Diaporama de l/i.test(await a.locator('h1').innerText()));
   await a.goto(`${B}/admin/demandes`, { waitUntil: 'domcontentloaded' });
-  check('  page demandes', /Demandes et messages/.test(await a.locator('h1').innerText()));
+  check('  page demandes', /Demandes et messages/i.test(await a.locator('h1').innerText()));
   await a.goto(`${B}/admin/logements`, { waitUntil: 'domcontentloaded' });
   check('  page logements', /Logements/i.test(await a.locator('h1').innerText()));
   const cartes = await a.locator('.carte-logement').count();
@@ -1236,7 +1239,7 @@ if (!mdp) {
 
   await a.goto(`${B}/admin/paiement`, { waitUntil: 'domcontentloaded' });
   const paie = await a.locator('body').innerText();
-  check('  page paiement', /Paiement/.test(await a.locator('h1').innerText()));
+  check('  page paiement', /Paiement/i.test(await a.locator('h1').innerText()));
   /* Tant que la commission n'est pas renseignee, le virement reste eteint et
      la page le dit : c'est la garantie qu'aucun second prix n'est invente. */
   const commission = await a.locator('input[name=commission_pct]').inputValue();

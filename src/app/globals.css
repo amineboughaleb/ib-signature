@@ -18,9 +18,15 @@
    soignées, une page sans couleur paraît vide plutôt que sobre. La charte
    repose donc sur la qualité de vos images.
 
-   Les caractères : Newsreader pour les titres, une serif contemporaine dessinée
-   pour l'écran, avec du contraste et sans nostalgie ; Karla pour le texte, une
-   grotesque à l'italique franche. Staytle n'emploie ni l'une ni l'autre.
+   Les caractères : Karla porte tout ce qui se lit - titres, texte, navigation.
+   C'est une grotesque à l'italique franche, et une page composée d'un seul
+   caractère se tient par le corps et la graisse plutôt que par un changement
+   de famille à chaque niveau. Newsreader, la serif, ne garde qu'un emploi :
+   les chiffres. Prix, notes, numéros d'étape, références de virement. Là, son
+   contraste sert à quelque chose - il fait qu'un montant se distingue de la
+   phrase qui l'entoure sans qu'on ait besoin de le mettre en gras ni en
+   couleur. Ailleurs, elle n'était qu'une habitude.
+   Staytle n'emploie ni l'une ni l'autre.
 
    Aucune couleur ne s'introduit ici sans découler des variables ci-dessous.
    ========================================================================== */
@@ -87,19 +93,52 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* ---------- typographie ----------
-   Newsreader a du contraste et une hauteur d'x normale : elle demande de
-   l'espace et des capitales espacées. On ne lui demande jamais de porter un
-   paragraphe - seulement des titres, où sa finesse fait tout le travail. */
-h1, h2, h3 {
-  font-family: var(--titre);
-  font-weight: 400;
+   Deux régimes de titres, et la distinction n'est pas décorative.
+
+   Un titre qui NOMME une section - « Nos logements », « Le quartier », « Ce
+   que les voyageurs disent » - est une étiquette. On ne le lit pas vraiment :
+   on le repère, on sait où l'on est, et l'œil descend au contenu. Il n'a donc
+   aucun besoin de quarante-quatre points de serif ; il prend le costume des
+   autres étiquettes de la charte, capitales espacées en Karla, et rend
+   l'espace au texte qui, lui, se lit.
+
+   Un titre qui DIT quelque chose - l'accroche de l'accueil, le nom d'un
+   appartement, une question posée au voyageur - est une phrase. Une phrase en
+   capitales se crie plutôt qu'elle ne se lit, et c'est là que Newsreader fait
+   le travail qu'on attend d'elle. Ceux-là gardent la serif et leur taille :
+   la liste des exceptions, juste en dessous, est courte et fermée. */
+h1, h2 {
+  font-family: var(--texte);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  line-height: 1.35;
   margin: 0;
-  line-height: 1.08;
-  letter-spacing: 0.01em;
 }
-h1 { font-size: clamp(38px, 5.4vw, 68px); }
-h2 { font-size: clamp(28px, 3.4vw, 44px); }
-h3 { font-family: var(--texte); font-size: 19px; font-weight: 500; letter-spacing: 0; line-height: 1.3; }
+h1 { font-size: clamp(19px, 1.7vw, 24px); }
+h2 { font-size: clamp(15px, 1.3vw, 18px); }
+h3 { font-family: var(--texte); font-size: 19px; font-weight: 500; letter-spacing: 0; line-height: 1.3; margin: 0; }
+
+/* Les titres qui sont des phrases, et non des étiquettes.
+   Ils ne prennent pas les capitales - une phrase en capitales se crie au lieu
+   de se lire - mais ils sont en Karla comme le reste. Le site n'a plus qu'un
+   seul caractère, et la hiérarchie tient au corps et à la graisse plutôt qu'à
+   un changement de famille.
+   Karla étant une linéale, elle supporte mal les corps que portait une serif :
+   ce qui passait à soixante-huit points en Newsreader devient massif. Chaque
+   taille est donc redescendue d'un cran, et le crénage légèrement resserré. */
+.accroche-corps h1,
+.presentation-texte h1,
+.fiche-nom,
+.etape-titre {
+  font-family: var(--texte);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+.accroche-corps h1 { font-size: clamp(32px, 4.4vw, 54px); }
+.etape-titre { font-size: clamp(23px, 2.2vw, 29px); }
 p { margin: 0 0 1em; }
 
 /* L'étiquette en capitales espacées : le motif récurrent de la charte.
@@ -255,13 +294,15 @@ textarea { resize: vertical; min-height: 120px; }
 .rech-btn { height: 100%; white-space: nowrap; }
 
 /* ---------- manifeste ----------
-   Le seul endroit où Newsreader porte autre chose qu'un titre : deux phrases
-   composées grand, très aérées, qui se lisent lentement. C'est la voix de la
-   maison, elle a droit à du silence autour d'elle. */
+   Deux phrases composées grand, très aérées, qui se lisent lentement. C'est la
+   voix de la maison, elle a droit à du silence autour d'elle. En Karla, il
+   faut descendre le corps de six points : une linéale de trente points pèse
+   ce qu'une serif de trente-six pesait. */
 .manifeste { background: var(--papier-creux); border-top: 1px solid var(--filet); }
 .manifeste .wrap { max-width: 900px; }
 .manifeste-phrase {
-  font-family: var(--titre); font-size: clamp(24px, 2.9vw, 36px);
+  font-family: var(--texte); font-weight: 500; letter-spacing: -0.015em;
+  font-size: clamp(21px, 2.4vw, 30px);
   line-height: 1.32; color: var(--encre); margin: 22px 0 0; text-wrap: balance;
 }
 .manifeste-phrase + .manifeste-phrase { color: var(--sourd); }
@@ -326,7 +367,9 @@ textarea { resize: vertical; min-height: 120px; }
 
 /* ---------- encart propriétaires ---------- */
 .proprio { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; padding: 52px; }
-.proprio h2 { max-width: 12ch; }
+/* Douze caractères convenaient à une serif de quarante points ; des capitales
+   espacées de dix-huit en demandent davantage avant de casser la ligne. */
+.proprio h2 { max-width: 26ch; }
 
 /* ---------- pied ---------- */
 .site-footer { border-top: 1px solid var(--filet); padding: 72px 0 34px; background: var(--papier-creux); }
@@ -447,7 +490,8 @@ textarea { resize: vertical; min-height: 120px; }
 }
 .menu-panneau nav { display: flex; flex-direction: column; gap: 4px; }
 .menu-panneau nav a {
-  font-family: var(--titre); font-size: 34px; color: var(--encre);
+  font-family: var(--texte); font-weight: 500; letter-spacing: -0.02em;
+  font-size: 27px; color: var(--encre);
   padding: 14px 0; border-bottom: 1px solid var(--filet);
 }
 .menu-pied { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -589,7 +633,7 @@ textarea { resize: vertical; min-height: 120px; }
 }
 .avis-carte blockquote {
   margin: 0 0 18px; padding: 0; border: 0;
-  font-family: var(--titre); font-size: 21px; line-height: 1.45; color: var(--encre);
+  font-family: var(--texte); font-size: 18px; line-height: 1.5; color: var(--encre);
 }
 .avis-carte blockquote::before { content: '\201C'; color: var(--accent); margin-right: 2px; }
 .avis-carte blockquote::after { content: '\201D'; color: var(--accent); margin-left: 1px; }
@@ -722,7 +766,7 @@ textarea { resize: vertical; min-height: 120px; }
 @media (max-width: 640px) { .accroche-nue { min-height: 340px; } }
 
 /* Le titre de l'accueil vit maintenant dans le bloc de présentation. */
-.presentation-texte h1 { font-size: clamp(30px, 3.4vw, 46px); margin: 16px 0 22px; }
+.presentation-texte h1 { font-size: clamp(26px, 2.9vw, 38px); margin: 16px 0 22px; }
 .presentation-texte .lead + .lead { margin-top: 18px; }
 
 /* La plateforme d'origine d'un avis, après la provenance. */
@@ -784,7 +828,7 @@ textarea { resize: vertical; min-height: 120px; }
 .cal-compte { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--sourd); }
 .cal-mois { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .cal-titre {
-  font-family: var(--titre); font-size: 17px; text-align: center; margin-bottom: 10px;
+  font-family: var(--texte); font-weight: 600; font-size: 15px; text-align: center; margin-bottom: 10px;
   text-transform: capitalize;
 }
 .cal-jours, .cal-grille { display: grid; grid-template-columns: repeat(7, 1fr); }
@@ -837,7 +881,11 @@ textarea { resize: vertical; min-height: 120px; }
    chasse moyenne de Newsreader, et le plafond de 40 points empêche un nom
    court de devenir une enseigne. */
 .fiche-nom {
-  font-size: min(40px, calc((min(100vw, var(--maxw)) - 80px) / var(--n, 20) * 1.7));
+  /* Le facteur passe de 1,7 à 1,5 : Karla a une chasse plus large que
+     Newsreader, et la formule d'origine faisait déborder les noms longs -
+     qui, la ligne ne pouvant pas revenir, finissaient tronqués par les points
+     de suspension. Le plafond descend d'autant. */
+  font-size: min(34px, calc((min(100vw, var(--maxw)) - 80px) / var(--n, 20) * 1.5));
   line-height: 1.1;
   white-space: nowrap;
   overflow: hidden;
@@ -869,8 +917,9 @@ textarea { resize: vertical; min-height: 120px; }
   align-items: baseline;
   gap: 16px;
   padding: 20px 0;
-  font-family: var(--titre);
-  font-size: 19px;
+  font-family: var(--texte);
+  font-weight: 500;
+  font-size: 18px;
   line-height: 1.35;
 }
 .faq summary::-webkit-details-marker { display: none; }
@@ -1141,9 +1190,9 @@ textarea { resize: vertical; min-height: 120px; }
   margin: 0 0 10px;
   padding: 0;
   border: 0;
-  font-family: var(--titre);
-  font-size: 20px;
-  line-height: 1.45;
+  font-family: var(--texte);
+  font-size: 17px;
+  line-height: 1.5;
   color: var(--encre);
   display: -webkit-box;
   -webkit-box-orient: vertical;
