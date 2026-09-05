@@ -552,6 +552,13 @@ textarea { resize: vertical; min-height: 120px; }
    Une icône, un titre, une ligne. Le trait de l'icône reprend l'encre des
    filets : c'est le même geste graphique, à une autre échelle. */
 .services-grille { gap: 44px; }
+/* Quatre colonnes, et l'un des titres tient sur deux lignes : sans précaution
+   son paragraphe descend d'un cran, et l'œil ne trouve plus de ligne de
+   lecture commune. Deux lignes réservées au titre suffisent à les aligner
+   tous. La grille imbriquée aurait été plus juste, mais elle impose le même
+   écart entre l'icône et le titre qu'entre deux colonnes : quarante-quatre
+   points d'air là où il en faut dix-huit. */
+.services-grille .service h3 { line-height: 1.3; min-height: 2.6em; }
 .service-icone { color: var(--accent); display: block; margin-bottom: 18px; }
 .service h3 { font-size: 19px; margin: 0 0 8px; }
 .service p { margin: 0; }

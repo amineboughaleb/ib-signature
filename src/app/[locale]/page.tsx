@@ -36,6 +36,7 @@ export default async function Accueil({ params }: { params: Promise<{ locale: st
     { t: t('svc_1_t'), p: t('svc_1_p'), i: 'clef' },
     { t: t('svc_2_t'), p: t('svc_2_p'), i: 'menage' },
     { t: t('svc_3_t'), p: t('svc_3_p'), i: 'linge' },
+    { t: t('svc_4_t'), p: t('svc_4_p'), i: 'assistance' },
   ];
 
   return (
@@ -83,17 +84,19 @@ export default async function Accueil({ params }: { params: Promise<{ locale: st
         </div>
       </section>
 
-      {/* ---------- les trois services ----------
-          Trois icônes tracées à la main, à l'encre. Elles ne décorent pas :
-          elles nomment les trois choses qu'un voyageur vérifie avant de
-          préférer un logement à une chambre d'hôtel. */}
+      {/* ---------- les services ----------
+          Des icônes tracées à la main, à l'encre. Elles ne décorent pas :
+          elles nomment ce qu'un voyageur vérifie avant de préférer un logement
+          à une chambre d'hôtel. La quatrième - l'assistance - répond à la
+          crainte propre à la location : personne à qui parler si quelque chose
+          cloche à vingt-deux heures. */}
       <section className="section-tight services">
         <div className="wrap">
           <hr className="filet-or" />
           <div className="eyebrow" style={{ marginBottom: 40 }}>
             {t('svc_sur')}
           </div>
-          <div className="grid3 services-grille">
+          <div className="grid4 services-grille">
             {services.map((s) => (
               <article key={s.i} className="service">
                 <Icone nom={s.i} />
@@ -112,9 +115,9 @@ export default async function Accueil({ params }: { params: Promise<{ locale: st
 }
 
 /**
- * Les trois pictogrammes, tracés en SVG plutôt qu'en émoji ou en police
- * d'icônes : un trait d'encre d'un point et demi, du même dessin que les
- * filets de la charte, et rien à télécharger.
+ * Les pictogrammes, tracés en SVG plutôt qu'en émoji ou en police d'icônes :
+ * un trait d'encre d'un point et demi, du même dessin que les filets de la
+ * charte, et rien à télécharger.
  */
 function Icone({ nom }: { nom: string }) {
   const commun = {
@@ -149,13 +152,25 @@ function Icone({ nom }: { nom: string }) {
         <path d="M19 4l.7 1.8L21.5 6.5 19.7 7.2 19 9l-.7-1.8L16.5 6.5l1.8-.7z" />
       </svg>
     );
+  if (nom === 'linge')
+    return (
+      /* Du linge plié : le standard hôtelier, draps et serviettes. */
+      <svg {...commun}>
+        <rect x="3" y="6" width="18" height="5" rx="1" />
+        <rect x="3" y="13" width="18" height="5" rx="1" />
+        <path d="M8 6v5M8 13v5" />
+        <path d="M16 6v5M16 13v5" />
+      </svg>
+    );
   return (
-    /* Du linge plié : le standard hôtelier, draps et serviettes. */
+    /* Une bulle et ses trois points : quelqu'un répond. Un combiné aurait dit
+       « appelez-nous », ce qui n'est pas la promesse - on écrit plus souvent
+       qu'on n'appelle, et à toute heure. */
     <svg {...commun}>
-      <rect x="3" y="6" width="18" height="5" rx="1" />
-      <rect x="3" y="13" width="18" height="5" rx="1" />
-      <path d="M8 6v5M8 13v5" />
-      <path d="M16 6v5M16 13v5" />
+      <path d="M20 4H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3v4l5-4h8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" />
+      <path d="M8.5 10h.01" />
+      <path d="M12 10h.01" />
+      <path d="M15.5 10h.01" />
     </svg>
   );
 }

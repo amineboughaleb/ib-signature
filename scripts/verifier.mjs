@@ -438,9 +438,10 @@ const photo = await p.evaluate(() => {
 check('  et la photographie se charge vraiment', !!photo && photo.ok, photo ? `${photo.l}px de large` : 'absente');
 check('  les deux paragraphes de présentation', /alternatives aux chambres/.test(await p.locator('.presentation-texte').innerText())
   && /voyageurs exigeants/.test(await p.locator('.presentation-texte').innerText()));
-check('  les trois services', (await p.locator('.service').count()) === 3);
-check('  chacun avec son icône', (await p.locator('.service-icone').count()) === 3);
+check('  les quatre services', (await p.locator('.service').count()) === 4);
+check('  chacun avec son icône', (await p.locator('.service-icone').count()) === 4);
 check('  dont le linge hôtelier', /Linge de maison/.test(await p.locator('.services-grille').innerText()));
+check("  et l'assistance 7j/7", /Assistance 7\s*j\s*\/\s*7/i.test(await p.locator('.services-grille').innerText()));
 check('  les avis voyageurs', (await p.locator('.avis-carte').count()) === 6);
 const av = await p.locator('.avis-carte').first().innerText();
 check('  chaque avis porte sa provenance', /FRANCE|ÉTATS-UNIS|BELGIQUE|SUÈDE|MAROC|SUISSE/i.test(await p.locator('.avis-defilant').innerText()));

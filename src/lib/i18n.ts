@@ -205,7 +205,7 @@ const fr: Dico = {
   presentation_2:
     'Étant nous-mêmes des voyageurs exigeants, nous mettons tout en œuvre pour vous offrir un séjour sans accroc. Situés au cœur de la ville, les appartements IB Signature allient harmonieusement confort, charme et élégance.',
 
-  /* --- accueil : les trois services --- */
+  /* --- accueil : les quatre services --- */
   svc_sur: 'Compris dans chaque séjour',
   svc_1_t: 'Check-in autonome',
   svc_1_p: 'Vous entrez à l’heure de votre vol, pas à celle d’une réception.',
@@ -213,6 +213,8 @@ const fr: Dico = {
   svc_2_p: 'Le logement est remis à neuf avant vous, pas rangé après le précédent.',
   svc_3_t: 'Linge de maison qualité hôtelière',
   svc_3_p: 'Draps et linge de toilette d’hôtel, changés à chaque séjour.',
+  svc_4_t: 'Assistance 7j/7',
+  svc_4_p: 'Un interlocuteur joignable tous les jours, avant comme pendant votre séjour.',
 
   /* --- accueil : les avis --- */
   avis_sur: 'Ils y ont dormi',
@@ -475,6 +477,8 @@ const en: Dico = {
   svc_2_p: 'The flat is made new before you arrive, not tidied after the last guest.',
   svc_3_t: 'Hotel-grade linen',
   svc_3_p: 'Hotel sheets and towels, changed for every stay.',
+  svc_4_t: 'Support 7 days a week',
+  svc_4_p: 'Someone you can reach every day, before and during your stay.',
 
   avis_sur: 'They slept there',
   avis_titre: 'What travellers say',
