@@ -697,6 +697,48 @@ export function libererGalerie(bienId: number) {
   db().prepare('UPDATE liens SET photos_verrou = 0, updated_at = datetime(\'now\') WHERE bien_id = ?').run(bienId);
 }
 
+/**
+ * Reprendre les galeries de l'import, pour tous les logements non retouchés.
+ *
+ * Il existe deux listes de photographies : celle de la base, écrite ici, et
+ * celle du fichier versionné que le script d'import dépose avec le code. La
+ * base l'emporte - c'est voulu, sans quoi un déploiement défairait ce que vous
+ * avez rangé à la main.
+ *
+ * Mais cette règle se retourne le jour d'un nouvel import. Les images changent
+ * sur le disque, le fichier versionné change avec elles, et la base continue
+ * d'afficher l'ancienne liste : des adresses qui pointent vers des fichiers
+ * que le déploiement vient de remplacer. La galerie se vide sans que rien ne
+ * l'explique, et l'administration montre pourtant les bonnes photos.
+ *
+ * Vider la liste en base rend donc la main au fichier versionné. Rien n'est
+ * perdu : les images sont sur le disque, la liste se recalcule. Et les
+ * galeries verrouillées ne sont pas touchées - vous les avez rangées, elles
+ * restent rangées.
+ */
+export function reprendreGaleriesImport(): number {
+  migrerLiens();
+  const r = db()
+    .prepare(
+      `UPDATE liens SET photos = '', photos_ecartees = '', updated_at = datetime('now')
+       WHERE photos_verrou = 0 AND (photos <> '' OR photos_ecartees <> '')`
+    )
+    .run();
+  return r.changes;
+}
+
+/** Combien de galeries seraient reprises : sert à ne pas proposer un geste vide. */
+export function galeriesReprenables(): number {
+  migrerLiens();
+  return (
+    db()
+      .prepare(
+        `SELECT COUNT(*) n FROM liens WHERE photos_verrou = 0 AND (photos <> '' OR photos_ecartees <> '')`
+      )
+      .get() as { n: number }
+  ).n;
+}
+
 /* ---------- les descriptions ----------
    Lodgify porte un texte par logement, écrit pour Airbnb et Booking : il y
    parle de plateformes, de règles de maison, parfois en anglais seulement. Ce

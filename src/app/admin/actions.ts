@@ -17,6 +17,7 @@ import {
   ecrireGalerie,
   ecrireGalerieChoisie,
   libererGalerie,
+  reprendreGaleriesImport,
   ecrireDescription,
   ecrireFaits,
   ecrireEquipements,
@@ -292,6 +293,21 @@ export async function libererGalerieAction(form: FormData) {
   if (bienId) libererGalerie(bienId);
   revalidatePath('/admin/photos');
   revalidatePath(`/admin/photos/${bienId}`);
+}
+
+/**
+ * Après un nouvel import : reprendre les listes déposées avec le code.
+ *
+ * Se fait ici plutôt que par une ligne de commande, parce que le moment où
+ * c'est nécessaire est le moment où l'on vient de déployer - donc depuis un
+ * navigateur, pas depuis un terminal branché sur la production.
+ */
+export async function reprendreGaleriesAction() {
+  await garde();
+  const n = reprendreGaleriesImport();
+  revalidatePath('/admin/logements');
+  revalidatePath('/', 'layout');
+  redirect(`/admin/logements?reprises=${n}`);
 }
 
 /* ---------- la présentation d'un logement ---------- */

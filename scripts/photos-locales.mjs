@@ -49,8 +49,18 @@ const RACINE = process.cwd();
 
 /* Combien de photographies par logement. Au-delà d'une vingtaine, un visiteur
    ne regarde plus, il fait défiler - et chaque image supplémentaire pèse sur
-   le dépôt et sur le temps de chargement. */
+   le dépôt et sur le temps de chargement.
+
+   Deux plafonds, et la différence a du sens. Trente suffisent largement quand
+   c'est le classement automatique qui ratisse des dossiers entiers : ce qui
+   dépasse est de toute façon du remplissage. Mais un dossier que vous avez
+   composé n'est pas un tas où l'on puise - c'est une liste. La couper en
+   silence à la trentième image contredit le principe même de ce dossier :
+   quatre logements y ont perdu leur fin sans que rien ne le dise. Le plafond
+   reste, parce qu'une fiche de cent images n'existe pas, mais il est plus
+   haut et toute coupe est annoncée. */
 const MAX_PHOTOS = 30;
+const MAX_CHOISI = 50;
 /* 1400 points de large suffisent à un plein écran d'ordinateur portable. */
 const LARGEUR = 1400;
 const QUALITE = 78;
@@ -207,7 +217,17 @@ function dossiersImages(base, profondeur = 0) {
   return sorties;
 }
 
-/** Les fichiers d'un logement, dans l'ordre où ils méritent d'être vus. */
+/**
+ * Les fichiers d'un logement, dans l'ordre où ils méritent d'être vus.
+ *
+ * Rend aussi D'OÙ ils viennent, et c'est le point important. Un essai qui
+ * annonce « 30 photo(s) » ne dit pas si ces trente-là sont votre sélection ou
+ * un ratissage automatique de tous les sous-dossiers - or ce n'est pas du tout
+ * la même chose à publier. Deux logements sont passés à une seule image sans
+ * que rien ne le signale, parce qu'un dossier « Galerie site web » ne
+ * contenait qu'un fichier oublié là. Le compte seul ne suffit donc pas : il
+ * faut la source, et le fait que le plafond ait été atteint.
+ */
 function fichiersDe(dossier) {
   const base = path.join(SOURCE, dossier);
   if (!fs.existsSync(base)) return null;
@@ -222,7 +242,14 @@ function fichiersDe(dossier) {
      avec des photographies que vous avez précisément écartées en ne les y
      mettant pas. Un dossier choisi est un choix, pas une suggestion. */
   const choisis = dossiers.filter((d) => d !== base && CHOISI.test(path.basename(d)));
-  if (choisis.length) dossiers = choisis;
+  const choisi = choisis.length > 0;
+  if (choisi) dossiers = choisis;
+
+  const source = choisi
+    ? choisis.map((d) => path.basename(d)).join(' + ')
+    : dossiers.map((d) => (d === base ? 'le dossier lui-même' : path.basename(d))).join(' + ') || 'rien';
+
+  const fin = (liste, coupees) => ({ liste: couvertureDevant(liste), choisi, source, coupees });
 
   const retenus = [];
   const vus = new Set();
@@ -248,10 +275,13 @@ function fichiersDe(dossier) {
       if (vus.has(n.toLowerCase())) continue;
       vus.add(n.toLowerCase());
       retenus.push(path.join(rep, n));
-      if (retenus.length >= MAX_PHOTOS) return couvertureDevant(retenus);
     }
   }
-  return couvertureDevant(retenus);
+  /* On lit tout, puis on coupe - plutôt que de s'arrêter en chemin. C'est ce
+     qui permet de dire combien d'images ont été laissées de côté : un plafond
+     qui tronque sans le dire est indiscernable d'un dossier incomplet. */
+  const plafond = choisi ? MAX_CHOISI : MAX_PHOTOS;
+  return fin(retenus.slice(0, plafond), Math.max(0, retenus.length - plafond));
 }
 
 /* Un fichier que vous avez nommé « Couv » est la couverture que vous avez
@@ -312,19 +342,36 @@ async function main() {
       sans.push(`${b.nom} (${b.id}) — ${TABLE.has(cle(b.nom)) ? 'dossier absent du disque' : 'aucune ligne dans la table'}`);
       continue;
     }
-    const fichiers = fichiersDe(dossier);
-    if (fichiers === null) {
+    const trouve = fichiersDe(dossier);
+    if (trouve === null) {
       sans.push(`${b.nom} (${b.id}) — dossier « ${dossier} » introuvable`);
       continue;
     }
-    if (!fichiers.length) {
+    if (!trouve.liste.length) {
       sans.push(`${b.nom} (${b.id}) — dossier « ${dossier} » sans photographie`);
       continue;
     }
-    resultats.push({ bien: b, slug: identifiant(b.nom), dossier, fichiers });
+    resultats.push({ bien: b, slug: identifiant(b.nom), dossier, fichiers: trouve.liste, ...trouve });
   }
 
-  for (const r of resultats) dire(`${r.bien.nom} → ${r.dossier} · ${r.fichiers.length} photo(s)`);
+  for (const r of resultats) {
+    const source = r.choisi ? `votre « ${r.source} »` : `classement automatique · ${r.source}`;
+    dire(
+      `${r.bien.nom} → ${r.dossier} · ${r.fichiers.length} photo(s)${r.coupees ? ` (+${r.coupees} écartée(s) par le plafond de ${r.choisi ? MAX_CHOISI : MAX_PHOTOS})` : ''} · ${source}`
+    );
+  }
+
+  /* Une galerie composée à la main qui ne rend qu'une ou deux images est
+     presque toujours un oubli, pas un choix : le dossier a été créé, une image
+     y a été glissée, et la suite attend encore. Le dire ici évite de publier
+     un appartement représenté par une seule photographie - ce que le compte,
+     noyé dans vingt-trois autres lignes, ne montre pas. */
+  const maigres = resultats.filter((r) => r.choisi && r.fichiers.length < 5);
+  if (maigres.length) {
+    dire('');
+    for (const r of maigres)
+      dire(`À vérifier : ${r.bien.nom} n’aurait que ${r.fichiers.length} photo(s), toutes tirées de « ${r.source} ».`);
+  }
   if (sans.length) {
     dire('');
     for (const s of sans) dire(`Sans galerie : ${s}`);
