@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * L'ordre des photographies d'un logement.
@@ -41,7 +41,26 @@ export default function OrdreGalerie({
   const [envoi, setEnvoi] = useState(false);
   const [souci, setSouci] = useState<string[]>([]);
   const [progres, setProgres] = useState('');
+  /* Ce qui a changé à l'écran et pas encore en base.
+     Déposer une photographie l'envoie au serveur, mais ne la fait pas entrer
+     dans la galerie : c'est l'enregistrement qui décide. La distinction est
+     juste - on veut pouvoir déposer douze images, en écarter trois, puis
+     enregistrer - mais rien ne la disait. On voyait ses photographies
+     apparaître, on quittait la page, elles avaient disparu. */
+  const [modifie, setModifie] = useState(false);
   const champ = useRef<HTMLInputElement>(null);
+
+  /* Le garde-fou du navigateur, pour le cas où l'on ferme l'onglet sans avoir
+     lu le bandeau. Il ne s'arme que s'il y a quelque chose à perdre. */
+  useEffect(() => {
+    if (!modifie) return;
+    const alerte = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', alerte);
+    return () => window.removeEventListener('beforeunload', alerte);
+  }, [modifie]);
 
   async function ajouter(liste: FileList | null) {
     if (!liste || !liste.length) return;
@@ -66,8 +85,10 @@ export default function OrdreGalerie({
         if (!r.ok) throw new Error(d?.erreur || `envoi refusé (${r.status})`);
         /* Les nouvelles arrivent à la fin : c'est le seul endroit qui ne
            bouscule pas l'ordre que vous venez peut-être d'établir. */
-        if (d.ajoutees?.length)
+        if (d.ajoutees?.length) {
           setRetenues((v) => [...v, ...d.ajoutees.filter((u: string) => !v.includes(u))]);
+          setModifie(true);
+        }
         if (d.refusees?.length) rates.push(...d.refusees);
       } catch (e: any) {
         rates.push(...paquet.map((f) => `${f.name} — ${e?.message || 'envoi interrompu'}`));
@@ -88,6 +109,7 @@ export default function OrdreGalerie({
     const [x] = copie.splice(de, 1);
     copie.splice(vers, 0, x);
     setRetenues(copie);
+    setModifie(true);
   };
 
   const ecarter = (i: number) => {
@@ -95,6 +117,7 @@ export default function OrdreGalerie({
     const [x] = copie.splice(i, 1);
     setRetenues(copie);
     setEcartees([x, ...ecartees]);
+    setModifie(true);
   };
 
   const remettre = (i: number) => {
@@ -102,6 +125,7 @@ export default function OrdreGalerie({
     const [x] = copie.splice(i, 1);
     setEcartees(copie);
     setRetenues([...retenues, x]);
+    setModifie(true);
   };
 
   return (
@@ -140,6 +164,21 @@ export default function OrdreGalerie({
           s’ajoutent à la fin, puis se rangent comme les autres.
         </span>
       </div>
+
+      {/* Le bandeau qui manquait. Il porte son propre bouton d'enregistrement :
+          celui du bas de page existe déjà, mais après avoir déposé douze
+          photographies on est en haut de la liste, et un bouton qu'il faut
+          aller chercher trois écrans plus bas n'est pas un bouton. */}
+      {modifie && (
+        <p className="avert" style={{ borderColor: 'var(--accent)' }}>
+          <strong>Rien n’est encore enregistré.</strong> Les photographies déposées sont bien sur le serveur, mais la
+          galerie de ce logement ne les montrera qu’après enregistrement — et l’ordre que vous venez d’établir non
+          plus.{' '}
+          <button type="submit" className="btn-mini" style={{ marginTop: 12, display: 'inline-block' }}>
+            Enregistrer maintenant
+          </button>
+        </p>
+      )}
 
       {souci.length > 0 && (
         <p className="avert">

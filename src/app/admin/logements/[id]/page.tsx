@@ -208,7 +208,7 @@ export default async function AdminLogement({ params }: { params: Promise<{ id: 
           <OrdreGalerie bienId={b.id} retenues={retenues} ecartees={g.ecartees} />
           <div className="actions-ligne" style={{ marginTop: 22 }}>
             <button type="submit" className="btn-mini">
-              Enregistrer cet ordre
+              Enregistrer cette galerie
             </button>
           </div>
         </article>
