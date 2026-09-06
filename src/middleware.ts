@@ -53,7 +53,21 @@ export function middleware(requete: NextRequest) {
 }
 
 /* Inutile de filtrer ce qui ne peut pas porter d'action de serveur : les
-   fichiers statiques, les photographies, les images déposées. */
+   fichiers statiques, les photographies, les images déposées.
+ *
+ * Et `admin/api/` en est exclu pour une raison plus sérieuse, apprise à mes
+ * dépens. Dès qu'un intergiciel existe, Next met le corps de chaque requête
+ * qu'il traite en mémoire tampon, pour qu'il puisse être lu deux fois - une
+ * fois ici, une fois dans la route. Ce tampon est plafonné à dix mégaoctets,
+ * et au-delà le corps est tronqué SANS erreur : la route reçoit un formulaire
+ * incomplet, échoue à le lire, et rend un 500 qui ne dit rien.
+ *
+ * C'est exactement ce qui est arrivé au dépôt de photographies : quatre
+ * images de trois mégaoctets font douze, et l'envoi a cessé de fonctionner du
+ * jour où j'ai ajouté ce fichier. Le filtre n'a rien à faire sur cette route -
+ * elle ne porte pas d'action de serveur - et l'en écarter lui rend son corps
+ * entier. Le plafond est relevé dans next.config par précaution, pour les
+ * autres routes qui pourraient un jour recevoir un fichier. */
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|photos/|media/|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/((?!_next/static|_next/image|admin/api/|photos/|media/|favicon.ico|robots.txt|sitemap.xml).*)'],
 };

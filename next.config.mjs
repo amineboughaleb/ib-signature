@@ -27,6 +27,15 @@ export default {
     ]);
   },
 
+  /* Le tampon que l'intergiciel impose au corps des requêtes.
+     Par défaut dix mégaoctets, et au-delà le corps est tronqué en silence -
+     la route reçoit un formulaire amputé et échoue sans que rien n'explique
+     pourquoi. Un envoi de photographies dépasse ce plafond dès la deuxième
+     image. La route de dépôt est déjà écartée de l'intergiciel, ce qui suffit ;
+     ceci est la seconde barrière, pour le jour où une autre route recevra un
+     fichier et où personne ne se souviendra de cette histoire. */
+  experimental: { middlewareClientMaxBodySize: '64mb' },
+
   serverExternalPackages: ['better-sqlite3'],
   images: { unoptimized: true },
   eslint: { ignoreDuringBuilds: true },

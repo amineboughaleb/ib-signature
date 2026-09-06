@@ -72,9 +72,13 @@ export default function OrdreGalerie({
     /* Par petits paquets, l'un après l'autre. Douze photographies de téléphone
        font soixante mégaoctets : envoyées d'un bloc depuis un réseau mobile,
        elles échouent toutes ensemble, et l'on ne sait pas laquelle a fauté.
-       Par quatre, un échec ne coûte que quatre images, et les autres passent. */
-    for (let i = 0; i < fichiers.length; i += 4) {
-      const paquet = fichiers.slice(i, i + 4);
+       Par deux, un échec ne coûte que deux images, et les autres passent.
+       Deux et non quatre : un appareil récent produit des fichiers de huit à
+       dix mégaoctets, et quatre d'un coup approchaient des limites de taille
+       que traversent ces requêtes - sur un réseau mobile, un envoi trop gros
+       échoue de plusieurs façons, toutes muettes. */
+    for (let i = 0; i < fichiers.length; i += 2) {
+      const paquet = fichiers.slice(i, i + 2);
       setProgres(`${Math.min(i + paquet.length, fichiers.length)} / ${fichiers.length}`);
       const corps = new FormData();
       corps.set('bien_id', String(bienId));
