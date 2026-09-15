@@ -17,8 +17,12 @@ export const MARQUE = {
   adresse: '24 boulevard Rachidi, 20070 Casablanca',
   telephone: '+212 661 21 56 98',
   telephoneLien: '+212661215698',
-  /* Tant qu'aucune boîte @ibsignature.com n'existe, c'est celle de la société
-     qui reçoit. Le jour où vous en créez une, cette ligne suffit à basculer :
-     rien d'autre dans le code ne porte d'adresse. */
-  courriel: 'contact@partnershotels.ma',
+  /* La boîte de la marque, et non plus celle de la société.
+     C'est l'adresse que lisent le pied de page, les mentions légales, la
+     politique de confidentialité et la page contact. Elle ne dit pas où le
+     courrier arrive : les demandes d'audit partent vers AUDIT_TO et les envois
+     se font sous MAIL_FROM, deux variables d'environnement à tenir d'accord
+     avec cette ligne, faute de quoi le site annonce une adresse et écrit depuis
+     une autre. */
+  courriel: 'contact@ibsignature.com',
 } as const;

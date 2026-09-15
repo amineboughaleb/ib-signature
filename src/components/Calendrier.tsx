@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { departPossible, nuitPrise, type Nuit } from '@/lib/nuits';
 
 /**
  * Le calendrier d'arrivée et de départ.
@@ -71,11 +72,16 @@ export default function Calendrier({
   depart,
   onChange,
   libelles,
+  prises = [],
 }: {
   locale: string;
   arrivee: string;
   depart: string;
   onChange: (arrivee: string, depart: string) => void;
+  /* Les nuits déjà vendues, quand on les connaît. Facultatif à dessein : la
+     barre de recherche de la liste couvre seize logements à la fois et n'a
+     aucune nuit à barrer - elle cherche, elle ne réserve pas. */
+  prises?: Nuit[];
   libelles: { arrivee: string; depart: string; ajouter: string; effacer: string; nuits: (n: number) => string };
 }) {
   const [ouvert, setOuvert] = useState(false);
@@ -105,9 +111,21 @@ export default function Calendrier({
     };
   }, [ouvert]);
 
+  /* Sommes-nous en train de choisir une arrivée ou un départ ?
+   *
+   * Les deux premiers cas vont de soi. Le troisième est une porte de sortie :
+   * l'adresse de la page peut porter une arrivée tombée sur une nuit vendue -
+   * un lien ancien, un favori, la page rechargée après que le calendrier a
+   * changé. Sans cela, plus aucun départ n'étant valable, tout le calendrier
+   * se retrouvait grisé et le visiteur coincé devant une grille morte. On
+   * repart donc sur un choix d'arrivée, ce qui est exactement ce qu'il veut
+   * faire. */
+  const choixArrivee = !arrivee || !!depart || nuitPrise(prises, arrivee);
+
   function choisir(j: string) {
-    /* Aucune arrivée, ou une période déjà complète : on recommence. */
-    if (!arrivee || depart) {
+    /* Aucune arrivée, une période déjà complète, ou une arrivée qui ne vaut
+       plus rien : on recommence. */
+    if (choixArrivee) {
       onChange(j, '');
       setSurvol('');
       return;
@@ -185,9 +203,19 @@ export default function Calendrier({
                   {grille(m.getFullYear(), m.getMonth()).map((d, i) => {
                     if (!d) return <span key={i} />;
                     const v = iso(d);
-                    /* Le passé n'est pas réservable, et pendant le choix du
-                       départ tout ce qui précède l'arrivée non plus. */
-                    const interdit = v < aujourdhui || (!!arrivee && !depart && v <= arrivee);
+                    /* Le passé n'est jamais réservable. Pour le reste, tout
+                       dépend du bout du séjour qu'on est en train de poser -
+                       et l'asymétrie entre les deux est voulue : une nuit
+                       vendue interdit d'arriver, jamais de partir. */
+                    const interdit =
+                      v < aujourdhui ||
+                      (choixArrivee ? nuitPrise(prises, v) : !departPossible(prises, arrivee, v));
+                    /* Barré plutôt que simplement éteint, et seulement quand
+                       le refus vient bien d'une nuit vendue : « pris » et
+                       « hors de portée » sont deux nouvelles différentes, et
+                       les afficher pareil ne renseigne sur ni l'une ni
+                       l'autre. */
+                    const pris = interdit && v >= aujourdhui && nuitPrise(prises, v);
                     const debut = v === arrivee;
                     const arrivant = v === depart;
                     const entre = !!arrivee && !!fin && v > arrivee && v < fin;
@@ -201,10 +229,11 @@ export default function Calendrier({
                           debut ? 'cal-debut' : '',
                           arrivant ? 'cal-fin' : '',
                           entre ? 'cal-entre' : '',
+                          pris ? 'cal-pris' : '',
                         ]
                           .filter(Boolean)
                           .join(' ')}
-                        onMouseEnter={() => arrivee && !depart && setSurvol(v)}
+                        onMouseEnter={() => !choixArrivee && setSurvol(v)}
                         onClick={() => choisir(v)}
                         aria-label={`${d.getDate()} ${MOIS[lang][d.getMonth()]} ${d.getFullYear()}`}
                       >

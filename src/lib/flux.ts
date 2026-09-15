@@ -385,6 +385,32 @@ export function conflit(bienId: number, arrivee: string, depart: string): Period
 }
 
 /**
+ * Les nuits vendues d'un logement, telles qu'on peut les montrer au visiteur.
+ *
+ * Même prudence que `conflit`, et pour la même raison : un calendrier périmé
+ * ne prouve rien. Mais la conséquence s'inverse, et il faut s'en rendre
+ * compte. Devant la vente, ne rien savoir bloque ; devant l'affichage, ne rien
+ * savoir n'a pas le droit de barrer des nuits peut-être libres. On rend donc
+ * une liste vide : le calendrier s'ouvre en grand, et c'est la garde du
+ * virement qui refusera si les dates sont prises. Montrer trop de nuits
+ * offertes coûte une déception ; en barrer une qui était libre coûte une
+ * réservation.
+ *
+ * Deux filtrages, dont le second n'est pas un détail. Le passé ne sert à rien
+ * dans un calendrier qui ne l'affiche pas. Et surtout, le libellé de la
+ * réservation ne sort pas d'ici : un flux Lodgify écrit « Reserved - Marie
+ * Dupont » dans ses résumés, et cette liste part telle quelle dans la page,
+ * lisible par n'importe qui. On ne rend que les deux dates.
+ */
+export function nuitsPrises(bienId: number): { d: string; f: string }[] {
+  if (fluxPerime(bienId)) return [];
+  const p = occupationParBien().get(bienId);
+  if (!p || !p.length) return [];
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  return p.filter((x) => x.f >= aujourdhui).map((x) => ({ d: x.d, f: x.f }));
+}
+
+/**
  * L'état de chaque calendrier sur les mois à venir.
  *
  * Tout vient des flux, et de rien d'autre. C'est le calendrier de Lodgify,

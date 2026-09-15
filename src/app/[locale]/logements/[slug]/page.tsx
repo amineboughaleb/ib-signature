@@ -4,7 +4,7 @@ import { estLocale, getT } from '@/lib/i18n';
 import { bien, biens, descriptionAffichee } from '@/lib/biens';
 import { optionsPaiement } from '@/lib/reservation';
 import { reglages } from '@/lib/db';
-import { conflit } from '@/lib/flux';
+import { conflit, nuitsPrises } from '@/lib/flux';
 import ChoixDates from '@/components/ChoixDates';
 import { sejoursMinimums } from '@/lib/lodgify';
 import { formatDate, nuitsEntre } from '@/lib/dates';
@@ -89,6 +89,13 @@ export default async function Fiche({
      est occupé promet un appartement qu'on ne pourra pas livrer, et cela se
      découvre après que le voyageur a choisi. */
   const pris = nuits > 0 ? conflit(b.id, arrivee, depart) : null;
+
+  /* Et les mêmes nuits, cette fois pour le calendrier lui-même.
+     Le contrôle ci-dessus refuse après le choix ; celui-ci empêche de choisir.
+     Les deux lisent la même source et ne peuvent donc pas se contredire - un
+     calendrier qui offrirait une nuit que la page refuse ensuite serait pire
+     que l'absence de calendrier. */
+  const prises = nuitsPrises(b.id);
 
   const options = await optionsPaiement(b, arrivee, depart, voyageurs, locale);
   /* On passe toujours par notre propre étape, même quand seule la carte est
@@ -267,6 +274,7 @@ export default async function Fiche({
               depart={depart}
               voyageurs={voyageurs}
               libelle={t('fiche_choisir_dates')}
+              prises={prises}
             />
 
             {/* Le prix du séjour, quand il est connu.

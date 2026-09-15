@@ -843,6 +843,16 @@ textarea { resize: vertical; min-height: 120px; }
 }
 .cal-jour:hover:not(:disabled) { background: var(--papier-creux); }
 .cal-jour:disabled { color: var(--filet); cursor: default; }
+/* Une nuit vendue. Barrée, et non pas seulement éteinte comme le passé : le
+   voyageur doit lire « quelqu'un l'a prise » et non « cette case ne marche
+   pas ». Le trait reste fin et de la couleur du texte - un rouge ici ferait
+   ressembler un appartement qui se loue bien à une page en erreur. */
+.cal-jour.cal-pris {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0;
+  opacity: .75;
+}
 /* La période choisie : les deux bornes pleines, la traînée en papier creux.
    Deux niveaux suffisent, un dégradé de trois nuances se lit mal en petit. */
 .cal-jour.cal-entre { background: var(--papier-creux); border-radius: 0; }

@@ -30,6 +30,7 @@ export default function ChoixDates({
   depart: departInitial,
   voyageurs: voyageursInitiaux,
   libelle,
+  prises = [],
 }: {
   locale: string;
   slug: string;
@@ -37,6 +38,10 @@ export default function ChoixDates({
   depart: string;
   voyageurs: number;
   libelle: string;
+  /* Les nuits vendues de CE logement. Elles viennent du serveur, qui les tient
+     du calendrier Lodgify importé chaque nuit ; le composant ne les calcule
+     pas et ne les interroge pas, il les reçoit. */
+  prises?: { d: string; f: string }[];
 }) {
   const t = getT(locale);
   const router = useRouter();
@@ -59,6 +64,7 @@ export default function ChoixDates({
         locale={locale}
         arrivee={arrivee}
         depart={depart}
+        prises={prises}
         onChange={(a, d) => {
           setArrivee(a);
           setDepart(d);
