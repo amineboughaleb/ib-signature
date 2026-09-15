@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { hote, redirectionDeHote } from '@/lib/redirections';
 
 /**
  * Le filtre des actions de serveur.
@@ -42,6 +43,22 @@ import type { NextRequest } from 'next/server';
 const EMPREINTE = /^[0-9a-f]{20,128}$/i;
 
 export function middleware(requete: NextRequest) {
+  /* Les anciennes adresses d'abord, avant toute autre considération.
+   *
+   * L'ancien sous-domaine de la conciergerie ne sert plus aucun contenu : tout
+   * ce qui l'atteint doit repartir, quelle que soit la requête. Ce contrôle
+   * passe donc avant le filtre des actions de serveur - non par préséance, mais
+   * parce que celui-ci laisse filer les navigations ordinaires dès la première
+   * ligne, et qu'un visiteur venu de l'ancien lien n'aurait jamais été vu.
+   *
+   * 301 et non 308 : le chemin d'origine est abandonné, la méthode n'a pas à
+   * être préservée, et c'est le code que les moteurs lisent comme « cette page
+   * a déménagé pour de bon » - celui qui transfère ce que l'ancienne adresse
+   * avait accumulé. Il se met aussi en cache très durablement chez le
+   * visiteur : c'est le prix d'un déménagement définitif, et il l'est. */
+  const ailleurs = redirectionDeHote(hote(requete.headers));
+  if (ailleurs) return NextResponse.redirect(ailleurs, 301);
+
   const action = requete.headers.get('next-action');
   /* Absence d'en-tête : une navigation ordinaire, on ne s'en mêle pas. */
   if (action === null) return NextResponse.next();
