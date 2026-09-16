@@ -98,7 +98,17 @@ export default async function QuiSommesNous({ params }: { params: Promise<{ loca
         </div>
       </nav>
 
+      {/* Qui parle, avant ce qu'il a à dire.
+          La page s'ouvrait sur un constat de marché - « la majorité des
+          locations sous-exploitent leur potentiel » - qui suppose qu'on sache
+          déjà de qui il émane. Or on arrive ici par un lien, par une signature
+          de courriel, par un moteur de recherche, et rarement par l'accueil.
+          Ce paragraphe répond d'abord à la question posée, puis laisse la page
+          faire son travail. */}
       <section className="section">
+        <div className="wrap qs-intro">
+          <p className="lead">{c.intro_p}</p>
+        </div>
         <div className="wrap presentation">
           <div className="presentation-image presentation-portrait">
             {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -165,6 +165,12 @@ p { margin: 0 0 1em; }
 .narrow { max-width: 780px; }
 .section { padding: 96px 0; }
 .section-tight { padding: 64px 0; }
+/* L'ouverture de « Qui sommes-nous », dans la même section que le bloc au
+   portrait plutôt que dans la sienne : deux sections, c'étaient deux fois
+   quatre-vingt-seize pixels de respiration entre un paragraphe et le titre
+   qu'il annonce, et le lecteur y voyait une fin de partie. */
+.qs-intro { margin-bottom: 56px; }
+.qs-intro .lead { margin: 0; }
 
 /* ---------- en-tête ---------- */
 .site-header {

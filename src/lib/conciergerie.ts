@@ -24,6 +24,11 @@ export type Cas = { lieu: string; type: string; avant: string; apres: string; no
 export type Temoin = { nom: string; bien: string; texte: string };
 
 type Bloc = {
+  /* Le paragraphe d'ouverture. Il ne développe rien : il répond à la question
+     que se pose celui qui arrive ici par un lien ou par un moteur de recherche,
+     et qui ne sait pas encore ce qu'il lit. Le reste de la page suppose cette
+     réponse connue. */
+  intro_p: string;
   approche_titre: string;
   approche_p: string[];
   principes_sur: string;
@@ -106,6 +111,9 @@ export const PHOTOS: { url: string; alt: { fr: string; en: string } }[] = [
 ];
 
 const fr: Bloc = {
+  intro_p:
+    'IB Signature gère à Casablanca les appartements meublés de propriétaires qui attendent mieux de leur bien que ce qu’une location ordinaire leur rend. Nous appliquons à des logements privés les exigences d’un hôtel : nos propres équipes, un accueil tenu à l’heure près, et un compte rendu mensuel dont chaque chiffre se vérifie. Le propriétaire garde son bien ; il n’en garde pas la charge.',
+
   approche_titre: 'L’écart entre un Airbnb ordinaire et une expérience IB Signature',
   approche_p: [
     'Au Maroc, la majorité des locations courte durée sous-exploitent leur potentiel. Tarification statique, absence de stratégie de revenue management, qualité d’accueil inégale, photos amateurs, gestion des avis négligée.',
@@ -258,6 +266,9 @@ const fr: Bloc = {
 };
 
 const en: Bloc = {
+  intro_p:
+    'IB Signature manages furnished apartments in Casablanca for owners who expect more from their property than an ordinary rental returns. We apply to private homes the demands of a hotel: our own teams, a welcome kept to the hour, and a monthly report in which every figure can be checked. The owner keeps the property; they do not keep the burden.',
+
   approche_titre: 'The gap between an ordinary Airbnb and an IB Signature stay',
   approche_p: [
     'In Morocco, most short-term rentals fall short of their potential. Static pricing, no revenue management strategy, uneven hospitality, amateur photographs, neglected review management.',
