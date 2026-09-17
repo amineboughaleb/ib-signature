@@ -54,23 +54,42 @@ export function hote(entetes: { get(nom: string): string | null }): string {
 
 /* ---------- les fiches qui ont changé d'adresse ----------
  *
- * L'adresse d'une fiche se fabrique à partir du nom que Lodgify donne au
- * logement. Lodgify a traduit certains de ces noms tout seul - « The 501
- * Racine » est devenu « Le 501 Racine » - et l'adresse a suivi : l'ancienne a
- * cessé d'exister du jour au lendemain, sans erreur nulle part, sans que
- * personne l'ait demandé. Search Console l'a signalé trois semaines plus tard ;
- * entre-temps, tout lien déjà diffusé menait à une page introuvable.
+ * L'adresse d'une fiche se fabriquait à partir du nom que Lodgify donne au
+ * logement : renommer là-bas changeait l'adresse ici, sans erreur nulle part.
+ * Ce défaut est réglé à sa source - `data/enrichissement.json` porte désormais
+ * une adresse figée par logement, et le nom Lodgify ne commande plus rien.
  *
- * Cette table rattrape les adresses mortes. Elle ne guérit pas la cause : pour
- * cela il faut figer les adresses dans l'enrichissement, ce que prépare
- * `scripts/figer-slugs.mjs`. Une fois figées, cette table cessera de grandir.
- *
- * Les clefs sont des fragments d'adresse et non des chemins entiers : la langue
- * se lit à part, et une ligne par logement vaut mieux que deux. */
+ * Cette table ne sert donc qu'aux changements voulus, et elle est vide. La
+ * raison pour laquelle elle l'est se lit plus bas : elle a coûté assez cher
+ * pour être racontée. */
 const ANCIENS_LOGEMENTS: Record<string, string> = {
-  'the-501-racine': 'le-501-racine',
-  'the-31-grand-theatre': 'le-31-grand-theatre',
-  'the-23-princesses': 'le-23-princesses',
+  /* Vide - et le récit de ce qui l'a remplie quelques heures mérite d'être
+     gardé, parce que la faute était dans la méthode, pas dans le code.
+
+     Le raisonnement était : Search Console signale `the-501-racine` en erreur,
+     un serveur d'essai confirme qu'elle rend 404 et que `le-501-racine` répond,
+     donc Lodgify a renommé le logement et il faut rediriger l'ancienne adresse
+     vers la nouvelle. Trois lignes, et des fiches cassées en production.
+
+     Le serveur d'essai ne pouvait pas joindre l'API de Lodgify. Dans ce cas,
+     `biens()` bascule sans bruit sur le `repli` de ce même fichier - un
+     catalogue écrit à la main, dont les adresses portent la forme française.
+     Ce qui passait pour le catalogue réel était un catalogue de secours, et la
+     « nouvelle adresse » n'existait que là.
+
+     Les vraies adresses n'avaient jamais bougé. Les rediriger les a fait
+     pointer vers des pages qui n'ont jamais existé.
+
+     Deux leçons, et la seconde est la vraie. Un repli silencieux est un piège
+     pour qui l'observe sans le savoir : il rend une réponse plausible là où une
+     erreur aurait instruit. Et une redirection se vérifie sur le site en ligne,
+     jamais sur une copie - c'est le seul endroit où l'adresse de départ et
+     l'adresse d'arrivée sont celles que voit un visiteur.
+
+     La table reste, vide, pour le jour où une adresse changera pour de vrai :
+     un logement renommé, un slug corrigé à la main dans l'enrichissement. Ce
+     jour-là, une ligne ici évitera une page d'erreur - après vérification en
+     ligne des deux adresses, celle qu'on quitte et celle où l'on va. */
 };
 
 /**
