@@ -4,8 +4,63 @@ import { avis } from '@/lib/avis';
 import Recherche from '@/components/Recherche';
 import Diaporama from '@/components/Diaporama';
 import Avis from '@/components/Avis';
+import { metaCommune } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * L'accueil se présente enfin.
+ *
+ * Toutes les autres pages du site déclaraient leur adresse canonique et leurs
+ * équivalents linguistiques ; celle-ci, non. L'oubli ne se voyait pas à
+ * l'écran, et c'est ce qui l'a fait durer : rien ne manquait au visiteur.
+ *
+ * Il se voyait dans Search Console. Sans canonique, `/fr` et `/en` arrivent
+ * chez Google comme deux pages proches dont aucune ne dit laquelle fait foi -
+ * et Google tranche à notre place, parfois pour l'anglaise là où la clientèle
+ * cherche en français. Sans `hreflang`, il n'a même pas de quoi comprendre
+ * qu'elles sont deux versions d'une même page.
+ *
+ * Les villes ne sont pas écrites ici. Elles se lisent dans le catalogue, parce
+ * qu'une ville en dur dans un titre ne se contredit pas bruyamment le jour où
+ * le catalogue change : elle devient simplement fausse, et c'est Google qui
+ * l'affiche pendant des mois.
+ */
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const en = locale === 'en';
+  const villes = [...new Set((await biens()).map((b) => b.ville).filter(Boolean))].sort();
+  const lieu = enumerer(villes, en);
+
+  /* Soixante caractères, pas un de plus : c'est ce que Google affiche avant de
+     couper. « Appartements meublés à Casablanca et Marrakech · IB Signature »
+     en faisait soixante et un, et se serait lu « ...et Marrakech · IB Sign… ».
+     L'adjectif saute plutôt que la marque. */
+  const titre = lieu
+    ? en
+      ? `Apartments in ${lieu} · IB Signature`
+      : `Appartements à ${lieu} · IB Signature`
+    : en
+      ? 'Serviced apartments · IB Signature'
+      : 'Appartements meublés · IB Signature';
+
+  /* Une description écrite pour la page de résultats, et tenue sous les cent
+     soixante caractères que Google affiche : au-delà, la phrase est coupée au
+     milieu d'un mot, ce qui ressemble à une négligence au moment précis où
+     l'on décide de cliquer. */
+  const description = en
+    ? `Apartments run by our own teams${lieu ? ` in ${lieu}` : ''}: a personal welcome, hotel-grade linen, careful housekeeping. Choose your dates and book.`
+    : `Des appartements tenus par nos propres équipes${lieu ? ` à ${lieu}` : ''} : accueil soigné, linge hôtelier, ménage professionnel. Choisissez vos dates.`;
+
+  return metaCommune(locale, '', titre, description);
+}
+
+/** « Casablanca et Marrakech », ou « Casablanca, Rabat et Marrakech ». */
+function enumerer(mots: string[], en: boolean): string {
+  if (!mots.length) return '';
+  if (mots.length === 1) return mots[0];
+  return `${mots.slice(0, -1).join(', ')} ${en ? 'and' : 'et'} ${mots[mots.length - 1]}`;
+}
 
 /**
  * L'accueil, destiné au voyageur.
