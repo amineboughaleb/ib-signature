@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { hote, redirectionDeHote } from '@/lib/redirections';
+import { hote, redirectionDeChemin, redirectionDeHote } from '@/lib/redirections';
 
 /**
  * Le filtre des actions de serveur.
@@ -58,6 +58,23 @@ export function middleware(requete: NextRequest) {
    * visiteur : c'est le prix d'un déménagement définitif, et il l'est. */
   const ailleurs = redirectionDeHote(hote(requete.headers));
   if (ailleurs) return NextResponse.redirect(ailleurs, 301);
+
+  /* Puis les fiches qui ont changé d'adresse.
+   *
+   * Après l'hôte, parce qu'un visiteur venu de l'ancien sous-domaine sur une
+   * fiche renommée doit d'abord arriver sur le bon site ; et avant le filtre
+   * des actions de serveur, pour la raison déjà dite - celui-ci laisse filer
+   * les navigations ordinaires dès sa première ligne.
+   *
+   * La chaîne de requête est reportée telle quelle : un lien partagé porte
+   * souvent des dates, et les perdre en chemin rendrait au voyageur une fiche
+   * vide là où il attendait un prix. */
+  const nouveauChemin = redirectionDeChemin(requete.nextUrl.pathname);
+  if (nouveauChemin) {
+    const cible = new URL(nouveauChemin, requete.url);
+    cible.search = requete.nextUrl.search;
+    return NextResponse.redirect(cible, 301);
+  }
 
   const action = requete.headers.get('next-action');
   /* Absence d'en-tête : une navigation ordinaire, on ne s'en mêle pas. */

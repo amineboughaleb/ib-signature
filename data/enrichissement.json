@@ -3,7 +3,80 @@
   "base_reservation": "https://ibsignature.lodgify.com/fr/toutes-les-proprietes/",
   "checkout_base": "https://checkout.lodgify.com",
   "checkout_compte": "ibsignature",
-  "biens": {},
+  "biens": {
+    "573132": {
+      "slug": "the-26-palmier"
+    },
+    "573133": {
+      "slug": "the-51-hermitage"
+    },
+    "573134": {
+      "slug": "number-nine-triangle-d-or"
+    },
+    "586696": {
+      "slug": "gardenia-cfc"
+    },
+    "603177": {
+      "slug": "number-six-triangle-d-or"
+    },
+    "604830": {
+      "slug": "the-23-princesses"
+    },
+    "604831": {
+      "slug": "the-53-gauthier"
+    },
+    "611955": {
+      "slug": "one-five-racine"
+    },
+    "648841": {
+      "slug": "the-31-grand-theatre"
+    },
+    "651405": {
+      "slug": "number-06-bourgogne"
+    },
+    "651728": {
+      "slug": "villa-dar-bassidi"
+    },
+    "659024": {
+      "slug": "summer-house-with-swimming-pool-sea-and-golf-course"
+    },
+    "667752": {
+      "slug": "the-41-maarif"
+    },
+    "669055": {
+      "slug": "the-501-racine"
+    },
+    "675267": {
+      "slug": "number-twelve-triangle-d-or"
+    },
+    "682456": {
+      "slug": "the-28-triangle-d-or"
+    },
+    "688529": {
+      "slug": "holiday-home-with-sea-and-pool-views-in-tamaris"
+    },
+    "703202": {
+      "slug": "the-fifteen-triangle-d-or"
+    },
+    "710269": {
+      "slug": "the-nineteen-racine"
+    },
+    "712993": {
+      "slug": "c202-alcazar"
+    },
+    "730652": {
+      "slug": "the-twenty-four-cil"
+    },
+    "737645": {
+      "slug": "the-sixteen-triangle-d-or"
+    },
+    "783246": {
+      "slug": "number-one-racine-2br-terrace-parking"
+    },
+    "800429": {
+      "slug": "the-37-gauthier-large-1br-flat-wifi-parking"
+    }
+  },
   "repli": [
     {
       "slug": "number-twelve-triangle-d-or",

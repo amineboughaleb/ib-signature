@@ -52,6 +52,41 @@ export function hote(entetes: { get(nom: string): string | null }): string {
   return brut.trim().toLowerCase().split(',')[0].trim().split(':')[0];
 }
 
+/* ---------- les fiches qui ont changé d'adresse ----------
+ *
+ * L'adresse d'une fiche se fabrique à partir du nom que Lodgify donne au
+ * logement. Lodgify a traduit certains de ces noms tout seul - « The 501
+ * Racine » est devenu « Le 501 Racine » - et l'adresse a suivi : l'ancienne a
+ * cessé d'exister du jour au lendemain, sans erreur nulle part, sans que
+ * personne l'ait demandé. Search Console l'a signalé trois semaines plus tard ;
+ * entre-temps, tout lien déjà diffusé menait à une page introuvable.
+ *
+ * Cette table rattrape les adresses mortes. Elle ne guérit pas la cause : pour
+ * cela il faut figer les adresses dans l'enrichissement, ce que prépare
+ * `scripts/figer-slugs.mjs`. Une fois figées, cette table cessera de grandir.
+ *
+ * Les clefs sont des fragments d'adresse et non des chemins entiers : la langue
+ * se lit à part, et une ligne par logement vaut mieux que deux. */
+const ANCIENS_LOGEMENTS: Record<string, string> = {
+  'the-501-racine': 'le-501-racine',
+  'the-31-grand-theatre': 'le-31-grand-theatre',
+  'the-23-princesses': 'le-23-princesses',
+};
+
+/**
+ * Le chemin vers lequel cette fiche doit partir, ou `null` si elle reste.
+ *
+ * Rend un chemin et non une adresse complète, à dessein : c'est l'intergiciel
+ * qui sait sous quel hôte il travaille, et une redirection qui changerait
+ * d'hôte en chemin enverrait un visiteur d'un environnement dans l'autre.
+ */
+export function redirectionDeChemin(chemin: string): string | null {
+  const m = /^\/(fr|en)\/logements\/([^/?#]+)\/?$/.exec(chemin);
+  if (!m) return null;
+  const neuf = ANCIENS_LOGEMENTS[m[2].toLowerCase()];
+  return neuf ? `/${m[1]}/logements/${neuf}` : null;
+}
+
 /**
  * L'adresse vers laquelle cet hôte doit partir, ou `null` s'il reste chez lui.
  *
