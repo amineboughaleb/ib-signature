@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { biens } from '@/lib/biens';
+import { vitrine } from '@/lib/biens';
 import { LANGUES, PAGES, origine } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
@@ -18,7 +18,7 @@ export const dynamic = 'force-dynamic';
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = origine();
-  const catalogue = await biens();
+  const catalogue = await vitrine();
 
   const alternatives = (chemin: string) => ({
     languages: Object.fromEntries(LANGUES.map((l) => [l, `${base}/${l}${chemin}`])),

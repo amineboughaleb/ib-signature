@@ -1,5 +1,5 @@
 import { getT } from '@/lib/i18n';
-import { biens, photosAccroche } from '@/lib/biens';
+import { photosAccroche, vitrine } from '@/lib/biens';
 import { avis } from '@/lib/avis';
 import Recherche from '@/components/Recherche';
 import Diaporama from '@/components/Diaporama';
@@ -29,7 +29,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const en = locale === 'en';
-  const villes = [...new Set((await biens()).map((b) => b.ville).filter(Boolean))].sort();
+  const villes = [...new Set((await vitrine()).map((b) => b.ville).filter(Boolean))].sort();
   const lieu = enumerer(villes, en);
 
   /* Soixante caractères, pas un de plus : c'est ce que Google affiche avant de
@@ -82,7 +82,7 @@ function enumerer(mots: string[], en: boolean): string {
 export default async function Accueil({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = getT(locale);
-  const tous = await biens();
+  const tous = await vitrine();
   const photos = await photosAccroche();
   const lesAvis = await avis(locale, 6);
   const villes = [...new Set(tous.map((b) => b.ville))].sort();

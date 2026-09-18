@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { estLocale, getT } from '@/lib/i18n';
 import { conciergerie } from '@/lib/conciergerie';
-import { biens } from '@/lib/biens';
+import { biens, vitrine } from '@/lib/biens';
 
 import { metaCommune } from '@/lib/seo';
 
@@ -68,7 +68,7 @@ export default async function QuiSommesNous({ params }: { params: Promise<{ loca
   /* Les photographies des études de cas : les vôtres, chez Lodgify. Aucune
      image de remplacement - une carte qui nomme un logement précis ne doit pas
      être illustrée par un intérieur qui n'est pas le sien. */
-  const catalogue = await biens();
+  const catalogue = await vitrine();
   const miennes = catalogue.filter((b) => b.photos[0]).map((b) => ({ url: b.photos[0], alt: b.nom }));
   const image = (n: number) => miennes[n % miennes.length];
 

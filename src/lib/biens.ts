@@ -23,7 +23,15 @@ import enrichissement from '../../data/enrichissement.json';
 /* Les galeries issues de l'import, versionnées avec le code. Elles voyagent
    avec les fichiers d'images ; la base, elle, reste sur le serveur. */
 import galeriesVersionnees from '../../data/galeries.json';
-import { listerImages, liensReservation, galeries, descriptions, tousLesFaits, equipements } from './db';
+import {
+  listerImages,
+  liensReservation,
+  galeries,
+  descriptions,
+  tousLesFaits,
+  equipements,
+  vitrineReglee,
+} from './db';
 
 export type Bien = {
   /** L'identifiant Lodgify. C'est la clef de tout le reste. */
@@ -64,6 +72,8 @@ export type Bien = {
   /** Rang d'affichage. Les biens sans rang passent après, dans l'ordre de Lodgify. */
   rang?: number;
   enAvant?: boolean;
+  /** Retiré du site sans être retiré de Lodgify : travaux, reprise par le propriétaire. */
+  masque?: boolean;
   /** L'adresse de réservation Lodgify de ce bien. */
   reservation?: string;
 };
@@ -236,7 +246,17 @@ export async function biens(): Promise<Bien[]> {
      n'efface rien - il rend simplement la main. */
   const saisis = tousLesFaits();
   const equipes = equipements();
+  /* Ce que l'administration a réglé pour la vitrine passe devant le fichier
+     d'enrichissement - même règle que partout ailleurs ici, et pour la même
+     raison : un déploiement ne doit pas défaire ce qu'on a rangé à la main. */
+  const reglee = vitrineReglee();
   for (const b of liste) {
+    const v = reglee.get(b.id);
+    if (v) {
+      if (v.rang) b.rang = v.rang;
+      b.enAvant = v.avant;
+      b.masque = v.masque;
+    }
     const u = liens.get(b.id);
     if (u) b.reservation = u;
     const t = textes.get(b.id);
@@ -268,8 +288,28 @@ export async function biens(): Promise<Bien[]> {
   return liste.sort(parRang);
 }
 
+/**
+ * Le catalogue tel que le public le voit.
+ *
+ * `biens()` rend tout, y compris ce qui est retiré du site : l'administration a
+ * besoin de voir un logement masqué pour le démasquer, et une liste où il
+ * aurait disparu serait une impasse. C'est donc ici, à la porte du public, que
+ * le retrait s'applique - à un seul endroit, plutôt qu'à chaque page qui
+ * affiche des appartements.
+ */
+export async function vitrine(): Promise<Bien[]> {
+  return (await biens()).filter((b) => !b.masque);
+}
+
+/**
+ * Un logement par son adresse, pour le public.
+ *
+ * Passe par `vitrine()`, donc un logement masqué rend une page introuvable
+ * plutôt qu'une fiche qu'on croyait retirée. C'est ce qu'on attend d'un retrait,
+ * et c'est aussi ce qui empêche un lien déjà diffusé de contourner la décision.
+ */
 export async function bien(slug: string): Promise<Bien | undefined> {
-  return (await biens()).find((b) => b.slug === slug);
+  return (await vitrine()).find((b) => b.slug === slug);
 }
 
 /** Vrai quand le catalogue affiché vient d'un repli, donc sans prix ni calendrier. */

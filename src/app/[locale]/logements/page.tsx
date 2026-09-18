@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { estLocale, getT } from '@/lib/i18n';
-import { biens, catalogueDegrade } from '@/lib/biens';
+import { biens, catalogueDegrade, vitrine } from '@/lib/biens';
 import { sejoursMinimums, devisMultiples } from '@/lib/lodgify';
 import { disponibiliteReelle, veillerAuxFlux } from '@/lib/flux';
 import { metaCommune } from '@/lib/seo';
@@ -65,7 +65,7 @@ export default async function Liste({
      celle-ci sera désactivée par mégarde. */
   veillerAuxFlux();
 
-  const tous = await biens();
+  const tous = await vitrine();
   const villes = [...new Set(tous.map((b) => b.ville))].sort();
   const degrade = await catalogueDegrade();
 

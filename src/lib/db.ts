@@ -376,6 +376,16 @@ function migrerLiens() {
     'f_sejour_min INTEGER NOT NULL DEFAULT 0',
     "f_quartier TEXT NOT NULL DEFAULT ''",
     "equipements TEXT NOT NULL DEFAULT ''",
+    /* La vitrine : l'ordre d'affichage, la mise en avant, le retrait.
+       Ces trois-là vivaient dans `data/enrichissement.json`, donc dans le code :
+       ranger un appartement demandait un commit et un déploiement, ce qui n'est
+       pas une administration. Ils rejoignent la base, comme les textes, les
+       photographies et les équipements avant eux - et pour la même raison : la
+       base garde le dernier mot, sans quoi un déploiement déferait le travail.
+       Zéro vaut « non renseigné » partout, et rend la main au fichier. */
+    'v_rang INTEGER NOT NULL DEFAULT 0',
+    'v_avant INTEGER NOT NULL DEFAULT 0',
+    'v_masque INTEGER NOT NULL DEFAULT 0',
   ]) {
     try {
       db().exec(`ALTER TABLE liens ADD COLUMN ${col}`);
@@ -383,6 +393,63 @@ function migrerLiens() {
       /* colonne déjà présente */
     }
   }
+}
+
+/* ---------- la vitrine ----------
+   Ce qu'on décide de montrer, dans quel ordre, et ce qu'on retire. */
+
+export type Vitrine = { rang: number; avant: boolean; masque: boolean };
+
+/**
+ * L'ordre et l'état de chaque logement, tels que l'administration les a réglés.
+ *
+ * Seules les lignes réellement renseignées sont rendues : un logement absent de
+ * cette table n'est pas un logement au rang zéro, c'est un logement dont
+ * personne n'a rien dit, et c'est alors au fichier d'enrichissement de
+ * répondre. Confondre les deux ferait passer tout nouvel appartement devant les
+ * autres le jour de son arrivée.
+ */
+export function vitrineReglee(): Map<number, Vitrine> {
+  migrerLiens();
+  const lignes = db()
+    .prepare('SELECT bien_id, v_rang, v_avant, v_masque FROM liens')
+    .all() as { bien_id: number; v_rang: number; v_avant: number; v_masque: number }[];
+  const out = new Map<number, Vitrine>();
+  for (const l of lignes) {
+    if (!l.v_rang && !l.v_avant && !l.v_masque) continue;
+    out.set(Number(l.bien_id), {
+      rang: Number(l.v_rang) || 0,
+      avant: Boolean(l.v_avant),
+      masque: Boolean(l.v_masque),
+    });
+  }
+  return out;
+}
+
+/**
+ * Écrit la vitrine entière, d'un seul coup.
+ *
+ * Entière et non ligne par ligne, parce que ranger est un geste global : les
+ * rangs n'ont de sens que les uns par rapport aux autres, et enregistrer un
+ * seul déplacement laisserait deux logements au même rang le temps d'un
+ * rechargement. Une transaction, et la liste est cohérente ou elle ne change
+ * pas.
+ */
+export function ecrireVitrine(lignes: { bienId: number; rang: number; avant: boolean; masque: boolean }[]) {
+  migrerLiens();
+  const req = db().prepare(
+    `INSERT INTO liens (bien_id, v_rang, v_avant, v_masque, updated_at)
+     VALUES (@bienId, @rang, @avant, @masque, datetime('now'))
+     ON CONFLICT(bien_id) DO UPDATE SET
+       v_rang = excluded.v_rang, v_avant = excluded.v_avant,
+       v_masque = excluded.v_masque, updated_at = datetime('now')`
+  );
+  db().transaction((tout: typeof lignes) => {
+    for (const l of tout) {
+      if (!l.bienId) continue;
+      req.run({ bienId: l.bienId, rang: l.rang, avant: l.avant ? 1 : 0, masque: l.masque ? 1 : 0 });
+    }
+  })(lignes);
 }
 
 export function liensReservation(): Map<number, string> {

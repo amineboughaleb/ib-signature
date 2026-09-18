@@ -53,6 +53,9 @@ export default async function AdminPhotos({
       </p>
 
       <div className="actions-ligne" style={{ marginBottom: 26 }}>
+        <Link className="btn-mini" href="/admin/logements/ordre">
+          Ranger l’ordre d’affichage
+        </Link>
         <Link className="btn-mini" href="/admin/calendriers">
           Voir l’état des calendriers
         </Link>

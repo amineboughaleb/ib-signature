@@ -16,6 +16,7 @@ import {
   ecrireLien,
   ecrireGalerie,
   ecrireGalerieChoisie,
+  ecrireVitrine,
   libererGalerie,
   reprendreGaleriesImport,
   ecrireDescription,
@@ -168,6 +169,59 @@ export async function enregistrerLienAction(form: FormData) {
   }
 
   revalidatePath('/admin/reservation');
+  revalidatePath('/', 'layout');
+}
+
+/* ---------- la vitrine : l'ordre, la mise en avant, le retrait ---------- */
+
+/**
+ * Enregistre la vitrine entière.
+ *
+ * Le formulaire envoie une seule valeur : la liste des identifiants dans
+ * l'ordre voulu, plus les deux marques par logement. Envoyer la liste entière
+ * plutôt que le déplacement effectué évite un bug classique - deux
+ * administrateurs, ou deux onglets, qui rangent chacun de leur côté et dont les
+ * demandes partielles se croisent. Ici, la dernière liste reçue fait foi.
+ *
+ * Le rang est recalculé à partir de la position, jamais envoyé par le
+ * navigateur : un rang venu du client est un rang qu'on peut falsifier, et
+ * surtout un rang qui peut arriver en double.
+ */
+export async function enregistrerVitrineAction(form: FormData) {
+  await garde();
+
+  const ordre = String(form.get('ordre') || '')
+    .split(',')
+    .map((x) => Number(x.trim()))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  if (!ordre.length) return;
+
+  const avant = new Set(
+    String(form.get('avant') || '')
+      .split(',')
+      .map((x) => Number(x.trim()))
+      .filter(Boolean)
+  );
+  const masques = new Set(
+    String(form.get('masques') || '')
+      .split(',')
+      .map((x) => Number(x.trim()))
+      .filter(Boolean)
+  );
+
+  /* Les doublons sautent : un identifiant présent deux fois dans la liste
+     donnerait deux rangs au même logement, et c'est le dernier écrit qui
+     gagnerait - silencieusement. */
+  const vus = new Set<number>();
+  const lignes = [];
+  for (const id of ordre) {
+    if (vus.has(id)) continue;
+    vus.add(id);
+    lignes.push({ bienId: id, rang: vus.size, avant: avant.has(id), masque: masques.has(id) });
+  }
+  ecrireVitrine(lignes);
+
+  revalidatePath('/admin/logements/ordre');
   revalidatePath('/', 'layout');
 }
 

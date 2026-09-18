@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { estLocale, getT } from '@/lib/i18n';
-import { bien, biens, descriptionAffichee } from '@/lib/biens';
+import { bien, biens, descriptionAffichee, vitrine } from '@/lib/biens';
 import { optionsPaiement } from '@/lib/reservation';
 import { reglages } from '@/lib/db';
 import { conflit, nuitsPrises } from '@/lib/flux';
@@ -136,7 +136,7 @@ export default async function Fiche({
     t('fiche_c5', { a: arriveeH }),
     t('fiche_c6'),
   ];
-  const autres = (await biens()).filter((x) => x.slug !== b.slug).slice(0, 3);
+  const autres = (await vitrine()).filter((x) => x.slug !== b.slug).slice(0, 3);
 
   return (
     <>

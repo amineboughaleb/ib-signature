@@ -649,3 +649,40 @@
    suivant une ancre. */
 html { scroll-padding-top: 132px; }
 .admin-corps :is(input, select, textarea, button) { scroll-margin-top: 132px; }
+
+/* ---------- ranger la vitrine ----------
+   Une ligne se saisit et se déplace : elle doit donc être assez haute pour
+   qu'un doigt l'attrape sans viser, et assez dense pour qu'on voie seize
+   logements sans faire défiler trois écrans. */
+.ordre-liste { list-style: none; margin: 0 0 20px; padding: 0; }
+.ordre-ligne {
+  display: grid; grid-template-columns: 28px 52px 1fr auto auto;
+  align-items: center; gap: 14px;
+  padding: 10px 12px; border: 1px solid var(--filet); border-radius: 3px;
+  background: var(--papier); margin-bottom: 8px; cursor: grab;
+}
+.ordre-ligne:active { cursor: grabbing; }
+/* Retiré : en retrait, pas effacé. On doit pouvoir le lire pour le remettre. */
+.ordre-masque { opacity: .55; background: var(--papier-creux); }
+.ordre-n { font-variant-numeric: tabular-nums; color: var(--sourd); font-size: 13px; text-align: right; }
+.ordre-vignette { width: 52px; height: 38px; object-fit: cover; border-radius: 2px; display: block; }
+.ordre-vignette-vide { background: var(--papier-creux); border: 1px solid var(--filet); }
+.ordre-nom { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ordre-nom strong { font-weight: 600; }
+.ordre-marques { display: flex; gap: 16px; white-space: nowrap; }
+.ordre-marques label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.ordre-fleches { display: flex; gap: 4px; }
+.ordre-fleches button {
+  width: 30px; height: 30px; border: 1px solid var(--filet); background: transparent;
+  border-radius: 2px; cursor: pointer; font-size: 14px; line-height: 1; color: var(--encre);
+}
+.ordre-fleches button:hover:not(:disabled) { background: var(--papier-creux); }
+.ordre-fleches button:disabled { opacity: .3; cursor: default; }
+.ordre-pied { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* Au doigt, le glisser-déposer ne marche pas et les cases se serrent : la ligne
+   se replie en deux rangs plutôt que de déborder. */
+@media (max-width: 760px) {
+  .ordre-ligne { grid-template-columns: 24px 44px 1fr auto; row-gap: 8px; }
+  .ordre-marques { grid-column: 3 / -1; }
+}
