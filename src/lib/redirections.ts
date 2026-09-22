@@ -115,3 +115,54 @@ export function redirectionDeChemin(chemin: string): string | null {
 export function redirectionDeHote(nomDHote: string): string | null {
   return ANCIENS_HOTES[nomDHote] ?? null;
 }
+
+/* ---------- une seule adresse canonique ----------
+ *
+ * `www.ibsignature.com` et `ibsignature.com` servis côte à côte, ce sont deux
+ * origines distinctes : deux jeux de cookies, deux entrées dans les moteurs de
+ * recherche pour les mêmes pages, et des signaux répartis entre les deux au
+ * lieu d'être concentrés sur une seule. Google a d'ailleurs indexé la version
+ * `www` et écarté l'autre.
+ *
+ * Cette règle ne peut pas vivre dans `ANCIENS_HOTES`, et c'est la raison de ce
+ * bloc séparé : cette table envoie tout un hôte vers UNE page, parce que
+ * l'ancien sous-domaine n'avait pas d'équivalent chemin pour chemin. Ici c'est
+ * l'inverse - le `www` sert exactement le même site, et chaque chemin doit
+ * retrouver le sien. Envoyer `www.ibsignature.com/fr/logements/le-501` sur la
+ * page d'accueil perdrait le visiteur ET le lien.
+ */
+
+/** Le préfixe, isolé : il apparaît trois fois et se lit mal en dur. */
+const PREFIXE_WWW = 'www.';
+
+/**
+ * L'adresse canonique de cette requête, ou `null` si elle y est déjà.
+ *
+ * Comme le reste du module : ni Next, ni requête, seulement des chaînes.
+ *
+ * **L'exception `/.well-known/` est vitale**, et elle ne se devine pas. C'est
+ * par là que passe la validation d'un certificat : l'autorité demande une
+ * preuve à `www.ibsignature.com` et refuse d'être renvoyée ailleurs. Rediriger
+ * ce chemin, c'est empêcher le `www` d'obtenir le certificat dont il a besoin
+ * pour rediriger - un serpent qui se mord la queue, et qui ne produit aucune
+ * erreur lisible. Le jour où le certificat expire, le `www` cesse de répondre
+ * et personne ne fait le lien avec cette ligne-ci.
+ */
+export function redirectionCanonique(
+  nomDHote: string,
+  chemin: string,
+  recherche = ''
+): string | null {
+  if (!nomDHote.startsWith(PREFIXE_WWW)) return null;
+
+  const nu = nomDHote.slice(PREFIXE_WWW.length);
+  /* Un hôte sans point après le retrait du préfixe n'est pas un domaine : on ne
+     redirige pas `www.localhost` vers `localhost`, ni quoi que ce soit qui
+     ressemblerait à cela en développement. */
+  if (!nu.includes('.')) return null;
+
+  if (chemin.startsWith('/.well-known/')) return null;
+
+  return `https://${nu}${chemin}${recherche}`;
+}
+

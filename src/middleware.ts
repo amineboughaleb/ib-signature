@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { hote, redirectionDeChemin, redirectionDeHote } from '@/lib/redirections';
+import { hote, redirectionCanonique, redirectionDeChemin, redirectionDeHote } from '@/lib/redirections';
 
 /**
  * Le filtre des actions de serveur.
@@ -58,6 +58,29 @@ export function middleware(requete: NextRequest) {
    * visiteur : c'est le prix d'un déménagement définitif, et il l'est. */
   const ailleurs = redirectionDeHote(hote(requete.headers));
   if (ailleurs) return NextResponse.redirect(ailleurs, 301);
+
+  /* Puis le `www`, vers le domaine nu.
+   *
+   * Après la table ci-dessus, et l'ordre n'est pas indifférent :
+   * `www.conciergerie.ibsignature.com` commence lui aussi par `www.`, et la
+   * règle canonique seule l'enverrait sur `conciergerie.ibsignature.com`, qui
+   * repartirait aussitôt. Deux sauts là où la table en fait un - et une chaîne
+   * de redirections est précisément ce qu'un moteur compte contre vous.
+   *
+   * 308 et non 301, contrairement à ses deux voisines. Les deux disent
+   * « définitif » et transfèrent autant l'une que l'autre ; la différence est
+   * que 308 préserve la méthode. Un formulaire de réservation posté sur le
+   * `www` - parce que le visiteur y est arrivé par un lien ancien - traverse la
+   * redirection au lieu d'être vidé de son contenu en chemin. Les deux autres
+   * peuvent rester en 301 : elles mènent à une page fixe, où il n'y a jamais
+   * rien à poster.
+   */
+  const canonique = redirectionCanonique(
+    hote(requete.headers),
+    requete.nextUrl.pathname,
+    requete.nextUrl.search
+  );
+  if (canonique) return NextResponse.redirect(canonique, 308);
 
   /* Puis les fiches qui ont changé d'adresse.
    *

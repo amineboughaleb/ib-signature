@@ -27,6 +27,30 @@ export default {
     ]);
   },
 
+  /**
+   * Les métadonnées écrites dans l'en-tête, et non diffusées en fin de page.
+   *
+   * Depuis Next 15.2, le titre, la description et surtout la balise canonique
+   * ne sont plus écrits dans le `<head>` : ils sont envoyés à la fin du corps,
+   * pour ne pas retarder l'affichage. Un navigateur les remonte sans peine, et
+   * Google, qui exécute le JavaScript, finit par les voir.
+   *
+   * Mais « finit par » ne suffit pas. Le premier passage de Google ne lit que
+   * le HTML brut, et c'est souvent à ce moment-là qu'il décide quelle page est
+   * l'originale et laquelle est un doublon. C'est ce qui explique le rapport de
+   * Search Console : « URL canonique déclarée par l'utilisateur : Aucun »,
+   * alors que la balise est bien là quand on inspecte la page. Elle n'est pas
+   * absente, elle arrive trop tard.
+   *
+   * `/.*​/` désigne tous les robots : plus personne ne reçoit les métadonnées en
+   * différé. Le coût est de quelques millisecondes sur le premier octet,
+   * puisqu'il faut résoudre `generateMetadata` avant d'envoyer la page. C'est
+   * sans commune mesure avec une page écartée de l'index.
+   *
+   * Staytle porte le même réglage depuis le 15 septembre, pour le même motif.
+   */
+  htmlLimitedBots: /.*/,
+
   /* Le tampon que l'intergiciel impose au corps des requêtes.
      Par défaut dix mégaoctets, et au-delà le corps est tronqué en silence -
      la route reçoit un formulaire amputé et échoue sans que rien n'explique
