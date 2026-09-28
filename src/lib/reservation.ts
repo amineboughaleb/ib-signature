@@ -122,18 +122,32 @@ export async function optionsPaiement(
     heuresBlocage,
   });
 
-  if (r.virement_actif !== '1') return rendre('le virement est éteint dans les réglages');
-  if (!r.virement_rib.trim()) return rendre('aucune coordonnée bancaire n’est saisie');
-  if (!nb(r.commission_pct)) return rendre('la commission n’est pas renseignée : l’écart de prix serait inventé');
   if (!nuits) return rendre('aucune date n’est demandée');
+
+  /* Le prix du séjour, AVANT toute condition du virement.
+
+     Il était demandé après : un séjour qui ne pouvait se payer que par carte
+     - virement éteint, ou arrivée trop proche pour laisser le temps de virer -
+     sortait de cette fonction sans devis, et la fiche retombait sur « à partir
+     de 50 EUR / nuit » alors que les dates étaient choisies. Le voyageur qui
+     arrive demain, c'est-à-dire celui qui est le plus près de payer, était
+     justement celui à qui l'on cachait le total.
+
+     Le prix est celui de la carte, quel que soit le moyen de paiement : c'est
+     Lodgify qui le calcule, et il se montre dans tous les cas. Le devis est en
+     cache cinq minutes : la liste l'a souvent déjà demandé. */
+  const d = await devis(b.id, arrivee, depart, voyageurs || 1);
+
+  if (r.virement_actif !== '1') return rendre('le virement est éteint dans les réglages', d);
+  if (!r.virement_rib.trim()) return rendre('aucune coordonnée bancaire n’est saisie', d);
+  if (!nb(r.commission_pct)) return rendre('la commission n’est pas renseignée : l’écart de prix serait inventé', d);
 
   const delai = Math.max(0, Math.round(nb(r.virement_delai_jours)));
   const jours = joursAvant(arrivee);
   if (jours < delai) {
-    return rendre(`l’arrivée est dans ${jours} jour(s), le virement demande ${delai} jour(s)`);
+    return rendre(`l’arrivée est dans ${jours} jour(s), le virement demande ${delai} jour(s)`, d);
   }
 
-  const d = await devis(b.id, arrivee, depart, voyageurs || 1);
   if (!d.connu || !d.total) return rendre(`Lodgify n’a pas rendu de prix (${d.detail || 'sans détail'})`, d);
 
   /* Les dates déjà tenues par une autre demande en attente. Le site ne peut pas
