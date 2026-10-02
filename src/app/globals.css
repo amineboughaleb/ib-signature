@@ -659,10 +659,22 @@ textarea { resize: vertical; min-height: 120px; }
 }
 .sous-menu .wrap { display: flex; align-items: center; gap: 26px; height: 56px; overflow-x: auto; }
 .sous-menu .surtitre { flex: none; }
-.sous-menu ul { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
+.sous-menu .wrap { scrollbar-width: none; }
+.sous-menu .wrap::-webkit-scrollbar { display: none; }
+.sous-menu ul { display: flex; gap: 10px; list-style: none; margin: 0; padding: 0; }
 .sous-menu li { flex: none; }
-.sous-menu a { font-size: 14px; color: var(--sourd); white-space: nowrap; }
-.sous-menu a:hover { color: var(--encre); }
+/* Des boutons, pas du texte gris : sur un téléphone, rien ne disait que ces
+   mots se touchaient. Un cadre et un fond de panneau suffisent - l'encre
+   reste le seul accent de la maison. Le dernier, coupé par le bord de
+   l'écran, dit de lui-même que la rangée défile. */
+.sous-menu a {
+  display: inline-flex; align-items: center; min-height: 36px; padding: 0 15px;
+  font-size: 13.5px; font-weight: 500; color: var(--encre); white-space: nowrap;
+  background: var(--panneau); border: 1px solid var(--filet); border-radius: var(--r-sm);
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.sous-menu a:hover, .sous-menu a:focus-visible { border-color: var(--accent); }
+.sous-menu a:active { background: var(--accent); border-color: var(--accent); color: var(--papier); }
 .qs-portes { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 40px; }
 
 @media (max-width: 860px) {
