@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { LOCALES } from '@/lib/i18n';
 import { navigation } from '@/lib/navigation';
@@ -52,7 +53,13 @@ export default function Menu({ locale, path = '' }: { locale: string; path?: str
         </span>
       </button>
 
-      {ouvert && (
+      {/* Le panneau est rendu dans <body>, pas dans l'en-tête. L'en-tête porte un
+          flou d'arrière-plan (backdrop-filter), et un élément ainsi filtré
+          devient le repère de ses descendants en position fixe : le panneau
+          ne couvrait alors que la hauteur de l'en-tête, et les liens
+          débordaient par-dessus la page, sans fond. */}
+      {ouvert &&
+        createPortal(
         <div className="menu-panneau" role="dialog" aria-modal="true">
           <nav>
             {liens.map((x) => (
@@ -73,8 +80,9 @@ export default function Menu({ locale, path = '' }: { locale: string; path?: str
               {MARQUE.telephone}
             </a>
           </div>
-        </div>
-      )}
+        </div>,
+          document.body
+        )}
     </>
   );
 }
