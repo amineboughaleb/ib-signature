@@ -51,13 +51,14 @@ export function middleware(requete: NextRequest) {
    * parce que celui-ci laisse filer les navigations ordinaires dès la première
    * ligne, et qu'un visiteur venu de l'ancien lien n'aurait jamais été vu.
    *
-   * 301 et non 308 : le chemin d'origine est abandonné, la méthode n'a pas à
-   * être préservée, et c'est le code que les moteurs lisent comme « cette page
-   * a déménagé pour de bon » - celui qui transfère ce que l'ancienne adresse
-   * avait accumulé. Il se met aussi en cache très durablement chez le
-   * visiteur : c'est le prix d'un déménagement définitif, et il l'est. */
+   * 308, redirection permanente : c'est le code que les moteurs lisent comme
+   * « cette page a déménagé pour de bon », celui qui transfère ce que
+   * l'ancienne adresse avait accumulé. Il se met aussi en cache très
+   * durablement chez le visiteur : c'est le prix d'un déménagement définitif,
+   * et il l'est. (301 jusqu'au 4 octobre ; 308 dit la même chose et aligne
+   * cette règle sur sa voisine.) */
   const ailleurs = redirectionDeHote(hote(requete.headers));
-  if (ailleurs) return NextResponse.redirect(ailleurs, 301);
+  if (ailleurs) return NextResponse.redirect(ailleurs, 308);
 
   /* Puis le `www`, vers le domaine nu.
    *

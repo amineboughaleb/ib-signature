@@ -17,7 +17,9 @@ export const dynamic = 'force-dynamic';
  */
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: '*', allow: '/', disallow: ['/admin', '/admin/', '/api/', '/media/'] }],
+    /* `/media/` n'est plus interdit : les photographies des logements y sont
+       servies, et les fermer privait Google des images de chaque fiche. */
+    rules: [{ userAgent: '*', allow: '/', disallow: ['/admin', '/admin/', '/api/'] }],
     sitemap: `${origine()}/sitemap.xml`,
     host: origine(),
   };

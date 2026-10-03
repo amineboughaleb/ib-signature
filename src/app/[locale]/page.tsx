@@ -29,7 +29,18 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const en = locale === 'en';
-  const villes = [...new Set((await vitrine()).map((b) => b.ville).filter(Boolean))].sort();
+  /* Le catalogue porte le nom des villes tel que Lodgify l'écrit, en anglais :
+     « Marrakesh ». En français, la ville s'écrit « Marrakech », et c'est ce que
+     les gens tapent. Le titre et la description suivent donc la langue. */
+  const enFrancais: Record<string, string> = { Marrakesh: 'Marrakech', Tangier: 'Tanger', Fez: 'Fès' };
+  const villes = [
+    ...new Set(
+      (await vitrine())
+        .map((b) => b.ville)
+        .filter(Boolean)
+        .map((v) => (en ? v : enFrancais[v] || v))
+    ),
+  ].sort();
   const lieu = enumerer(villes, en);
 
   /* Soixante caractères, pas un de plus : c'est ce que Google affiche avant de

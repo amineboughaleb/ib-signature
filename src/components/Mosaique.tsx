@@ -20,7 +20,7 @@ import { useEffect, useState } from 'react';
  * comme au doigt. Sur téléphone, la mosaïque n'a pas de sens - cinq images sur
  * 390 points ne se regardent pas - et laisse la place à un défilement.
  */
-export default function Mosaique({ photos, nom }: { photos: string[]; nom: string }) {
+export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom: string; lieu?: string }) {
   const [ouvert, setOuvert] = useState<number | null>(null);
   const n = photos.length;
 
@@ -45,6 +45,14 @@ export default function Mosaique({ photos, nom }: { photos: string[]; nom: strin
 
   const visibles = photos.slice(0, 5);
 
+  /* Le texte alternatif de chaque photographie : « The Fifteen Triangle d'Or,
+     Triangle d'Or, Casablanca - photographie 3 sur 18 ». C'est ce qu'un moteur
+     lit à la place de l'image, et ce qu'entend quelqu'un qui ne la voit pas.
+     Les photographies n'ont pas de légende par pièce ici : le rang tient lieu
+     de distinction, pour que deux images n'aient jamais le même texte. */
+  const ou = [nom, lieu].filter(Boolean).join(', ');
+  const texteAlt = (i: number) => `${ou} - photographie ${i + 1} sur ${n}`;
+
   return (
     <>
       <section className={`wrap mosaique mosaique-${Math.min(n, 5)}`}>
@@ -54,10 +62,10 @@ export default function Mosaique({ photos, nom }: { photos: string[]; nom: strin
             type="button"
             className={i === 0 ? 'mosaique-grande' : undefined}
             onClick={() => setOuvert(i)}
-            aria-label={`${nom} — photographie ${i + 1} sur ${n}`}
+            aria-label={`${nom} - photographie ${i + 1} sur ${n}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={u} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
+            <img src={u} alt={texteAlt(i)} loading={i === 0 ? 'eager' : 'lazy'} />
           </button>
         ))}
         {n > 1 && (
@@ -84,7 +92,7 @@ export default function Mosaique({ photos, nom }: { photos: string[]; nom: strin
             ‹
           </button>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={photos[ouvert]} alt={`${nom} — ${ouvert + 1}`} />
+          <img src={photos[ouvert]} alt={texteAlt(ouvert)} />
           <button
             type="button"
             className="vis-nav vis-apres"
