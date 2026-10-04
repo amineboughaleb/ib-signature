@@ -686,3 +686,11 @@ html { scroll-padding-top: 132px; }
   .ordre-ligne { grid-template-columns: 24px 44px 1fr auto; row-gap: 8px; }
   .ordre-marques { grid-column: 3 / -1; }
 }
+
+/* Effacer en deux clics : le bouton ouvre, la confirmation s'affiche à côté. */
+.effacer { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.effacer summary { list-style: none; cursor: pointer; display: inline-block; }
+.effacer summary::-webkit-details-marker { display: none; }
+.effacer[open] summary { border-color: #8c3a2c; color: #8c3a2c; }
+.effacer-confirmer { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.boite > .effacer { margin-top: 14px; }

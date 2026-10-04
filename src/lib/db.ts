@@ -257,6 +257,16 @@ export function auditsRecents(n = 100) {
   return db().prepare('SELECT * FROM audits ORDER BY id DESC LIMIT ?').all(n);
 }
 
+/* Effacer une demande ou un message. Fait pour les essais - une réservation
+   fictive, un message de test - et définitif : il n'y a pas de corbeille. */
+export function supprimerMessage(id: number) {
+  db().prepare('DELETE FROM messages WHERE id = ?').run(id);
+}
+
+export function supprimerAudit(id: number) {
+  db().prepare('DELETE FROM audits WHERE id = ?').run(id);
+}
+
 
 /* ---------- les avis ----------
    Ils vivaient dans data/avis.json. Un fichier n'est pas modifiable depuis une
@@ -1364,6 +1374,23 @@ export function changerStatutVirement(id: number, statut: string) {
   migrerVirements();
   if (!STATUTS.has(statut)) return;
   db().prepare('UPDATE virements SET statut = ? WHERE id = ?').run(statut, id);
+}
+
+/**
+ * Efface une demande de réservation, et l'invitation à laisser un avis qui en
+ * dépend.
+ *
+ * Une demande « en attente » tenait des dates : l'effacer les rend, comme une
+ * annulation. Un avis déjà déposé pour ce séjour n'est pas touché - il se gère
+ * depuis la page des avis, et on ne supprime pas un texte par ricochet.
+ */
+export function supprimerVirement(id: number) {
+  migrerVirements();
+  migrerInvitations();
+  db().transaction(() => {
+    db().prepare('DELETE FROM avis_invitations WHERE virement_id = ?').run(id);
+    db().prepare('DELETE FROM virements WHERE id = ?').run(id);
+  })();
 }
 
 /**

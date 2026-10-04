@@ -27,6 +27,9 @@ import {
   ecrireReglages,
   reglages,
   changerStatutVirement,
+  supprimerVirement,
+  supprimerMessage,
+  supprimerAudit,
   ecrireFluxDeBien,
   restaurer,
 } from '@/lib/db';
@@ -367,6 +370,31 @@ export async function changerStatutVirementAction(form: FormData) {
   if (id > 0) changerStatutVirement(id, statut);
   revalidatePath('/admin/virements');
   revalidatePath('/', 'layout');
+}
+
+/* Effacer une réservation, un message ou une demande d'audit. Pensé pour les
+   essais ; la confirmation se fait dans la page, en deux clics. */
+export async function supprimerVirementAction(form: FormData) {
+  await garde();
+  const id = Number(form.get('id')) || 0;
+  if (id > 0) supprimerVirement(id);
+  revalidatePath('/admin/virements');
+  revalidatePath('/admin/avis');
+  revalidatePath('/', 'layout');
+}
+
+export async function supprimerMessageAction(form: FormData) {
+  await garde();
+  const id = Number(form.get('id')) || 0;
+  if (id > 0) supprimerMessage(id);
+  revalidatePath('/admin/demandes');
+}
+
+export async function supprimerAuditAction(form: FormData) {
+  await garde();
+  const id = Number(form.get('id')) || 0;
+  if (id > 0) supprimerAudit(id);
+  revalidatePath('/admin/demandes');
 }
 
 /* ---------- l'ordre des photographies ---------- */

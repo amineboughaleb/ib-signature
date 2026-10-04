@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import { connecte } from '@/lib/admin';
 import { auditsRecents, messagesRecents } from '@/lib/db';
+import { supprimerAuditAction, supprimerMessageAction } from '../actions';
+import Effacer from '../Effacer';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,6 +87,7 @@ export default async function Demandes() {
             )}
           </dl>
           {a.message && <p className="corps">{a.message}</p>}
+          <Effacer action={supprimerAuditAction} id={a.id} quoi={`la demande de ${a.nom}`} />
         </article>
       ))}
 
@@ -118,6 +121,7 @@ export default async function Demandes() {
             </div>
           </dl>
           <p className="corps">{m.message}</p>
+          <Effacer action={supprimerMessageAction} id={m.id} quoi={`le message de ${m.nom}`} />
         </article>
       ))}
     </>

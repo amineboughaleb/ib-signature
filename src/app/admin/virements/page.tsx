@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { connecte } from '@/lib/admin';
 import { reglages, virementsRecents } from '@/lib/db';
-import { changerStatutVirementAction } from '../actions';
+import { changerStatutVirementAction, supprimerVirementAction } from '../actions';
+import Effacer from '../Effacer';
 
 export const dynamic = 'force-dynamic';
 
@@ -125,6 +126,7 @@ export default async function AdminVirements() {
         <Link className="btn-mini" href={`/fr/logements/${v.slug}`} target="_blank" rel="noopener">
           Voir le logement
         </Link>
+        <Effacer action={supprimerVirementAction} id={v.id} quoi={`la demande ${v.reference}`} />
       </div>
     </article>
   );
