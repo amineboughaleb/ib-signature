@@ -37,6 +37,12 @@ export type Avis = {
   /** Renseignés seulement si le logement est encore au catalogue. */
   bienSlug?: string;
   photo?: string;
+  /** De 1 à 5, ou zéro quand l'avis n'en porte pas. */
+  note: number;
+  /** Le mois du séjour, « 2026-10 », quand il est connu. */
+  sejour: string;
+  /** Votre réponse publique, vide s'il n'y en a pas. */
+  reponse: string;
 };
 
 type Brut = {
@@ -86,6 +92,9 @@ function habiller(l: LigneAvis, locale: string, parSlug: Map<string, Bien>): Avi
     bienNom: b?.nom || l.bien_nom,
     bienSlug: b?.slug,
     photo: b?.photos[0],
+    note: l.note >= 1 && l.note <= 5 ? l.note : 0,
+    sejour: l.sejour || '',
+    reponse: (locale === 'en' ? l.reponse_en || l.reponse_fr : l.reponse_fr) || '',
   };
 }
 
@@ -94,4 +103,31 @@ export async function avis(locale: string, max = 6): Promise<Avis[]> {
   const catalogue = await biens();
   const parSlug = new Map<string, Bien>(catalogue.map((b) => [b.slug, b]));
   return listerAvis(true).slice(0, max).map((l) => habiller(l, locale, parSlug));
+}
+
+/**
+ * Les avis d'un logement, pour sa fiche.
+ *
+ * Les plus récents d'abord, et non dans l'ordre du rang : le rang règle la
+ * bande de l'accueil, où vous choisissez ce qui se voit en premier. Sur une
+ * fiche, le lecteur veut savoir ce qu'on en disait le mois dernier.
+ */
+export async function avisDuBien(slug: string, locale: string): Promise<Avis[]> {
+  amorcerUneFois();
+  const catalogue = await biens();
+  const parSlug = new Map<string, Bien>(catalogue.map((b) => [b.slug, b]));
+  return listerAvis(true)
+    .filter((l) => l.bien_slug === slug)
+    .sort((a, b) => (b.sejour || '').localeCompare(a.sejour || '') || b.id - a.id)
+    .map((l) => habiller(l, locale, parSlug));
+}
+
+/** « octobre 2026 » ou « October 2026 », depuis « 2026-10 ». Vide si le mois est inconnu. */
+export function moisDuSejour(sejour: string, locale: string): string {
+  if (!/^\d{4}-\d{2}$/.test(sejour)) return '';
+  return new Date(`${sejour}-01T00:00:00Z`).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 }

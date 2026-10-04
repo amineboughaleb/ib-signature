@@ -276,32 +276,78 @@ export type LigneAvis = {
   source: string;
   rang: number;
   publie: number;
+  /** De 1 à 5. Zéro : pas de note - c'est le cas des avis recopiés d'une plateforme. */
+  note: number;
+  /** Le mois du séjour, « 2026-10 ». Vide quand il n'est pas connu. */
+  sejour: string;
+  /** « voyageur » quand l'avis a été déposé par le voyageur lui-même, depuis son lien. */
+  origine: string;
+  /** « attente » tant que vous n'avez pas décidé de son sort ; vide ensuite. */
+  etat: string;
+  reponse_fr: string;
+  reponse_en: string;
+  created_at: string;
 };
 
-const CHAMPS_AVIS = ['prenom', 'pays_fr', 'pays_en', 'bien_slug', 'bien_nom', 'texte_fr', 'texte_en', 'source', 'rang', 'publie'] as const;
+const CHAMPS_AVIS = [
+  'prenom', 'pays_fr', 'pays_en', 'bien_slug', 'bien_nom', 'texte_fr', 'texte_en', 'source', 'rang', 'publie',
+  'note', 'sejour', 'origine', 'etat', 'reponse_fr', 'reponse_en',
+] as const;
 
-export function amorcerAvis(graine: Omit<LigneAvis, 'id'>[]) {
+/* Les colonnes arrivées avec la collecte d'avis. Ajoutées une à une plutôt
+   qu'en refondant la table : les avis déjà saisis doivent rester où ils sont,
+   et ils y restent - sans note, puisqu'aucune ne leur a jamais été donnée. */
+let avisMigres = false;
+function migrerAvis() {
+  if (avisMigres) return;
+  avisMigres = true;
+  for (const col of [
+    'note       INTEGER NOT NULL DEFAULT 0',
+    "sejour     TEXT NOT NULL DEFAULT ''",
+    "origine    TEXT NOT NULL DEFAULT ''",
+    "etat       TEXT NOT NULL DEFAULT ''",
+    "reponse_fr TEXT NOT NULL DEFAULT ''",
+    "reponse_en TEXT NOT NULL DEFAULT ''",
+  ]) {
+    try {
+      db().exec(`ALTER TABLE avis ADD COLUMN ${col}`);
+    } catch {
+      /* colonne déjà présente */
+    }
+  }
+}
+
+type GraineAvis = Pick<
+  LigneAvis,
+  'prenom' | 'pays_fr' | 'pays_en' | 'bien_slug' | 'bien_nom' | 'texte_fr' | 'texte_en' | 'source' | 'rang' | 'publie'
+>;
+
+export function amorcerAvis(graine: GraineAvis[]) {
+  migrerAvis();
   const n = db().prepare('SELECT COUNT(*) c FROM avis').get() as { c: number };
   if (n.c > 0) return;
   const ins = db().prepare(
     `INSERT INTO avis (prenom, pays_fr, pays_en, bien_slug, bien_nom, texte_fr, texte_en, source, rang, publie)
      VALUES (@prenom, @pays_fr, @pays_en, @bien_slug, @bien_nom, @texte_fr, @texte_en, @source, @rang, @publie)`
   );
-  db().transaction((liste: Omit<LigneAvis, 'id'>[]) => liste.forEach((a) => ins.run(a)))(graine);
+  db().transaction((liste: GraineAvis[]) => liste.forEach((a) => ins.run(a)))(graine);
 }
 
 export function listerAvis(seulementPublies = true): LigneAvis[] {
+  migrerAvis();
   const where = seulementPublies ? 'WHERE publie = 1' : '';
   return db().prepare(`SELECT * FROM avis ${where} ORDER BY rang, id`).all() as LigneAvis[];
 }
 
 export function unAvis(id: number): LigneAvis | undefined {
+  migrerAvis();
   return db().prepare('SELECT * FROM avis WHERE id = ?').get(id) as LigneAvis | undefined;
 }
 
 /* Écriture par liste blanche de colonnes : une clef inconnue venant d'un
    formulaire ne doit jamais atteindre la requête. */
 export function ecrireAvis(id: number | null, v: Record<string, string | number>): number {
+  migrerAvis();
   const cols = CHAMPS_AVIS.filter((c) => c in v);
   if (!cols.length) return id ?? 0;
   if (id) {
@@ -316,6 +362,171 @@ export function ecrireAvis(id: number | null, v: Record<string, string | number>
 
 export function supprimerAvis(id: number) {
   db().prepare('DELETE FROM avis WHERE id = ?').run(id);
+}
+
+/* ---------- les invitations à laisser un avis ----------
+   Une ligne par séjour, et jamais deux : c'est elle qui garantit qu'un avis
+   vient d'un voyageur qui a réellement dormi là, et qu'il n'en dépose qu'un.
+
+   Le jeton est la seule clef du formulaire. Il est tiré au hasard, long, et
+   n'apparaît que dans le courriel du voyageur : il n'y a ni compte, ni mot de
+   passe, ni adresse à deviner. Une fois l'avis déposé, la ligne porte son
+   numéro et le lien ne sert plus. */
+
+let invitationsMigrees = false;
+function migrerInvitations() {
+  if (invitationsMigrees) return;
+  invitationsMigrees = true;
+  db().exec(
+    `CREATE TABLE IF NOT EXISTS avis_invitations (
+       id          INTEGER PRIMARY KEY AUTOINCREMENT,
+       jeton       TEXT NOT NULL UNIQUE,
+       virement_id INTEGER NOT NULL UNIQUE,
+       email       TEXT NOT NULL DEFAULT '',
+       prenom      TEXT NOT NULL DEFAULT '',
+       residence   TEXT NOT NULL DEFAULT '',
+       bien_slug   TEXT NOT NULL DEFAULT '',
+       bien_nom    TEXT NOT NULL DEFAULT '',
+       arrivee     TEXT NOT NULL DEFAULT '',
+       depart      TEXT NOT NULL DEFAULT '',
+       locale      TEXT NOT NULL DEFAULT 'fr',
+       envoye_at   TEXT NOT NULL DEFAULT '',
+       avis_id     INTEGER NOT NULL DEFAULT 0,
+       created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+     )`
+  );
+}
+
+export type Invitation = {
+  id: number;
+  jeton: string;
+  virement_id: number;
+  email: string;
+  prenom: string;
+  residence: string;
+  bien_slug: string;
+  bien_nom: string;
+  arrivee: string;
+  depart: string;
+  locale: string;
+  /** Vide tant que le courriel n'est pas parti. */
+  envoye_at: string;
+  /** Zéro tant que le voyageur n'a rien déposé. */
+  avis_id: number;
+  created_at: string;
+};
+
+export function invitationParJeton(jeton: string): Invitation | undefined {
+  migrerInvitations();
+  if (!/^[0-9a-f]{40}$/.test(jeton)) return undefined;
+  return db().prepare('SELECT * FROM avis_invitations WHERE jeton = ?').get(jeton) as Invitation | undefined;
+}
+
+export function invitationDuVirement(virementId: number): Invitation | undefined {
+  migrerInvitations();
+  return db().prepare('SELECT * FROM avis_invitations WHERE virement_id = ?').get(virementId) as
+    | Invitation
+    | undefined;
+}
+
+export function invitations(): Map<number, Invitation> {
+  migrerInvitations();
+  const lignes = db().prepare('SELECT * FROM avis_invitations').all() as Invitation[];
+  return new Map(lignes.map((i) => [i.virement_id, i]));
+}
+
+/**
+ * Crée l'invitation d'un séjour, ou rend celle qui existe.
+ *
+ * `INSERT OR IGNORE` sur `virement_id` : deux passages simultanés - la tâche
+ * de nuit et un clic dans l'administration - ne fabriquent pas deux jetons
+ * pour le même séjour, donc pas deux avis.
+ */
+export function creerInvitation(v: Virement, jeton: string): Invitation {
+  migrerInvitations();
+  db()
+    .prepare(
+      `INSERT OR IGNORE INTO avis_invitations
+         (jeton, virement_id, email, prenom, residence, bien_slug, bien_nom, arrivee, depart, locale)
+       VALUES (@jeton, @virement_id, @email, @prenom, @residence, @bien_slug, @bien_nom, @arrivee, @depart, @locale)`
+    )
+    .run({
+      jeton,
+      virement_id: v.id,
+      email: v.email,
+      prenom: v.prenom || '',
+      residence: v.residence || '',
+      bien_slug: v.slug,
+      bien_nom: v.bien_nom,
+      arrivee: v.arrivee,
+      depart: v.depart,
+      locale: v.locale === 'en' ? 'en' : 'fr',
+    });
+  return invitationDuVirement(v.id)!;
+}
+
+export function marquerInvitationEnvoyee(id: number) {
+  migrerInvitations();
+  db().prepare("UPDATE avis_invitations SET envoye_at = datetime('now') WHERE id = ?").run(id);
+}
+
+/**
+ * Dépose l'avis d'une invitation, une fois et une seule.
+ *
+ * Tout tient dans une transaction : l'avis est écrit et l'invitation fermée
+ * ensemble, ou rien ne l'est. Un double clic sur « Envoyer » trouve la
+ * seconde fois une invitation déjà fermée et ne crée rien.
+ */
+export function deposerAvis(
+  jeton: string,
+  v: { note: number; texte: string; prenom: string; pays: string }
+): number | null {
+  migrerAvis();
+  migrerInvitations();
+  return db().transaction(() => {
+    const inv = db().prepare('SELECT * FROM avis_invitations WHERE jeton = ?').get(jeton) as Invitation | undefined;
+    if (!inv || inv.avis_id) return null;
+    const info = db()
+      .prepare(
+        `INSERT INTO avis (prenom, pays_fr, pays_en, bien_slug, bien_nom, texte_fr, texte_en, source, rang, publie,
+                           note, sejour, origine, etat)
+         VALUES (@prenom, @pays, @pays, @bien_slug, @bien_nom, @texte, @texte, 'Direct', 5, 0,
+                 @note, @sejour, 'voyageur', 'attente')`
+      )
+      .run({
+        prenom: v.prenom,
+        pays: v.pays,
+        bien_slug: inv.bien_slug,
+        bien_nom: inv.bien_nom,
+        texte: v.texte,
+        note: v.note,
+        sejour: inv.depart.slice(0, 7),
+      });
+    const id = Number(info.lastInsertRowid);
+    db().prepare('UPDATE avis_invitations SET avis_id = ? WHERE id = ?').run(id, inv.id);
+    return id;
+  })();
+}
+
+/**
+ * Supprimer un avis rouvre-t-il le lien du voyageur ? Non.
+ *
+ * L'invitation garde le numéro d'un avis disparu, et reste donc fermée. Un
+ * avis que vous avez écarté ne doit pas pouvoir être redéposé à l'identique
+ * par le même lien.
+ */
+
+/** Les séjours terminés que le site connaît : de quoi inviter. */
+export function sejoursTermines(joursMax = 90): Virement[] {
+  migrerVirements();
+  return db()
+    .prepare(
+      `SELECT * FROM virements
+       WHERE statut IN ('recu', 'piste') AND email <> ''
+         AND depart <> '' AND depart <= date('now') AND depart >= date('now', ?)
+       ORDER BY depart DESC, id DESC`
+    )
+    .all(`-${Math.max(1, Math.floor(joursMax))} days`) as Virement[];
 }
 
 /* ---------- le diaporama ---------- */

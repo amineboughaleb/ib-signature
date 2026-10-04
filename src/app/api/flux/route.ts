@@ -1,4 +1,5 @@
 import { importerTous, fraicheurDesFlux } from '@/lib/flux';
+import { inviterLesSejoursTermines } from '@/lib/invitations';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,6 +56,13 @@ export async function POST(requete: Request) {
   const relus = resultats.filter((r) => r.ok).length;
   const echecs = resultats.filter((r) => !r.ok);
 
+  /* La même tâche de nuit envoie les invitations à laisser un avis, pour les
+     séjours terminés la veille. Elle passe ici plutôt que par une seconde
+     adresse à planifier : un ordonnanceur de plus est un ordonnanceur qu'on
+     oublie de régler. Un envoi qui échoue ne doit pas faire échouer l'import
+     des calendriers - d'où le `catch`, et le compte rendu séparé. */
+  const avis = await inviterLesSejoursTermines().catch(() => ({ partis: 0, echecs: -1 }));
+
   return Response.json({
     ok: echecs.length === 0,
     duree_ms: Date.now() - debut,
@@ -67,6 +75,7 @@ export async function POST(requete: Request) {
        porte. */
     details: echecs.map((r) => ({ bien_id: r.bien_id, source: r.source, erreur: r.erreur })),
     fraicheur: fraicheurDesFlux(),
+    invitations_avis: avis,
   });
 }
 

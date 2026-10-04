@@ -3,6 +3,7 @@ import { getT } from '@/lib/i18n';
 import { signature, type Avis as UnAvis } from '@/lib/avis';
 import AvisDefilant from './AvisDefilant';
 import TexteReplie from './TexteReplie';
+import Etoiles from './Etoiles';
 
 /**
  * Les avis voyageurs.
@@ -53,6 +54,7 @@ export default function Avis({ liste, locale }: { liste: UnAvis[]; locale: strin
                   <div className="avis-trame" aria-hidden="true" />
                 )}
               </div>
+              {a.note > 0 && <Etoiles note={a.note} libelle={t('fa_note_alt', { n: a.note })} />}
               <TexteReplie texte={a.texte} plus={t('avis_plus')} moins={t('avis_moins')} />
               <figcaption>
                 <span className="avis-qui">
@@ -60,7 +62,7 @@ export default function Avis({ liste, locale }: { liste: UnAvis[]; locale: strin
                   {/* La plateforme, quand elle est connue : un avis Airbnb et un
                       avis Booking ne pèsent pas la même chose pour tout le
                       monde, et le lecteur a le droit de savoir d'où il vient. */}
-                  {a.source && <span className="avis-source">{a.source}</span>}
+                  {a.source && a.source !== 'Direct' && <span className="avis-source">{a.source}</span>}
                 </span>
                 <span className="avis-bien small muted">
                   {t('avis_a_propos')}{' '}

@@ -8,7 +8,10 @@ import {
   enregistrerVirement,
   marquerVirementEnvoye,
   reglages,
+  deposerAvis,
+  invitationParJeton,
 } from '@/lib/db';
+import { origine } from '@/lib/seo';
 import { envoyer, echapper } from '@/lib/mail';
 import { getT } from '@/lib/i18n';
 import { MARQUE } from '@/lib/marque';
@@ -314,4 +317,57 @@ export async function demanderVirementAction(_prev: EtatVirement, form: FormData
     beneficiaire: r.virement_beneficiaire,
     heures: o.virement.reponseHeures,
   };
+}
+
+/* ---------- l'avis d'un voyageur ----------
+   Le jeton fait tout le contrôle : il prouve que celui qui écrit a séjourné,
+   dit dans quel logement et à quelles dates, et ne sert qu'une fois. Rien de
+   tout cela n'est lu dans le formulaire - un champ caché « logement » se
+   réécrit en dix secondes.
+
+   L'avis n'est pas publié. Il arrive « en attente » dans l'administration, et
+   c'est vous qui décidez. Le voyageur en est prévenu sur la page même : lui
+   laisser croire que son texte est en ligne, puis ne pas le publier, serait
+   pire que de le lui dire. */
+
+export type EtatAvis = { ok?: string; error?: string } | null;
+
+export async function deposerAvisAction(_prev: EtatAvis, form: FormData): Promise<EtatAvis> {
+  const locale = String(form.get('locale') || 'fr');
+  const t = getT(locale);
+  const champ = (n: string, max = 300) => String(form.get(n) || '').trim().slice(0, max);
+
+  const jeton = champ('jeton', 60);
+  const inv = invitationParJeton(jeton);
+  if (!inv) return { error: t('da_lien_invalide') };
+  if (inv.avis_id) return { ok: t('da_merci') };
+
+  const note = Math.round(Number(form.get('note')));
+  const texte = champ('texte', 2000);
+  if (!(note >= 1 && note <= 5)) return { error: t('da_erreur_note') };
+  if (texte.length < 10) return { error: t('da_erreur_texte') };
+
+  const prenom = champ('prenom', 60);
+  const pays = champ('pays', 60);
+  const id = deposerAvis(jeton, { note, texte, prenom, pays });
+  /* Déjà déposé entre-temps - un double envoi. Le voyageur a fait ce qu'on lui
+     demandait : on le remercie, on ne lui affiche pas une erreur. */
+  if (!id) return { ok: t('da_merci') };
+
+  await envoyer({
+    to: DESTINATAIRE,
+    replyTo: inv.email,
+    subject: `Avis à valider - ${inv.bien_nom} (${note}/5)`,
+    html: `<p>Un voyageur vient de déposer un avis sur ibsignature.com. Il n'est pas en ligne : il attend votre décision.</p>
+      <table>
+        <tr><td style="padding:6px 14px 6px 0;color:#6d747c">Logement</td><td style="padding:6px 0"><b>${echapper(inv.bien_nom)}</b></td></tr>
+        <tr><td style="padding:6px 14px 6px 0;color:#6d747c">Séjour</td><td style="padding:6px 0"><b>${echapper(inv.arrivee)} → ${echapper(inv.depart)}</b></td></tr>
+        <tr><td style="padding:6px 14px 6px 0;color:#6d747c">Voyageur</td><td style="padding:6px 0"><b>${echapper([prenom, pays].filter(Boolean).join(', ') || inv.email)}</b></td></tr>
+        <tr><td style="padding:6px 14px 6px 0;color:#6d747c">Note</td><td style="padding:6px 0"><b>${note} / 5</b></td></tr>
+      </table>
+      <p style="margin-top:14px;white-space:pre-wrap">${echapper(texte)}</p>
+      <p style="margin-top:18px"><a href="${origine()}/admin/avis">Publier ou écarter cet avis</a></p>`,
+  });
+
+  return { ok: t('da_merci') };
 }

@@ -10,6 +10,8 @@ import { redirect } from 'next/navigation';
 import { COOKIE, DUREE_COOKIE, administrationConfiguree, connecte, fabriquerJeton, motDePasseCorrect } from '@/lib/admin';
 import {
   ecrireAvis,
+  unAvis,
+  unVirement,
   supprimerAvis,
   ecrireImage,
   supprimerImage,
@@ -28,6 +30,7 @@ import {
   ecrireFluxDeBien,
   restaurer,
 } from '@/lib/db';
+import { inviter } from '@/lib/invitations';
 
 export type Etat = { error?: string } | null;
 
@@ -79,12 +82,43 @@ function champ(form: FormData, n: string, max = 2000) {
 }
 
 export async function enregistrerAvisAction(form: FormData) {
+  await ecrireUnAvis(form, '');
+}
+
+/* « Publier » et « Ne pas publier » sont deux actions, et non un bouton qui
+   porterait une valeur : la valeur du bouton cliqué n'arrive pas toujours
+   jusqu'à une action serveur, et une décision de publication ne doit pas
+   dépendre d'un champ qui peut manquer. */
+export async function publierAvisAction(form: FormData) {
+  await ecrireUnAvis(form, 'publier');
+}
+
+export async function ecarterAvisAction(form: FormData) {
+  await ecrireUnAvis(form, 'ecarter');
+}
+
+async function ecrireUnAvis(form: FormData, decision: '' | 'publier' | 'ecarter') {
   await garde();
   const id = Number(form.get('id')) || null;
   const texteFr = champ(form, 'texte_fr');
   /* Un avis sans texte n'est pas un avis. On refuse plutôt que d'écrire une
      carte vide qui apparaîtrait sur l'accueil. */
   if (!texteFr) return;
+
+  const existant = id ? unAvis(id) : undefined;
+  const duVoyageur = existant?.origine === 'voyageur';
+
+  /* « Publier » et « Ne pas publier » sont les deux boutons d'un avis en
+     attente ; ailleurs, c'est la case à cocher qui décide. Dans les deux cas
+     l'avis quitte la file d'attente : une décision a été prise. */
+  const publie = decision === 'publier' ? 1 : decision === 'ecarter' ? 0 : form.get('publie') ? 1 : 0;
+
+  /* La note d'un voyageur ne se retouche pas. Vous pouvez corriger une faute,
+     traduire, répondre, ne pas publier - mais un quatre qui devient un cinq
+     entre le dépôt et la mise en ligne n'est plus son avis, c'est le vôtre. */
+  const noteSaisie = Math.round(Number(form.get('note')) || 0);
+  const note = duVoyageur ? existant!.note : noteSaisie >= 1 && noteSaisie <= 5 ? noteSaisie : 0;
+  const sejourSaisi = champ(form, 'sejour', 7);
 
   ecrireAvis(id, {
     prenom: champ(form, 'prenom', 60),
@@ -96,10 +130,31 @@ export async function enregistrerAvisAction(form: FormData) {
     texte_en: champ(form, 'texte_en') || texteFr,
     source: champ(form, 'source', 40),
     rang: Number(form.get('rang')) || 100,
-    publie: form.get('publie') ? 1 : 0,
+    publie,
+    note,
+    sejour: duVoyageur ? existant!.sejour : /^\d{4}-\d{2}$/.test(sejourSaisi) ? sejourSaisi : '',
+    etat: '',
+    reponse_fr: champ(form, 'reponse_fr'),
+    reponse_en: champ(form, 'reponse_en') || champ(form, 'reponse_fr'),
   });
   revalidatePath('/admin/avis');
   revalidatePath('/', 'layout');
+}
+
+/* ---------- les invitations à laisser un avis ---------- */
+
+/**
+ * Inviter le voyageur d'un séjour, à la main.
+ *
+ * C'est le seul chemin pour un séjour payé par carte : le site ne sait pas si
+ * le paiement est allé au bout chez Lodgify, et ne l'invite donc jamais de
+ * lui-même. Ce clic est votre confirmation que le séjour a bien eu lieu.
+ */
+export async function inviterAvisAction(form: FormData) {
+  await garde();
+  const v = unVirement(Number(form.get('id')) || 0);
+  if (v) await inviter(v);
+  revalidatePath('/admin/avis');
 }
 
 export async function supprimerAvisAction(form: FormData) {
