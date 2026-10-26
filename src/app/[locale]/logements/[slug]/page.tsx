@@ -16,6 +16,8 @@ import Texte from '@/components/Texte';
 import { equipementsDe, libelle } from '@/lib/equipements';
 import { jsonFil, jsonLogement, metaCommune } from '@/lib/seo';
 import DonneesStructurees from '@/components/DonneesStructurees';
+import { cheminQuartier, cheminVille } from '@/lib/quartiers';
+import { pagesDuLogement } from '@/lib/quartiers-serveur';
 
 export const dynamic = 'force-dynamic';
 
@@ -137,6 +139,15 @@ export default async function Fiche({
     t('fiche_c6'),
   ];
   const autres = (await vitrine()).filter((x) => x.slug !== b.slug).slice(0, 3);
+  /* La page de son quartier et celle de sa ville, quand elles sont publiées :
+     le voyageur qui hésite trouve en un clic les autres appartements du même
+     quartier. */
+  const langue = locale === 'en' ? 'en' : 'fr';
+  const pages = await pagesDuLogement(b, langue);
+  const liensLieu = {
+    quartier: pages.ville && pages.quartier ? `/${locale}${cheminQuartier(langue, pages.ville.ref.cle, pages.quartier.ref.cle)}` : undefined,
+    ville: pages.ville ? `/${locale}${cheminVille(langue, pages.ville.ref.cle)}` : undefined,
+  };
 
   return (
     <>
@@ -254,6 +265,7 @@ export default async function Fiche({
                 quartier={b.quartier}
                 ville={b.ville}
                 locale={locale}
+                liens={liensLieu}
               />
             </div>
           )}

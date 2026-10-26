@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { getT } from '@/lib/i18n';
 import Barre from './Barre';
 import { MARQUE } from '@/lib/marque';
+import { cheminQuartier, cheminVille, type Langue } from '@/lib/quartiers';
+import { etatDesPages, type EtatVille } from '@/lib/quartiers-serveur';
 
 /**
  * L'en-tête et le pied.
@@ -39,8 +41,32 @@ export function Entete({ locale }: { locale: string }) {
   );
 }
 
-export function Pied({ locale }: { locale: string }) {
+export async function Pied({ locale }: { locale: string }) {
   const t = getT(locale);
+  const langue: Langue = locale === 'en' ? 'en' : 'fr';
+  /* Les pages ville et quartier publiées, pour les liens du pied. Un incident
+     de lecture ne doit pas emporter le pied de toutes les pages : on s'en
+     passe alors, et le pied reste ce qu'il était. */
+  let villes: EtatVille[] = [];
+  try {
+    villes = await etatDesPages();
+  } catch {
+    villes = [];
+  }
+  const publiee = (cle: string) => villes.find((v) => v.ref.cle === cle && v.statut[langue] === 'indexable');
+  const quartiers = villes.flatMap((v) =>
+    v.quartiers
+      .filter((q) => q.statut[langue] === 'indexable')
+      .map((q) => ({ cle: `${v.ref.cle}/${q.ref.cle}`, nom: q.ref.nom[langue], h: cheminQuartier(langue, v.ref.cle, q.ref.cle) }))
+  );
+  const villeLien = (nom: string, cle: string) =>
+    publiee(cle) ? (
+      <Link href={`/${locale}${cheminVille(langue, cle)}`} className="pied-ville">
+        {nom}
+      </Link>
+    ) : (
+      nom
+    );
   return (
     <footer className="site-footer">
       <div className="wrap">
@@ -57,7 +83,7 @@ export function Pied({ locale }: { locale: string }) {
               height={148}
             />
             <div className="surtitre" style={{ marginTop: 14 }}>
-              Casablanca · Marrakech
+              {villeLien('Casablanca', 'casablanca')} · {villeLien('Marrakech', 'marrakech')}
             </div>
             <p className="small muted" style={{ marginTop: 18, maxWidth: 380 }}>
               {t('pied_maison')}
@@ -84,6 +110,16 @@ export function Pied({ locale }: { locale: string }) {
             </div>
           </div>
         </div>
+        {quartiers.length > 0 && (
+          <div className="pied-quartiers">
+            <span className="surtitre">{langue === 'en' ? 'Neighbourhoods' : 'Quartiers'}</span>
+            {quartiers.map((q) => (
+              <Link key={q.cle} href={`/${locale}${q.h}`}>
+                {q.nom}
+              </Link>
+            ))}
+          </div>
+        )}
         <hr className="rule" />
         <div className="pied-bas small">
           <span>© {new Date().getFullYear()} IB Signature. {t('pied_droits')}</span>

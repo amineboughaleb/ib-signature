@@ -8,6 +8,8 @@ import { metaCommune } from '@/lib/seo';
 import { nuitsEntre } from '@/lib/dates';
 import Recherche from '@/components/Recherche';
 import CarteBien from '@/components/CarteBien';
+import { cheminQuartier, cheminVille } from '@/lib/quartiers';
+import { etatDesPages } from '@/lib/quartiers-serveur';
 
 export const dynamic = 'force-dynamic';
 
@@ -135,6 +137,21 @@ export default async function Liste({
 
   const filtre = !!(ville || voyageurs || arrivee || depart);
 
+  /* Les pages quartier publiées, en une ligne au-dessus de la liste : le
+     voyageur qui sait déjà où il veut loger y va droit. Le filtre par ville
+     ne change pas. */
+  const langue = locale === 'en' ? 'en' : 'fr';
+  const pagesQuartier = (await etatDesPages()).flatMap((v) =>
+    v.statut[langue] === 'indexable'
+      ? [
+          { cle: v.ref.cle, nom: v.ref.nom[langue], h: cheminVille(langue, v.ref.cle), ville: true },
+          ...v.quartiers
+            .filter((q) => q.statut[langue] === 'indexable')
+            .map((q) => ({ cle: `${v.ref.cle}/${q.ref.cle}`, nom: q.ref.nom[langue], h: cheminQuartier(langue, v.ref.cle, q.ref.cle), ville: false })),
+        ]
+      : []
+  );
+
   return (
     <>
       <section className="section-tight liste-tete">
@@ -150,6 +167,17 @@ export default async function Liste({
       <div className="wrap" style={{ marginBottom: 44 }}>
         <Recherche locale={locale} villes={villes} valeurs={{ ville, arrivee, depart, voyageurs: String(voyageurs || 2) }} />
       </div>
+
+      {pagesQuartier.length > 0 && (
+        <nav className="wrap par-quartier" aria-label={langue === 'en' ? 'By neighbourhood' : 'Par quartier'}>
+          <span className="surtitre">{langue === 'en' ? 'By neighbourhood' : 'Par quartier'}</span>
+          {pagesQuartier.map((p) => (
+            <Link key={p.cle} href={`/${locale}${p.h}`} className={p.ville ? 'par-quartier-ville' : undefined}>
+              {p.nom}
+            </Link>
+          ))}
+        </nav>
+      )}
 
       <section className="wrap" style={{ paddingBottom: 96 }}>
         <div className="liste-barre">

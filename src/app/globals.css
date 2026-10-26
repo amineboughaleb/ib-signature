@@ -1748,3 +1748,37 @@ textarea { resize: vertical; min-height: 120px; }
 .note-etoiles label.allumee svg { fill: var(--accent); stroke: var(--accent); }
 .note-etoiles label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-md); }
 .note-dite { margin-left: 10px; min-width: 6em; }
+
+/* ---------- pages ville et quartier (26 octobre 2026) ----------
+   Les mêmes pièces que la page des logements - filet, titre, grille de
+   cartes - avec un texte en tête. Rien de nouveau dans la charte : une page
+   quartier doit avoir l'air d'appartenir au site, pas d'une campagne. */
+.quartier-fil { display: flex; flex-wrap: wrap; gap: 4px; font-size: 14px; color: var(--sourd); }
+.quartier-fil [aria-current='page'] { color: var(--encre); }
+.quartier-tete { padding-bottom: 40px; }
+.quartier-chiffres { display: block; margin-top: 16px; }
+.quartier-texte { max-width: 68ch; margin-top: 26px; }
+.quartier-texte p { font-size: 17px; line-height: 1.7; color: var(--sourd); margin: 0 0 16px; }
+.quartier-texte p:last-child { margin-bottom: 0; }
+.quartier-sous-titre { margin: 0; }
+.quartiers-grille { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.quartier-carte { display: flex; flex-direction: column; gap: 10px; color: var(--encre); transition: border-color .15s; }
+.quartier-carte:hover, .quartier-carte:focus-visible { border-color: var(--accent); }
+.quartier-carte-nom { font-family: var(--titre); font-size: 19px; line-height: 1.25; }
+.quartier-carte-accroche { font-size: 15px; color: var(--sourd); flex: 1; }
+.quartier-carte-lien { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-top: 6px; }
+.par-quartier { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 20px; margin: -20px auto 40px; font-size: 14px; }
+.par-quartier a { color: var(--sourd); border-bottom: 1px solid var(--filet); }
+.par-quartier a:hover, .par-quartier a:focus-visible { color: var(--accent); border-bottom-color: var(--accent); }
+.par-quartier .par-quartier-ville { color: var(--encre); }
+.pied-quartiers { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 22px; margin-bottom: 32px; font-size: 14px; }
+.pied-quartiers a { color: var(--sourd); }
+.pied-quartiers a:hover { color: var(--accent); }
+.pied-ville { color: inherit; border-bottom: 1px solid currentColor; }
+@media (max-width: 1000px) {
+  .quartiers-grille { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .quartiers-grille { grid-template-columns: 1fr; }
+  .par-quartier { margin-top: -12px; }
+}

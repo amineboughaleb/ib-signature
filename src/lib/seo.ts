@@ -54,9 +54,24 @@ export const PAGES = ['', '/logements', '/proprietaires', '/qui-sommes-nous', '/
  * Une fiche de logement met sa propre photo ; tout le reste retombe ici. */
 const IMAGE_PARTAGE = '/accueil-sejour.jpg';
 
-export function metaCommune(locale: string, chemin: string, titre: string, description: string, image?: string) {
+export function metaCommune(
+  locale: string,
+  chemin: string,
+  titre: string,
+  description: string,
+  image?: string,
+  /* Pour une page dont l'adresse change d'une langue à l'autre - les pages
+     ville et quartier, `/fr/location-appartement/...` et
+     `/en/apartments-for-rent/...` : le chemin de chaque langue. Absent, le
+     même chemin sert aux deux, comme pour toutes les autres pages. */
+  chemins?: Record<string, string>,
+  /* Une page qui répond sans devoir être indexée : redescendue sous le seuil,
+     elle reste lisible pour qui a gardé le lien, mais sort de l'index. */
+  noindex?: boolean
+) {
   const base = origine();
-  const url = `${base}/${locale}${chemin}`;
+  const de = (l: string) => (chemins && chemins[l] !== undefined ? chemins[l] : chemin);
+  const url = `${base}/${locale}${de(locale)}`;
   /* Une adresse relative ne sert à rien dans une balise de partage : les
      réseaux ne savent pas d'où elle vient. On la rend absolue ici, une fois. */
   const brut = image || IMAGE_PARTAGE;
@@ -68,14 +83,15 @@ export function metaCommune(locale: string, chemin: string, titre: string, descr
     alternates: {
       canonical: url,
       languages: {
-        ...Object.fromEntries(LANGUES.map((l) => [l, `${base}/${l}${chemin}`])),
+        ...Object.fromEntries(LANGUES.map((l) => [l, `${base}/${l}${de(l)}`])),
         /* Pour un visiteur dont la langue n'est ni le français ni l'anglais,
            un moteur doit savoir quelle version servir. Sans `x-default`, il
            choisit - souvent l'anglaise, pour une clientèle qui cherche en
            français. */
-        'x-default': `${base}/fr${chemin}`,
+        'x-default': `${base}/fr${de('fr')}`,
       },
     },
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       type: 'website' as const,
       siteName: MARQUE.nom,
@@ -191,6 +207,33 @@ export function jsonLogement(b: BienSeo, locale: string) {
     };
   }
   return noyau;
+}
+
+/**
+ * La liste des logements d'une page ville ou quartier.
+ *
+ * Chaque élément renvoie à sa fiche, qui porte la description complète : on ne
+ * la répète pas ici. Pas de note ni de prix : la liste dit ce qu'on trouve sur
+ * la page, la fiche dit le reste.
+ */
+export function jsonListe(locale: string, nom: string, biens: { nom: string; slug: string; photos: string[] }[]) {
+  const base = origine();
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: nom,
+    numberOfItems: biens.length,
+    itemListElement: biens.map((b, i) => {
+      const photo = b.photos.find(Boolean);
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.nom,
+        url: `${base}/${locale}/logements/${b.slug}`,
+        ...(photo ? { image: photo.startsWith('http') ? photo : `${base}${photo}` } : {}),
+      };
+    }),
+  };
 }
 
 /** Le fil d'Ariane, qui donne à Google la place de la page dans le site. */

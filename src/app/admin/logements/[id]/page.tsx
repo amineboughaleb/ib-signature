@@ -5,10 +5,12 @@ import { biens } from '@/lib/biens';
 import { descriptionDe, equipementsDeBien, faitsDe, galerieDe, liensReservation } from '@/lib/db';
 import { EQUIPEMENTS } from '@/lib/equipements';
 import OrdreGalerie from '@/components/OrdreGalerie';
+import { rattachements } from '@/lib/quartiers-serveur';
 import {
   enregistrerDescriptionAction,
   enregistrerEquipementsAction,
   enregistrerFaitsAction,
+  enregistrerPageQuartierAction,
   enregistrerGalerieAction,
   enregistrerLienAction,
   libererGalerieAction,
@@ -41,6 +43,12 @@ export default async function AdminLogement({ params }: { params: Promise<{ id: 
   const url = liensReservation().get(bienId) || '';
   const f = faitsDe(bienId);
   const eq = new Set(equipementsDeBien(bienId));
+  const r = (await rattachements()).get(bienId);
+  const PAR: Record<string, string> = {
+    equipe: 'votre choix ci-dessous',
+    libelle: `le quartier de la fiche (« ${b.quartier} »)`,
+    carte: 'la position sur la carte',
+  };
 
   return (
     <>
@@ -162,6 +170,54 @@ export default async function AdminLogement({ params }: { params: Promise<{ id: 
           </div>
         </article>
       </form>
+
+      {/* ---------- la page quartier ----------
+          Où ce logement est rangé sur le site, et pourquoi. La carte n'est
+          qu'un relevé sur image : quand elle contredit le quartier de la
+          fiche, on le dit, et c'est ici qu'on tranche. */}
+      {r?.ville && (
+        <form action={enregistrerPageQuartierAction}>
+          <input type="hidden" name="bien_id" value={b.id} />
+          <article className="boite">
+            <div className="boite-tete">
+              <span className="fiche-titre">Page quartier</span>
+              <span className="fiche-meta">{r.quartier ? r.quartier.nom.fr : 'aucune'}</span>
+            </div>
+            <p className="corps">
+              {r.quartier
+                ? `Ce logement apparaît sur la page « ${r.quartier.nom.fr} » (${r.ville.nom.fr}), d’après ${PAR[r.par || 'libelle']}.`
+                : r.par === 'equipe'
+                  ? 'Ce logement n’apparaît sur aucune page quartier : c’est votre choix.'
+                  : `Ce logement n’apparaît sur aucune page quartier : le quartier de sa fiche${b.quartier ? ` (« ${b.quartier} »)` : ''} n’en a pas.`}{' '}
+              Il figure dans tous les cas sur la page {r.ville.nom.fr}.
+            </p>
+            {r.carte?.cle !== r.quartier?.cle && r.zone && (
+              <p className="hint" style={{ marginTop: 10 }}>
+                Selon sa position sur la carte, il serait {r.carte ? `sur la page « ${r.carte.nom.fr} »` : 'hors des pages quartier'} (zone
+                « {r.zone} »). Le relevé de la carte peut se tromper de côté d’un boulevard : vérifiez, et choisissez
+                ci-dessous si besoin.
+              </p>
+            )}
+            <div className="field" style={{ marginTop: 14, maxWidth: 420 }}>
+              <label htmlFor="q_page">Choisir la page</label>
+              <select id="q_page" name="q_page" defaultValue={r.choix}>
+                <option value="">Laisser le site décider</option>
+                {r.ville.quartiers.map((q) => (
+                  <option key={q.cle} value={q.cle}>
+                    {q.nom.fr}
+                  </option>
+                ))}
+                <option value="aucune">Aucune page quartier</option>
+              </select>
+            </div>
+            <div className="actions-ligne">
+              <button type="submit" className="btn-mini">
+                Enregistrer la page quartier
+              </button>
+            </div>
+          </article>
+        </form>
+      )}
 
       {/* ---------- les équipements ---------- */}
       <form action={enregistrerEquipementsAction}>

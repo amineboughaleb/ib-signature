@@ -1,4 +1,5 @@
 import dynamique from 'next/dynamic';
+import Link from 'next/link';
 import { getT } from '@/lib/i18n';
 
 /* Leaflet touche au document dès son chargement : il ne peut pas être rendu sur
@@ -27,6 +28,7 @@ export default function Carte({
   locale,
   rayonM = 250,
   rayonPlancherM = 120,
+  liens,
 }: {
   lat?: number;
   lng?: number;
@@ -35,12 +37,33 @@ export default function Carte({
   locale: string;
   rayonM?: number;
   rayonPlancherM?: number;
+  /* Les pages quartier et ville du logement, quand elles sont publiées : le
+     nom devient alors un lien vers tous les appartements du même quartier. */
+  liens?: { quartier?: string; ville?: string };
 }) {
   const t = getT(locale);
   const lieu = [quartier, ville].filter(Boolean).join(', ');
+  const nom = (texte: string | undefined, h: string | undefined) =>
+    texte && h ? (
+      <Link href={h} className="lien">
+        {texte}
+      </Link>
+    ) : (
+      texte
+    );
+  const lieuAffiche =
+    liens?.quartier || liens?.ville ? (
+      <>
+        {nom(quartier, liens.quartier)}
+        {quartier && ville ? ', ' : ''}
+        {nom(ville, liens.ville)}
+      </>
+    ) : (
+      lieu
+    );
 
   if (typeof lat !== 'number' || typeof lng !== 'number' || Number.isNaN(lat) || Number.isNaN(lng)) {
-    return lieu ? <p className="lead">{lieu}</p> : null;
+    return lieu ? <p className="lead">{lieuAffiche}</p> : null;
   }
 
   const r = Math.max(80, Math.min(3000, Number(rayonM) || 250));
@@ -49,7 +72,7 @@ export default function Carte({
 
   return (
     <div className="carte-bloc">
-      {lieu && <p className="lead" style={{ marginBottom: 16 }}>{lieu}</p>}
+      {lieu && <p className="lead" style={{ marginBottom: 16 }}>{lieuAffiche}</p>}
       <div className="carte">
         <CarteVue
           lat={lat}

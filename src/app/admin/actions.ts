@@ -5,6 +5,8 @@ import { estEquipement } from '@/lib/equipements';
 import { importerTous, sourceDe } from '@/lib/flux';
 import { analyserCollage, type Collage } from '@/lib/collage';
 import { biens } from '@/lib/biens';
+import { VILLES } from '@/lib/quartiers';
+import { ecrireChoixDePage } from '@/lib/quartiers-serveur';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { COOKIE, DUREE_COOKIE, administrationConfiguree, connecte, fabriquerJeton, motDePasseCorrect } from '@/lib/admin';
@@ -518,6 +520,23 @@ export async function enregistrerFaitsAction(form: FormData) {
     quartier: champ(form, 'f_quartier', 80),
   });
 
+  revalidatePath(`/admin/logements/${bienId}`);
+  revalidatePath('/', 'layout');
+}
+
+/* ---------- la page quartier d'un logement ----------
+   Vide : le site décide, d'après le quartier de la fiche puis la carte.
+   « aucune » : le logement n'apparaît sur aucune page quartier. Sinon, le
+   slug d'une page du référentiel - et rien d'autre, une valeur inconnue
+   reviendrait à « laisser faire » sans le dire. */
+
+export async function enregistrerPageQuartierAction(form: FormData) {
+  await garde();
+  const bienId = Number(form.get('bien_id'));
+  if (!bienId) return;
+  const v = String(form.get('q_page') || '').trim();
+  const permis = new Set(['', 'aucune', ...VILLES.flatMap((x) => x.quartiers.map((q) => q.cle))]);
+  ecrireChoixDePage(bienId, permis.has(v) ? v : '');
   revalidatePath(`/admin/logements/${bienId}`);
   revalidatePath('/', 'layout');
 }

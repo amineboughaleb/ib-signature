@@ -4,6 +4,7 @@ import { connecte } from '@/lib/admin';
 import { biens } from '@/lib/biens';
 import { galeriesCompletes, galeriesReprenables } from '@/lib/db';
 import { reprendreGaleriesAction } from '../actions';
+import { rattachements } from '@/lib/quartiers-serveur';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,9 @@ export default async function AdminPhotos({
   const avec = catalogue.filter((b) => (galeries.get(b.id)?.retenues.length || 0) > 0).length;
   const verrouilles = catalogue.filter((b) => galeries.get(b.id)?.verrou).length;
   const reprenables = galeriesReprenables();
+  /* La page quartier de chaque logement, et un signe quand la carte n'est
+     pas d'accord : c'est sur la fiche du logement qu'on tranche. */
+  const pages = await rattachements();
 
   return (
     <>
@@ -122,6 +126,14 @@ export default async function AdminPhotos({
                 {g?.verrou ? ' · retouchée' : ''}
                 {g?.ecartees.length ? ` · ${g.ecartees.length} écartée(s)` : ''}
               </span>
+              {pages.get(b.id)?.ville && (
+                <span className="carte-meta">
+                  page : {pages.get(b.id)?.quartier?.nom.fr || 'aucun quartier'}
+                  {pages.get(b.id)?.zone && pages.get(b.id)?.carte?.cle !== pages.get(b.id)?.quartier?.cle
+                    ? ' · la carte dit autre chose'
+                    : ''}
+                </span>
+              )}
             </Link>
           );
         })}
