@@ -489,10 +489,10 @@ const en: Dico = {
   nav_qui: 'About us',
   nav_contact_page: 'Contact us',
 
-  presentation_titre: 'IB Signature - Your better alternative to a hotel room',
+  presentation_titre: 'IB Signature - Your best alternative to hotel rooms',
   presentation_photo_alt: 'A stay in an IB Signature home',
   presentation_1:
-    'Our homes are true alternatives to hotel rooms. You will find five-star comfort there, with more amenities and more space.',
+    'Our homes are a true alternative to hotel rooms, with five-star comfort, more amenities and more space.',
   presentation_2:
     'Demanding travellers ourselves, we do everything we can to give you a stay without a hitch. Set in the heart of the city, IB Signature apartments bring together comfort, charm and elegance.',
 
