@@ -79,7 +79,7 @@ export default function Carte({
           lng={lng}
           rayonM={r}
           rayonPlancherM={plancher}
-          libelle={`${t('carte_titre')} — ${lieu}`}
+          libelle={`${t('carte_titre')} - ${lieu}`}
           aide={t('carte_molette')}
         />
         <span className="carte-etiquette">{t('carte_rayon', { n: r })}</span>

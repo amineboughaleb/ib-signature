@@ -47,7 +47,7 @@ export const FAQ: Record<'fr' | 'en', { sur: string; titre: string; questions: Q
       },
       {
         q: 'Puis-je occuper mon logement quand je le souhaite ?',
-        r: 'Oui. Le bien reste le vôtre et son calendrier aussi : vous bloquez les dates qui vous conviennent, pour vous ou vos proches. Prévenez-nous simplement avant qu’elles ne soient réservées — une date déjà vendue à un voyageur ne peut plus être reprise.',
+        r: 'Oui. Le bien reste le vôtre et son calendrier aussi : vous bloquez les dates qui vous conviennent, pour vous ou vos proches. Prévenez-nous simplement avant qu’elles ne soient réservées : une date déjà vendue à un voyageur ne peut plus être reprise.',
       },
       {
         q: 'Puis-je suivre l’occupation de mon bien ?',
@@ -59,7 +59,7 @@ export const FAQ: Record<'fr' | 'en', { sur: string; titre: string; questions: Q
       },
       {
         q: 'L’audit m’engage-t-il à quelque chose ?',
-        r: 'Non. L’audit est gratuit et sans engagement : il vous rend une estimation de revenus et un diagnostic de votre bien. Vous restez libre de ne pas donner suite, et nous restons libres de ne pas proposer de mandat — nous sélectionnons nos propriétaires autant qu’ils nous sélectionnent.',
+        r: 'Non. L’audit est gratuit et sans engagement : il vous rend une estimation de revenus et un diagnostic de votre bien. Vous restez libre de ne pas donner suite, et nous restons libres de ne pas proposer de mandat : nous sélectionnons nos propriétaires autant qu’ils nous sélectionnent.',
       },
     ],
   },
@@ -93,7 +93,7 @@ export const FAQ: Record<'fr' | 'en', { sur: string; titre: string; questions: Q
       },
       {
         q: 'Can I use my property whenever I want?',
-        r: 'Yes. The property is yours and so is its calendar: you block the dates that suit you, for yourself or for family. Just let us know before they are booked — a date already sold to a guest cannot be taken back.',
+        r: 'Yes. The property is yours and so is its calendar: you block the dates that suit you, for yourself or for family. Just let us know before they are booked: a date already sold to a guest cannot be taken back.',
       },
       {
         q: 'Can I follow how my property is doing?',
@@ -105,7 +105,7 @@ export const FAQ: Record<'fr' | 'en', { sur: string; titre: string; questions: Q
       },
       {
         q: 'Does the audit commit me to anything?',
-        r: 'No. The audit is free and without obligation: it gives you a revenue estimate and an assessment of your property. You remain free to go no further, and so do we — we select our owners as much as they select us.',
+        r: 'No. The audit is free and without obligation: it gives you a revenue estimate and an assessment of your property. You remain free to go no further, and so do we: we select our owners as much as they select us.',
       },
     ],
   },

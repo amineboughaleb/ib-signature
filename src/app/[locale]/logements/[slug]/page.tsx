@@ -186,7 +186,7 @@ export default async function Fiche({
           laisser des cadres vides, et sans aucune photographie il ne rend rien
           - la trame géométrique tient alors la place, seule. */}
       {b.photos.length > 0 ? (
-        <Mosaique photos={b.photos} nom={b.nom} lieu={[b.quartier, b.ville].filter(Boolean).join(', ')} />
+        <Mosaique photos={b.photos} nom={b.nom} lieu={[b.quartier, b.ville].filter(Boolean).join(', ')} locale={locale} />
       ) : (
         <section className="wrap galerie galerie-vide">
           <figure className="galerie-grande">

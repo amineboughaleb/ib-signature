@@ -18,7 +18,8 @@ import { useRef, useState } from 'react';
  * à l'intérieur d'un lien ouvrirait la fiche, ce qui est exactement ce qu'on
  * cherchait à éviter.
  */
-export default function VignettePhotos({ photos, nom }: { photos: string[]; nom: string }) {
+export default function VignettePhotos({ photos, nom, locale = 'fr' }: { photos: string[]; nom: string; locale?: string }) {
+  const en = locale === 'en';
   const [i, setI] = useState(0);
   const bande = useRef<HTMLDivElement>(null);
 
@@ -55,10 +56,10 @@ export default function VignettePhotos({ photos, nom }: { photos: string[]; nom:
 
       {n > 1 && (
         <>
-          <button type="button" className="bien-nav bien-avant" onClick={(e) => aller(e, i - 1)} aria-label="Précédente">
+          <button type="button" className="bien-nav bien-avant" onClick={(e) => aller(e, i - 1)} aria-label={en ? 'Previous photo' : 'Photo précédente'}>
             ‹
           </button>
-          <button type="button" className="bien-nav bien-apres" onClick={(e) => aller(e, i + 1)} aria-label="Suivante">
+          <button type="button" className="bien-nav bien-apres" onClick={(e) => aller(e, i + 1)} aria-label={en ? 'Next photo' : 'Photo suivante'}>
             ›
           </button>
           <span className="bien-points" aria-hidden="true">

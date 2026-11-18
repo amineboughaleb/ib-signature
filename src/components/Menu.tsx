@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { LOCALES } from '@/lib/i18n';
-import { navigation } from '@/lib/navigation';
+import { navigation, cheminDansLangue } from '@/lib/navigation';
 import { MARQUE } from '@/lib/marque';
 
 /**
@@ -71,7 +71,7 @@ export default function Menu({ locale, path = '' }: { locale: string; path?: str
           <div className="menu-pied">
             <span className="switch">
               {LOCALES.map((l) => (
-                <Link key={l} href={`/${l}${path}`} className={locale === l ? 'on' : ''} hrefLang={l} onClick={() => setOuvert(false)}>
+                <Link key={l} href={`/${l}${cheminDansLangue(path, l)}`} className={locale === l ? 'on' : ''} hrefLang={l} onClick={() => setOuvert(false)}>
                   {l.toUpperCase()}
                 </Link>
               ))}

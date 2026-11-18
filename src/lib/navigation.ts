@@ -12,6 +12,19 @@ import { getT } from './i18n';
  * « Accueil » figure explicitement, même si le logo y mène : sur un téléphone,
  * le logo n'a pas l'air d'un bouton.
  */
+/**
+ * Le même chemin dans une autre langue. Les pages ville et quartier n'ont pas
+ * la même adresse en français et en anglais (`/location-appartement/...`,
+ * `/apartments-for-rent/...`) : sans cette traduction, le sélecteur de langue
+ * menait à une page introuvable (18 novembre 2026).
+ */
+const SEGMENTS: Record<string, string> = { fr: 'location-appartement', en: 'apartments-for-rent' };
+export function cheminDansLangue(path: string, langue: string): string {
+  const cible = SEGMENTS[langue];
+  if (!cible) return path;
+  return path.replace(/^\/(location-appartement|apartments-for-rent)(?=\/|$)/, `/${cible}`);
+}
+
 export function navigation(locale: string) {
   const t = getT(locale);
   return [

@@ -20,7 +20,8 @@ import { useEffect, useState } from 'react';
  * comme au doigt. Sur téléphone, la mosaïque n'a pas de sens - cinq images sur
  * 390 points ne se regardent pas - et laisse la place à un défilement.
  */
-export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom: string; lieu?: string }) {
+export default function Mosaique({ photos, nom, lieu, locale = 'fr' }: { photos: string[]; nom: string; lieu?: string; locale?: string }) {
+  const en = locale === 'en';
   const [ouvert, setOuvert] = useState<number | null>(null);
   const n = photos.length;
 
@@ -51,7 +52,7 @@ export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom:
      Les photographies n'ont pas de légende par pièce ici : le rang tient lieu
      de distinction, pour que deux images n'aient jamais le même texte. */
   const ou = [nom, lieu].filter(Boolean).join(', ');
-  const texteAlt = (i: number) => `${ou} - photographie ${i + 1} sur ${n}`;
+  const texteAlt = (i: number) => (en ? `${ou} - photo ${i + 1} of ${n}` : `${ou} - photo ${i + 1} sur ${n}`);
 
   return (
     <>
@@ -62,7 +63,7 @@ export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom:
             type="button"
             className={i === 0 ? 'mosaique-grande' : undefined}
             onClick={() => setOuvert(i)}
-            aria-label={`${nom} - photographie ${i + 1} sur ${n}`}
+            aria-label={en ? `${nom} - photo ${i + 1} of ${n}` : `${nom} - photo ${i + 1} sur ${n}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={u} alt={texteAlt(i)} loading={i === 0 ? 'eager' : 'lazy'} />
@@ -70,14 +71,14 @@ export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom:
         ))}
         {n > 1 && (
           <button type="button" className="mosaique-toutes" onClick={() => setOuvert(0)}>
-            {n} photographies
+            {en ? `${n} photos` : `${n} photos`}
           </button>
         )}
       </section>
 
       {ouvert !== null && (
         <div className="visionneuse" role="dialog" aria-modal="true" aria-label={nom}>
-          <button type="button" className="vis-fermer" onClick={() => setOuvert(null)} aria-label="Fermer">
+          <button type="button" className="vis-fermer" onClick={() => setOuvert(null)} aria-label={en ? 'Close' : 'Fermer'}>
             ✕
           </button>
           <span className="vis-compte">
@@ -87,7 +88,7 @@ export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom:
             type="button"
             className="vis-nav vis-avant"
             onClick={() => setOuvert((i) => (i === null ? null : (i - 1 + n) % n))}
-            aria-label="Photographie précédente"
+            aria-label={en ? 'Previous photo' : 'Photo précédente'}
           >
             ‹
           </button>
@@ -97,7 +98,7 @@ export default function Mosaique({ photos, nom, lieu }: { photos: string[]; nom:
             type="button"
             className="vis-nav vis-apres"
             onClick={() => setOuvert((i) => (i === null ? null : (i + 1) % n))}
-            aria-label="Photographie suivante"
+            aria-label={en ? 'Next photo' : 'Photo suivante'}
           >
             ›
           </button>

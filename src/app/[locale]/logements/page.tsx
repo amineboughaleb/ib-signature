@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     '/logements',
     locale === 'en' ? 'Our apartments · Casablanca & Marrakech · IB Signature' : 'Nos logements · Casablanca & Marrakech · IB Signature',
     locale === 'en'
-      ? 'Serviced apartments in Casablanca and Marrakech, each run by our own teams — never subcontracted. Pick your dates to see what is free.'
+      ? 'Serviced apartments in Casablanca and Marrakech, each run by our own teams, never subcontracted. Pick your dates to see what is free.'
       : 'Des appartements à Casablanca et Marrakech, chacun tenu par nos équipes et jamais sous-traité. Choisissez vos dates pour voir ce qui est libre.'
   );
 }

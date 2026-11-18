@@ -295,7 +295,7 @@ export async function demanderVirementAction(_prev: EtatVirement, form: FormData
   await envoyer({
     to: email,
     subject: locale === 'en' ? `Your booking request ${v.reference} - IB Signature` : `Votre demande de réservation ${v.reference} - IB Signature`,
-    html: `<p>${locale === 'en' ? 'Thank you — here are the details for your transfer.' : 'Merci — voici les éléments de votre virement.'}</p>
+    html: `<p>${locale === 'en' ? 'Thank you: here are the details for your transfer.' : 'Merci : voici les éléments de votre virement.'}</p>
       <table>${ligne(locale === 'en' ? 'Reference' : 'Référence', v.reference)}${ligne(locale === 'en' ? 'Home' : 'Logement', b.nom)}${ligne(locale === 'en' ? 'Stay' : 'Séjour', `${arrivee} → ${depart}`)}${ligne(locale === 'en' ? 'Amount' : 'Montant', somme)}${ligne(locale === 'en' ? 'Beneficiary' : 'Bénéficiaire', r.virement_beneficiaire)}</table>
       <p style="margin-top:14px;white-space:pre-wrap">${echapper(r.virement_rib)}</p>
       <p style="margin-top:14px">${locale === 'en' ? 'Please quote the reference on your transfer order, and send us the transfer advice once it has left.' : 'Portez la référence sur votre ordre de virement, et envoyez-nous l’avis de virement dès qu’il est parti.'}</p>

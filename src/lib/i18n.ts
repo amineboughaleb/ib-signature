@@ -40,7 +40,7 @@ const fr: Dico = {
   bien_total: 'Séjour de {n} nuit(s)',
 
   chiffre_1: 'propriétaires nous font confiance',
-  chiffre_2: 'de note moyenne Airbnb voyageurs',
+  chiffre_2: 'de note moyenne des voyageurs sur Airbnb',
   chiffre_3: 'de support, sept jours sur sept',
   chiffre_4: 'villes, Casablanca et Marrakech',
 
@@ -63,9 +63,9 @@ const fr: Dico = {
     'Ce logement demande au moins {min} nuits sur cette période. Votre séjour est plus court : allongez-le d’une nuit ou deux, ou choisissez un autre logement.',
   liste_resultats: '{n} logement(s)',
   liste_resultats_libres: '{n} logement(s) disponible(s)',
-  liste_aucun: 'Aucun logement ne correspond à cette recherche. Élargissez la ville ou le nombre de voyageurs.',
+  liste_aucun: 'Aucun logement ne correspond à cette recherche. Choisissez une autre ville, ou modifiez le nombre de voyageurs.',
   liste_aucun_libre:
-    'Aucun logement n’est disponible sur ces dates. Essayez une autre période, ou élargissez la ville.',
+    'Aucun logement n’est disponible sur ces dates. Essayez une autre période, ou une autre ville.',
   liste_sejour_minimum:
     '{n} logement(s) écarté(s) : ils demandent au moins {min} nuits sur cette période.',
   liste_aucun_sejour:
@@ -127,7 +127,7 @@ const fr: Dico = {
   po_titre: 'Confiez votre bien à IB Signature',
   po_texte:
     'Hôtellerie privée, le prix de la nuit d’abord, transparence absolue. 24 propriétaires nous font déjà confiance à Casablanca et Marrakech pour valoriser leurs biens en courte et moyenne durée.',
-  po_rassurance: 'Réponse sous 48h · Sans engagement · 100% gratuit',
+  po_rassurance: 'Réponse sous 48 heures · Sans engagement · 100 % gratuit',
   po_pb_titre: 'Si vous êtes propriétaire, vous le savez déjà…',
   po_nous_titre: 'Trois principes qui font la différence',
   po_parcours_titre: 'De votre demande à votre première réservation',
@@ -135,7 +135,7 @@ const fr: Dico = {
   po_audit_sur: 'Audit gratuit & personnalisé',
   po_audit_titre: 'Prêt à valoriser votre bien à son juste potentiel ?',
   po_audit_p: 'Recevez votre audit gratuit et personnalisé. Aucun engagement, aucun frais.',
-  po_audit_pied: 'Réponse sous 48h · Vos données restent strictement confidentielles.',
+  po_audit_pied: 'Réponse sous 48 heures · Vos données restent strictement confidentielles.',
   po_cta: 'Demander mon audit gratuit',
 
   po_pb_sur: 'Le constat',
@@ -186,7 +186,7 @@ const fr: Dico = {
   po_message: 'Ce que vous voulez nous dire',
   po_envoyer: 'Envoyer ma demande',
   po_merci: 'Votre demande est bien arrivée. Nous vous rappelons sous 48 heures.',
-  po_erreur: 'Un champ manque, ou l’adresse est mal formée.',
+  po_erreur: 'Un champ manque, ou l’adresse électronique n’est pas valide.',
 
   /* --- navigation refondue ---
      Cinq entrées, dans l'ordre où un visiteur se pose ses questions : où
@@ -201,16 +201,16 @@ const fr: Dico = {
   presentation_titre: 'IB Signature - Votre meilleure alternative aux chambres d’hôtel',
   presentation_photo_alt: 'Un séjour dans un appartement IB Signature',
   presentation_1:
-    'Nos logements sont de véritables alternatives aux chambres d’hôtel. Vous y trouverez un confort 5*, avec davantage de commodités et plus d’espace.',
+    'Nos logements sont de véritables alternatives aux chambres d’hôtel. Vous y trouverez le confort d’un cinq étoiles, avec davantage de commodités et plus d’espace.',
   presentation_2:
     'Étant nous-mêmes des voyageurs exigeants, nous mettons tout en œuvre pour vous offrir un séjour sans accroc. Situés au cœur de la ville, les appartements IB Signature allient harmonieusement confort, charme et élégance.',
 
   /* --- accueil : les quatre services --- */
   svc_sur: 'Compris dans chaque séjour',
-  svc_1_t: 'Check-in autonome',
+  svc_1_t: 'Arrivée autonome',
   svc_1_p: 'Vous entrez à l’heure de votre vol, pas à celle d’une réception.',
   svc_2_t: 'Ménage professionnel',
-  svc_2_p: 'Le logement est remis à neuf avant vous, pas rangé après le précédent.',
+  svc_2_p: 'Le logement est entièrement préparé avant votre arrivée, pas seulement rangé après le précédent voyageur.',
   svc_3_t: 'Linge de maison qualité hôtelière',
   svc_3_p: 'Draps et linge de toilette d’hôtel, changés à chaque séjour.',
   svc_4_t: 'Assistance 7j/7',
@@ -275,7 +275,7 @@ const fr: Dico = {
   ct_sujet_autre: 'Autre chose',
   ct_envoyer: 'Envoyer le message',
   ct_merci: 'Votre message est bien arrivé. Nous vous répondons dans la journée.',
-  ct_erreur: 'Un champ manque, ou l’adresse est mal formée.',
+  ct_erreur: 'Un champ manque, ou l’adresse électronique n’est pas valide.',
   ct_reserver: 'Pour réserver, passez plutôt par la page du logement : le calendrier et le tarif y sont à jour.',
 
   /* --- l'étape de paiement --- */
@@ -297,7 +297,7 @@ const fr: Dico = {
   res_carte_h1: 'Vers le paiement par carte',
   res_ref: 'Votre référence',
   res_ref_note: 'Portez-la sur votre ordre de virement : c’est elle qui rattache le paiement à votre séjour.',
-  res_erreur: 'Il manque un champ, ou l’adresse électronique est mal formée.',
+  res_erreur: 'Il manque un champ, ou l’adresse électronique n’est pas valide.',
   res_perime: 'Cette demande n’est plus valable. Reprenez depuis la page du logement.',
   res_retour: 'Revenir au logement',
   res_seule_carte: 'Pour ces dates, seul le paiement par carte est possible.',
@@ -364,15 +364,15 @@ const en: Dico = {
   liste_titre: 'Our homes',
   liste_texte: 'Casablanca and Marrakech. Every home is run by our own teams, never subcontracted.',
   liste_capacite_inconnue:
-    'The capacity of some homes is not published yet: they stay listed, check their page.',
+    'The capacity of some homes is not published yet: they are still listed, so please check each home’s page.',
   fiche_minimum: 'Minimum stay over this period: {min} nights.',
   fiche_trop_court:
     'This home requires at least {min} nights over this period. Your stay is shorter: extend it by a night or two, or choose another home.',
   liste_resultats: '{n} home(s)',
   liste_resultats_libres: '{n} home(s) available',
-  liste_aucun: 'No home matches this search. Try another city or a different number of guests.',
-  liste_aucun_libre: 'No home is available on these dates. Try another period, or widen the city.',
-  liste_sejour_minimum: '{n} home(s) set aside: they require at least {min} nights over this period.',
+  liste_aucun: 'No home matches this search. Try another city, or change the number of guests.',
+  liste_aucun_libre: 'No home is available on these dates. Try other dates, or another city.',
+  liste_sejour_minimum: '{n} home(s) not shown: they require at least {min} nights over this period.',
   liste_aucun_sejour:
     'No home accepts a stay this short on these dates. The most flexible one requires {min}. Try a slightly longer period.',
   rech_ajouter_date: 'Choose',
@@ -387,7 +387,7 @@ const en: Dico = {
   fiche_reserver: 'Book this home',
   fiche_reserver_dates: 'Book from {a} to {d}',
   fiche_ou: 'Payment and confirmation take place on our booking engine.',
-  fiche_ou_deux: 'Two ways to pay: credit card, or bank transfer with nothing added.',
+  fiche_ou_deux: 'Two ways to pay: credit card, or bank transfer at no extra cost.',
   fiche_choisir_dates: 'Pick your dates to see the price and availability.',
   fiche_pris: 'This home is already booked from {a} to {d}. Please choose other dates.',
   fiche_autres_dates: 'See available homes',
@@ -411,7 +411,7 @@ const en: Dico = {
   carte_rayon: 'Within {n} m',
   carte_note: 'The exact address is sent to you once your booking is confirmed.',
   carte_ouvrir: 'Open the map',
-  carte_molette: 'Click the map to zoom with the wheel',
+  carte_molette: 'Click the map to zoom with your mouse wheel',
   fiche_compris_titre: 'Included in every stay',
   fiche_horaires: 'Check-in from {a} · Check-out before {d}',
   fiche_c1: 'Professional cleaning and laundry before you arrive',
@@ -425,8 +425,8 @@ const en: Dico = {
   po_sur: 'Owners',
   po_titre: 'Entrust your property to IB Signature',
   po_texte:
-    'Private hospitality, the nightly rate first, absolute transparency. Twenty-four owners already trust us in Casablanca and Marrakech to make the most of their properties, short and medium term.',
-  po_rassurance: 'Answer within 48h · No obligation · 100% free',
+    'Private hospitality, the nightly rate first, absolute transparency. Twenty-four owners in Casablanca and Marrakech already trust us to make the most of their properties, for short and medium-term stays.',
+  po_rassurance: 'Reply within 48 hours · No obligation · 100% free',
   po_pb_titre: 'If you own a property, you already know this…',
   po_nous_titre: 'Three principles that make the difference',
   po_parcours_titre: 'From your request to your first booking',
@@ -434,13 +434,13 @@ const en: Dico = {
   po_audit_sur: 'Free, personalised audit',
   po_audit_titre: 'Ready to bring your property to its true potential?',
   po_audit_p: 'Receive your free, personalised audit. No obligation, no fee.',
-  po_audit_pied: 'Answer within 48h · Your data stays strictly confidential.',
+  po_audit_pied: 'Reply within 48 hours · Your data stays strictly confidential.',
   po_cta: 'Request my free audit',
 
   po_pb_sur: 'What we see',
   po_pb1_t: 'Your property under-earns, and you do not know why',
   po_pb1_p:
-    'Frozen pricing, amateur photographs, loose booking management. Under-exploited properties in Morocco plateau at 30 to 35 % occupancy, where the market allows a great deal more.',
+    'Frozen pricing, amateur photographs, loose booking management. Under-exploited properties in Morocco plateau at 30-35% occupancy, while the market allows a great deal more.',
   po_pb2_t: 'No clear view of what you actually receive',
   po_pb2_p:
     'Hidden fees, opaque method, irregular reporting. You sign, then you hope it goes well, without ever really knowing where the money goes.',
@@ -454,24 +454,24 @@ const en: Dico = {
     'We hold private flats to the standards of a five-star hotel: hotel linen, faultless cleanliness, a personal welcome, a two-minute response rather than two hours.',
   po_n2_t: 'The nightly rate first, occupancy second',
   po_n2_p:
-    'We protect the value of each night through dynamic revenue management before playing on volume. What is optimised is your net margin, not a flattering occupancy figure.',
+    'We protect the value of each night first, through dynamic revenue management (PriceLabs), before playing on volume. What we optimise is your net margin, not a flattering occupancy figure.',
   po_n3_t: 'Absolute transparency',
   po_n3_p:
     'No hidden fee. No unverifiable figure. A detailed monthly report, an explicit method. You sign knowing what you sign, you follow in real time, you keep control.',
 
-  po_parcours_sur: 'How it starts',
+  po_parcours_sur: 'A clear process, with no obligation',
   po_e1: 'You fill in the form',
   po_e1_d: '1 minute',
-  po_e1_p: 'Five fields. Nothing that sends you looking for a document.',
+  po_e1_p: 'You give us the key details about your property and your WhatsApp contact.',
   po_e2: 'A qualification call with Amine',
   po_e2_d: '30 minutes, within 48 h',
-  po_e2_p: 'A conversation with the founder, not a call centre.',
+  po_e2_p: 'Amine, founder of IB Signature, calls you to understand your property, your expectations and your time horizon.',
   po_e3: 'Your personalised report',
   po_e3_d: 'within 24 h of the call',
-  po_e3_p: 'A revenue estimate on your own property, costed, free and without obligation.',
+  po_e3_p: 'Revenue projection, occupancy scenarios, sourced market benchmarks and management terms suited to your property.',
   po_e4: 'Visit, mandate and launch',
   po_e4_d: 'if the project goes ahead',
-  po_e4_p: 'Photography, listings, calendar, first booking.',
+  po_e4_p: 'Visit, signing of the mandate, professional photo shoot, listing on every platform. First booking typically within 21 days.',
 
   po_form_titre: 'Request a free audit',
   po_form_texte: 'No obligation. We call you back within 48 hours.',
@@ -483,7 +483,7 @@ const en: Dico = {
   po_message: 'Anything you want to tell us',
   po_envoyer: 'Send my request',
   po_merci: 'Your request has arrived. We will call you back within 48 hours.',
-  po_erreur: 'A field is missing, or the address is malformed.',
+  po_erreur: 'A field is missing, or the email address is not valid.',
 
   nav_accueil: 'Home',
   nav_qui: 'About us',
@@ -494,19 +494,19 @@ const en: Dico = {
   presentation_1:
     'Our homes are a true alternative to hotel rooms, with five-star comfort, more amenities and more space.',
   presentation_2:
-    'Demanding travellers ourselves, we do everything we can to give you a stay without a hitch. Set in the heart of the city, IB Signature apartments bring together comfort, charm and elegance.',
+    'As demanding travellers ourselves, we do everything we can to make your stay hassle-free. Set in the heart of the city, IB Signature apartments combine comfort, charm and elegance.',
 
   svc_sur: 'Included in every stay',
   svc_1_t: 'Self check-in',
-  svc_1_p: 'You come in at your flight’s hour, not a front desk’s.',
+  svc_1_p: 'You arrive when your flight lands, not when a front desk opens.',
   svc_2_t: 'Professional cleaning',
-  svc_2_p: 'The flat is made new before you arrive, not tidied after the last guest.',
+  svc_2_p: 'The flat is fully prepared before you arrive, not just tidied after the last guest.',
   svc_3_t: 'Hotel-grade linen',
   svc_3_p: 'Hotel sheets and towels, changed for every stay.',
   svc_4_t: 'Support 7 days a week',
   svc_4_p: 'Someone you can reach every day, before and during your stay.',
 
-  avis_sur: 'They slept there',
+  avis_sur: 'They stayed with us',
   avis_titre: 'What travellers say',
   avis_texte: 'Comments left after the stay, published as written. Each one is about a specific apartment.',
   avis_source: 'Reviews left by travellers on the platforms where our homes are listed, or directly on this site after their stay.',
@@ -559,8 +559,8 @@ const en: Dico = {
   ct_sujet_long: 'A stay of several months',
   ct_sujet_autre: 'Something else',
   ct_envoyer: 'Send the message',
-  ct_merci: 'Your message has arrived. We will answer you today.',
-  ct_erreur: 'A field is missing, or the address is malformed.',
+  ct_merci: 'Your message has arrived. We will reply within the day.',
+  ct_erreur: 'A field is missing, or the email address is not valid.',
   ct_reserver: 'To book, go through the apartment’s page instead: the calendar and the rate are up to date there.',
 
   /* --- the payment step --- */
@@ -582,7 +582,7 @@ const en: Dico = {
   res_carte_h1: 'On to card payment',
   res_ref: 'Your reference',
   res_ref_note: 'Quote it on your transfer order: it is what ties the payment to your stay.',
-  res_erreur: 'A field is missing, or the email address is malformed.',
+  res_erreur: 'A field is missing, or the email address is not valid.',
   res_perime: 'This request is no longer valid. Please start again from the apartment’s page.',
   res_retour: 'Back to the apartment',
   res_seule_carte: 'For these dates, only card payment is available.',

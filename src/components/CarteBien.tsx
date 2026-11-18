@@ -47,7 +47,7 @@ export default function CarteBien({
   return (
     <Link href={`/${locale}/logements/${b.slug}${suite}`} className="bien-carte">
       {photo ? (
-        <VignettePhotos photos={b.photos} nom={b.nom} />
+        <VignettePhotos photos={b.photos} nom={b.nom} locale={locale} />
       ) : (
         <div className="bien-image">
           <div className="bien-trame" aria-hidden="true">
@@ -61,8 +61,8 @@ export default function CarteBien({
         <div className="small muted">
           {[
             [b.quartier, b.ville].filter(Boolean).join(' · '),
-            b.chambres ? `${b.chambres} ch.` : '',
-            b.voyageurs ? `${b.voyageurs} pers.` : '',
+            b.chambres ? (locale === 'en' ? `${b.chambres} bd` : `${b.chambres} ch.`) : '',
+            b.voyageurs ? (locale === 'en' ? `${b.voyageurs} guests` : `${b.voyageurs} pers.`) : '',
           ]
             .filter(Boolean)
             .join(' · ')}

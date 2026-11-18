@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LOCALES } from '@/lib/i18n';
-import { navigation, courant } from '@/lib/navigation';
+import { navigation, courant, cheminDansLangue } from '@/lib/navigation';
 import Menu from './Menu';
 
 /**
@@ -32,7 +32,7 @@ export default function Barre({ locale }: { locale: string }) {
         ))}
         <span className="switch">
           {LOCALES.map((l) => (
-            <Link key={l} href={`/${l}${path}`} className={locale === l ? 'on' : ''} hrefLang={l}>
+            <Link key={l} href={`/${l}${cheminDansLangue(path, l)}`} className={locale === l ? 'on' : ''} hrefLang={l}>
               {l.toUpperCase()}
             </Link>
           ))}
